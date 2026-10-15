@@ -5,6 +5,8 @@
 ## 현재 구현
 
 - 밝은 바깥 배경과 중앙의 다크 게임 프레임
+- 이미지 모델 연결 화면: API KEY, 이름, NovelAI 모델 선택 (V5·V4.5·V4 Full/Curated, Anime V3, Furry V3)
+- 이미지 모델 목록은 [NovelAI 공식 모델 문서](https://docs.novelai.net/en/image/models/)의 현재 모델 섹션 기준입니다. 선택 값은 화면용 식별자이며 실제 생성 API 연결·모델 ID 매핑은 아직 구현하지 않았습니다. 공식 이미지 생성 주소를 사용할 예정이므로 URL 입력 칸은 없습니다.
 - 왼쪽 설정 메뉴, 텍스트·이미지 모델 탭, 연결 입력 화면과 뒤로가기
 - 텍스트 모델의 Vertex AI 서비스 계정 JSON 키, 이름, 리전, 모델 ID 입력
 - JSON 키의 프로젝트 ID와 선택한 리전·모델로 Gemini 요청 주소 자동 구성
