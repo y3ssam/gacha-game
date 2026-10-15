@@ -84,6 +84,14 @@ test('모델 권한 오류, 빈 응답, 잘못된 응답 및 타임아웃을 성
   await assert.rejects(testVertexConnection(input, { signal, fetchImpl: async () => { throw new Error('aborted'); } }), error => error.code === 'TIMEOUT');
 });
 
+test('접근 차단, DNS, 인증서 오류를 구분하고 내부 오류에서 키를 노출하지 않음', async () => {
+  for (const [code, expected] of [['EACCES', 'NETWORK_ACCESS_DENIED'], ['EPERM', 'NETWORK_ACCESS_DENIED'], ['ENOTFOUND', 'DNS_ERROR'], ['UNABLE_TO_VERIFY_LEAF_SIGNATURE', 'TLS_ERROR'], ['UND_ERR_CONNECT_TIMEOUT', 'TIMEOUT']]) {
+    await assert.rejects(testVertexConnection(input, { fetchImpl: async () => {
+      throw new TypeError('fetch failed', { cause: Object.assign(new Error(credentials.private_key), { code }) });
+    } }), error => error.code === expected && !error.message.includes(credentials.private_key));
+  }
+});
+
 test('로컬 HTTP 서버의 출처·크기·경로 보호 및 테스트 응답 전달', async () => {
   let hits = 0;
   const app = createAppServer({ testConnection: async body => {
