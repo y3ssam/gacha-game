@@ -132,6 +132,41 @@
         word-break: keep-all;
         overflow-wrap: anywhere;
       }
+      .editor-footer {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 16px;
+        padding: 18px 40px;
+        border-top: 1px solid var(--border);
+      }
+      .save-connection-button {
+        width: 152px; min-height: 46px; flex-shrink: 0;
+        border: 1px solid var(--action-background); border-radius: 999px;
+        background: var(--action-background); color: var(--action-text);
+        font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+      }
+      .save-connection-button:hover { background: var(--action-hover); }
+      .save-connection-button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
+      .save-connection-button:disabled { opacity: .65; cursor: wait; }
+      .save-status { margin: 0; color: var(--text-secondary); font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
+      .save-status[data-state="error"] { color: #ff9fb2; }
+      #connection-list-status:not(:empty) { margin-bottom: 16px; }
+      .saved-connections { display: grid; gap: 12px; }
+      .saved-connection {
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 16px; padding: 20px; border: 1px solid var(--border); border-radius: 14px;
+      }
+      .saved-connection div { min-width: 0; }
+      .saved-connection strong { overflow-wrap: anywhere; }
+      .saved-connection p { margin: 8px 0 0; color: var(--text-secondary); font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
+      .saved-connection button {
+        flex-shrink: 0; padding: 8px 14px; border: 1px solid var(--border);
+        border-radius: 999px; background: var(--surface-active); color: var(--accent);
+        font: inherit; font-size: 13px; cursor: pointer;
+      }
+      .saved-connection button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
       .content-body { flex: 1; min-height: 0; overflow-y: auto; padding: 32px 40px; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
       .ai-toolbar {
         display: grid;
@@ -276,6 +311,7 @@
         .sidebar { padding: 22px 8px; }
         .brand { margin-bottom: 30px; }
         .nav-item { font-size: 11px; gap: 8px; }
+        .editor-footer { padding: 16px 22px; }
         .content-header { padding: 26px 22px 23px; }
         .content-body { padding: 24px 22px; }
         h1 { font-size: 20px; }
@@ -321,7 +357,7 @@
           <button class="add-ai-button" type="button">+ AI 연결 추가</button>
           </div>
           <!-- 각 모델의 연결 설정은 해당 패널 안에 추가합니다. -->
-          <section class="ai-panel" role="tabpanel" id="text-ai-panel" aria-labelledby="text-ai-tab" tabindex="0"></section>
+          <section class="ai-panel" role="tabpanel" id="text-ai-panel" aria-labelledby="text-ai-tab" tabindex="0"><p class="save-status" id="connection-list-status" role="status"></p><div class="saved-connections" id="saved-connections"></div></section>
           <section class="ai-panel" role="tabpanel" id="image-ai-panel" aria-labelledby="image-ai-tab" tabindex="0" hidden></section>
           </div>
           <div id="connection-editor-view" hidden>
@@ -371,6 +407,10 @@
           </form>
           </div>
         </div>
+        <footer class="editor-footer" id="connection-editor-footer" hidden>
+          <p class="save-status" id="connection-save-status" role="status" aria-live="polite"></p>
+          <button class="save-connection-button" id="save-connection" type="button">저장</button>
+        </footer>
       </main>
     </div>
     <script>
@@ -378,10 +418,17 @@
       const connectionEditor = document.getElementById('connection-editor-view');
       const connectionForm = document.getElementById('connection-form');
       const modelType = document.getElementById('connection-model-type');
+      let editingConnectionId = null;
+      let savingConnection = false;
+      let savedConnections = [];
+      const editorFooter = document.getElementById('connection-editor-footer');
+      const saveButton = document.getElementById('save-connection');
+      const saveStatus = document.getElementById('connection-save-status');
       const textModelFields = document.getElementById('text-model-fields');
       function updateModelFields() {
         const isTextModel = modelType.value === 'text';
         textModelFields.hidden = !isTextModel;
+        editorFooter.hidden = connectionEditor.hidden || !isTextModel;
         const vertexKey = document.getElementById('connection-vertex-key');
         const imageKey = document.getElementById('connection-api-key');
         vertexKey.hidden = !isTextModel;
@@ -396,10 +443,15 @@
       modelType.addEventListener('change', updateModelFields);
       const apiKey = document.getElementById('connection-api-key');
       document.querySelector('.add-ai-button').addEventListener('click', () => {
+        editingConnectionId = null;
+        connectionForm.reset();
+        saveStatus.textContent = '';
+        document.getElementById('connection-vertex-key').placeholder = 'Google Vertex AI JSON 키 전체를 붙여넣으세요.';
         modelType.value = document.getElementById('image-ai-tab').getAttribute('aria-selected') === 'true' ? 'image' : 'text';
         updateModelFields();
         connectionListView.hidden = true;
         connectionEditor.hidden = false;
+        updateModelFields();
         modelType.focus();
       });
       const testButton = document.getElementById('test-connection');
@@ -436,12 +488,14 @@
         const model = document.getElementById('connection-model').value.trim();
         const region = document.getElementById('connection-region').value;
         try {
-          if (!credentials) throw new Error('API KEY에 Vertex AI 서비스 계정 JSON 키 전체를 입력해 주세요.');
+          if (!credentials && !editingConnectionId) throw new Error('API KEY에 Vertex AI 서비스 계정 JSON 키 전체를 입력해 주세요.');
+          if (credentials) {
           let key;
           try { key = JSON.parse(credentials); }
           catch { throw new Error('API KEY의 JSON 형식이 올바르지 않습니다. 키 전체를 복사했는지 확인해 주세요.'); }
           if (!key || key.type !== 'service_account' || !key.project_id || !key.client_email || !key.private_key) {
             throw new Error('서비스 계정 JSON 키의 type, project_id, client_email, private_key를 확인해 주세요.');
+          }
           }
           if (!model) throw new Error('호출할 모델 ID를 입력해 주세요.');
           if (location.protocol !== 'http:' || !['127.0.0.1', 'localhost'].includes(location.hostname)) {
@@ -460,7 +514,7 @@
               headers: { 'Content-Type': 'application/json' },
               cache: 'no-store',
               signal: AbortSignal.any([controller.signal, AbortSignal.timeout(65000)]),
-              body: JSON.stringify({ credentials, model, region }),
+              body: JSON.stringify({ credentials, model, region, id: editingConnectionId }),
             });
           } catch (error) {
             if (controller.signal.aborted) return;
@@ -484,15 +538,104 @@
           }
         }
       });
-      // 키는 이 입력 화면의 메모리에서만 다루며 로컬 서버를 통해 Google 인증에 사용합니다.
+      async function loadSavedConnections() {
+        const status = document.getElementById('connection-list-status');
+        if (location.protocol !== 'http:' || !['127.0.0.1', 'localhost'].includes(location.hostname)) return;
+        try {
+          const response = await fetch('/api/connections', { cache: 'no-store' });
+          const data = await response.json();
+          if (!response.ok || !data.ok || !Array.isArray(data.connections)) throw new Error(data.error?.message || '저장된 연결을 불러오지 못했습니다.');
+          savedConnections = data.connections;
+          const list = document.getElementById('saved-connections');
+          list.replaceChildren();
+          for (const connection of savedConnections) {
+            const card = document.createElement('article');
+            card.className = 'saved-connection';
+            const info = document.createElement('div');
+            const title = document.createElement('strong');
+            title.textContent = connection.name;
+            const detail = document.createElement('p');
+            detail.textContent = connection.model + ' · ' + connection.region;
+            info.append(title, detail);
+            const edit = document.createElement('button');
+            edit.type = 'button';
+            edit.textContent = '수정';
+            edit.setAttribute('aria-label', connection.name + ' 수정');
+            edit.addEventListener('click', () => {
+              resetConnectionTest();
+              connectionForm.reset();
+              editingConnectionId = connection.id;
+              modelType.value = 'text';
+              document.getElementById('connection-name').value = connection.name;
+              document.getElementById('connection-model').value = connection.model;
+              document.getElementById('connection-region').value = connection.region;
+              document.getElementById('connection-vertex-key').placeholder = '저장된 JSON 키를 사용합니다. 키를 변경할 때만 새 JSON을 입력하세요.';
+              saveStatus.textContent = '';
+              connectionListView.hidden = true;
+              connectionEditor.hidden = false;
+              updateModelFields();
+              document.getElementById('connection-name').focus();
+            });
+            card.append(info, edit);
+            list.append(card);
+          }
+          status.textContent = '';
+        } catch (error) {
+          status.textContent = error.message || '저장된 연결을 불러오지 못했습니다.';
+        }
+      }
+      saveButton.addEventListener('click', async () => {
+        if (savingConnection || modelType.value !== 'text') return;
+        resetConnectionTest();
+        saveStatus.dataset.state = '';
+        saveStatus.textContent = '';
+        const name = document.getElementById('connection-name').value.trim();
+        const credentials = document.getElementById('connection-vertex-key').value.trim();
+        const model = document.getElementById('connection-model').value.trim();
+        const region = document.getElementById('connection-region').value;
+        try {
+          if (!name || name.length > 80) throw new Error('이름은 1~80자로 입력해 주세요.');
+          if (!model) throw new Error('모델 ID를 입력해 주세요.');
+          if (!credentials && !editingConnectionId) throw new Error('저장할 JSON 키를 입력해 주세요.');
+          if (location.protocol !== 'http:' || !['127.0.0.1', 'localhost'].includes(location.hostname)) throw new Error('연결 저장은 PC의 로컬 게임 주소에서 사용해 주세요.');
+          savingConnection = true;
+          connectionForm.inert = true;
+          document.getElementById('connection-back').disabled = true;
+          saveButton.disabled = true;
+          saveButton.textContent = '저장 중…';
+          const response = await fetch('/api/connections', {
+            method: 'POST', cache: 'no-store', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: editingConnectionId, name, credentials, model, region }),
+          });
+          let data;
+          try { data = await response.json(); } catch { throw new Error('로컬 저장 서버를 찾지 못했습니다. 게임 서버를 다시 실행해 주세요.'); }
+          if (!response.ok || !data.ok) throw new Error(data.error?.message || '연결을 저장하지 못했습니다.');
+          savingConnection = false;
+          returnToConnectionList();
+          await loadSavedConnections();
+          document.getElementById('connection-list-status').textContent = name + ' 연결을 이 PC에 저장했어요.';
+        } catch (error) {
+          saveStatus.dataset.state = 'error';
+          saveStatus.textContent = error.message || '저장하지 못했습니다. 로컬 서버 연결을 확인해 주세요.';
+        } finally {
+          savingConnection = false;
+          connectionForm.inert = false;
+          document.getElementById('connection-back').disabled = false;
+          saveButton.disabled = false;
+          saveButton.textContent = '저장';
+        }
+      });
+      loadSavedConnections();
       connectionForm.addEventListener('submit', (event) => event.preventDefault());
       function returnToConnectionList() {
-        if (connectionEditor.hidden) return;
+        if (connectionEditor.hidden || savingConnection) return;
         resetConnectionTest();
         connectionForm.reset();
         updateModelFields();
         apiKey.value = '';
         connectionEditor.hidden = true;
+        editorFooter.hidden = true;
+        editingConnectionId = null;
         connectionListView.hidden = false;
         document.querySelector('.add-ai-button').focus();
       }

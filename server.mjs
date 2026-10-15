@@ -1,4 +1,5 @@
 import http from 'node:http';
+import { createConnectionStore, StoreError } from './connection-store.mjs';
 import { readFile } from 'node:fs/promises';
 import { createPrivateKey, sign } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
@@ -160,7 +161,7 @@ async function readJson(req) {
   catch { throw new ConnectionError('올바른 JSON 요청이 필요합니다.', 'INVALID_JSON'); }
 }
 
-export function createAppServer({ testConnection = testVertexConnection } = {}) {
+export function createAppServer({ testConnection = testVertexConnection, store = createConnectionStore() } = {}) {
   let activeTests = 0;
   return http.createServer(async (req, res) => {
     try {
@@ -168,13 +169,26 @@ export function createAppServer({ testConnection = testVertexConnection } = {}) 
       const hosts = new Set([`127.0.0.1:${port}`, `localhost:${port}`]);
       if (!hosts.has(req.headers.host)) return sendJson(res, 403, { ok: false, error: { code: 'FORBIDDEN_HOST', message: '로컬 주소로 접속해 주세요.' } });
       const route = new URL(req.url, `http://${req.headers.host}`).pathname;
-      if (route === '/api/connections/test') {
+      if (route === '/api/connections' || route === '/api/connections/test') {
         const origin = req.headers.origin;
         if (origin && !new Set([`http://127.0.0.1:${port}`, `http://localhost:${port}`]).has(origin)) {
           return sendJson(res, 403, { ok: false, error: { code: 'FORBIDDEN_ORIGIN', message: '로컬 게임 화면에서만 테스트할 수 있습니다.' } });
         }
+        if (route === '/api/connections' && req.method === 'GET') {
+          return sendJson(res, 200, { ok: true, connections: await store.list() });
+        }
         if (req.method !== 'POST') return sendJson(res, 405, { ok: false, error: { code: 'METHOD_NOT_ALLOWED', message: 'POST 요청만 가능합니다.' } });
         if (!(req.headers['content-type'] || '').toLowerCase().startsWith('application/json')) throw new ConnectionError('JSON 요청이 필요합니다.', 'UNSUPPORTED_CONTENT_TYPE', 415);
+        if (route === '/api/connections') {
+          const input = await readJson(req);
+          const name = typeof input.name === 'string' ? input.name.trim() : '';
+          if (!name || name.length > 80) throw new ConnectionError('이름은 1~80자로 입력해 주세요.', 'INVALID_NAME');
+          if (input.id && (typeof input.id !== 'string' || !/^[a-f0-9-]{36}$/.test(input.id))) throw new ConnectionError('올바른 연결 ID가 필요합니다.');
+          if (!input.credentials && input.id) input.credentials = (await store.get(input.id)).credentials;
+          validateConnection(input);
+          const connection = await store.save({ id: input.id, name, credentials: input.credentials, model: input.model.trim(), region: input.region });
+          return sendJson(res, 200, { ok: true, connection });
+        }
         if (activeTests >= 2) throw new ConnectionError('다른 연결 테스트가 진행 중입니다. 잠시 후 다시 시도해 주세요.', 'BUSY', 429);
         activeTests++;
         const controller = new AbortController();
@@ -182,6 +196,7 @@ export function createAppServer({ testConnection = testVertexConnection } = {}) 
         res.on('close', onClose);
         try {
           const input = await readJson(req);
+          if (!input.credentials && input.id) input.credentials = (await store.get(input.id)).credentials;
           const result = await testConnection(input, { signal: AbortSignal.any([controller.signal, AbortSignal.timeout(60000)]) });
           if (!res.destroyed) sendJson(res, 200, result);
         } finally {
@@ -204,7 +219,7 @@ export function createAppServer({ testConnection = testVertexConnection } = {}) 
       }
       sendJson(res, 404, { ok: false, error: { code: 'NOT_FOUND', message: '요청한 경로를 찾을 수 없습니다.' } });
     } catch (error) {
-      const known = error instanceof ConnectionError;
+      const known = error instanceof ConnectionError || error instanceof StoreError;
       if (!res.destroyed && !res.headersSent) sendJson(res, known ? error.status : 500, { ok: false, error: { code: known ? error.code : 'INTERNAL_ERROR', message: known ? error.message : '연결 테스트를 처리하지 못했습니다. 다시 시도해 주세요.' } });
     }
   });
