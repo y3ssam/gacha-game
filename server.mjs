@@ -81,7 +81,21 @@ async function googleRequest(fetchImpl, url, options) {
   } catch (error) {
     if (error instanceof ConnectionError) throw error;
     if (options.signal.aborted) throw new ConnectionError('연결 시간이 초과되었습니다. 잠시 후 다시 시도해 주세요.', 'TIMEOUT', 504);
-    throw new ConnectionError('Google API에 접속하지 못했습니다. 네트워크 연결을 확인해 주세요.', 'NETWORK_ERROR', 502);
+    const causes = [error, error.cause, ...(error.cause?.errors || [])];
+    const codes = causes.map(cause => cause?.code).filter(Boolean);
+    if (codes.includes('EACCES') || codes.includes('EPERM')) {
+      throw new ConnectionError('로컬 서버의 실행 환경에서 Google 접속이 차단되었습니다. 게임 폴더의 start-local.cmd로 서버를 다시 실행한 뒤 테스트해 주세요. (EACCES/EPERM)', 'NETWORK_ACCESS_DENIED', 502);
+    }
+    if (codes.some(code => ['ENOTFOUND', 'EAI_AGAIN'].includes(code))) {
+      throw new ConnectionError('Google 주소를 찾지 못했습니다. 인터넷과 DNS 연결을 확인해 주세요.', 'DNS_ERROR', 502);
+    }
+    if (codes.some(code => ['CERT_HAS_EXPIRED', 'UNABLE_TO_VERIFY_LEAF_SIGNATURE', 'UNABLE_TO_GET_ISSUER_CERT_LOCALLY', 'DEPTH_ZERO_SELF_SIGNED_CERT', 'SELF_SIGNED_CERT_IN_CHAIN'].includes(code))) {
+      throw new ConnectionError('Google HTTPS 인증서를 검증하지 못했습니다. PC의 날짜와 신뢰할 수 있는 인증서 설정을 확인해 주세요.', 'TLS_ERROR', 502);
+    }
+    if (codes.some(code => ['ETIMEDOUT', 'UND_ERR_CONNECT_TIMEOUT', 'UND_ERR_HEADERS_TIMEOUT', 'UND_ERR_BODY_TIMEOUT'].includes(code))) {
+      throw new ConnectionError('Google 서버에 접속하는 시간이 초과되었습니다. 네트워크 연결을 확인하고 다시 시도해 주세요.', 'TIMEOUT', 504);
+    }
+    throw new ConnectionError('Google API에 접속하지 못했습니다. 인터넷 연결, 방화벽 또는 프록시 설정을 확인해 주세요.', 'NETWORK_ERROR', 502);
   }
 }
 
