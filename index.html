@@ -30,6 +30,10 @@
         --action-hover: #d0eaff;
         --action-text: #131820;
         --focus-ring: #b7c7ff;
+        --success-background: #e1f5d5;
+        --success-text: #20552d;
+        --error-background: #ffe2eb;
+        --error-text: #a71d3d;
         --frame-shadow: 0 20px 64px #1722341a, 0 3px 12px #1722340a;
       }
 
@@ -217,6 +221,19 @@
         font-weight: 600;
         cursor: pointer;
       }
+      .test-connection-button:disabled { cursor: wait; opacity: .65; }
+      .connection-result {
+        padding: 16px 18px;
+        border-radius: 12px;
+        text-align: left;
+        font-size: 14px;
+        line-height: 1.7;
+        overflow-wrap: anywhere;
+      }
+      .connection-result p { margin: 6px 0 0; white-space: pre-wrap; }
+      .connection-result[data-state="pending"] { background: var(--surface-active); color: var(--text-secondary); }
+      .connection-result[data-state="success"] { background: var(--success-background); color: var(--success-text); }
+      .connection-result[data-state="error"] { background: var(--error-background); color: var(--error-text); }
       .test-connection-button:hover { background: var(--action-hover); border-color: var(--action-hover); }
       .test-connection-button:focus-visible {
         outline: 2px solid var(--focus-ring);
@@ -345,6 +362,10 @@
               <div class="connection-field">
                 <span class="connection-field-label" id="connection-test-label">연결 테스트</span>
                 <button class="test-connection-button" id="test-connection" type="button" aria-describedby="connection-test-label">테스트 메시지 전송</button>
+                <div class="connection-result" id="connection-test-result" role="status" aria-live="polite" aria-atomic="true" hidden>
+                  <strong id="connection-test-title"></strong>
+                  <p id="connection-test-message"></p>
+                </div>
               </div>
             </div>
           </form>
@@ -368,7 +389,7 @@
         imageKey.hidden = isTextModel;
         imageKey.disabled = isTextModel;
         document.getElementById('connection-key-label').htmlFor = isTextModel ? 'connection-vertex-key' : 'connection-api-key';
-        textModelFields.querySelectorAll('input, button').forEach((control) => {
+        textModelFields.querySelectorAll('input, select, button').forEach((control) => {
           control.disabled = !isTextModel;
         });
       }
@@ -381,10 +402,93 @@
         connectionEditor.hidden = false;
         modelType.focus();
       });
-      // 입력 화면만 구현한 단계이므로 키를 저장하거나 전송하지 않습니다.
+      const testButton = document.getElementById('test-connection');
+      const resultBox = document.getElementById('connection-test-result');
+      const resultTitle = document.getElementById('connection-test-title');
+      const resultMessage = document.getElementById('connection-test-message');
+      let pendingTest = null;
+      let testVersion = 0;
+      function resetConnectionTest() {
+        testVersion++;
+        pendingTest?.abort();
+        pendingTest = null;
+        testButton.disabled = modelType.value !== 'text';
+        testButton.textContent = '테스트 메시지 전송';
+        testButton.setAttribute('aria-busy', 'false');
+        resultBox.hidden = true;
+        resultTitle.textContent = '';
+        resultMessage.textContent = '';
+      }
+      function showConnectionResult(state, title, message) {
+        resultBox.dataset.state = state;
+        resultTitle.textContent = title;
+        resultMessage.textContent = message;
+        resultBox.hidden = false;
+        requestAnimationFrame(() => { if (!resultBox.hidden) resultBox.scrollIntoView({ block: 'nearest' }); });
+      }
+      connectionForm.addEventListener('input', resetConnectionTest);
+      connectionForm.addEventListener('change', resetConnectionTest);
+      testButton.addEventListener('click', async () => {
+        if (pendingTest || modelType.value !== 'text') return;
+        resetConnectionTest();
+        const version = testVersion;
+        const credentials = document.getElementById('connection-vertex-key').value.trim();
+        const model = document.getElementById('connection-model').value.trim();
+        const region = document.getElementById('connection-region').value;
+        try {
+          if (!credentials) throw new Error('API KEY에 Vertex AI 서비스 계정 JSON 키 전체를 입력해 주세요.');
+          let key;
+          try { key = JSON.parse(credentials); }
+          catch { throw new Error('API KEY의 JSON 형식이 올바르지 않습니다. 키 전체를 복사했는지 확인해 주세요.'); }
+          if (!key || key.type !== 'service_account' || !key.project_id || !key.client_email || !key.private_key) {
+            throw new Error('서비스 계정 JSON 키의 type, project_id, client_email, private_key를 확인해 주세요.');
+          }
+          if (!model) throw new Error('호출할 모델 ID를 입력해 주세요.');
+          if (location.protocol !== 'http:' || !['127.0.0.1', 'localhost'].includes(location.hostname)) {
+            throw new Error('연결 테스트는 PC의 로컬 서버에서 실행해 주세요. 저장소 폴더에서 npm start를 실행한 뒤 표시되는 로컬 주소로 접속하면 됩니다.');
+          }
+          const controller = new AbortController();
+          pendingTest = controller;
+          testButton.disabled = true;
+          testButton.textContent = '테스트 중…';
+          testButton.setAttribute('aria-busy', 'true');
+          showConnectionResult('pending', '연결 테스트 중', '모델에 hello를 보내고 응답을 기다리고 있어요.');
+          let response;
+          try {
+            response = await fetch('/api/connections/test', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              cache: 'no-store',
+              signal: AbortSignal.any([controller.signal, AbortSignal.timeout(65000)]),
+              body: JSON.stringify({ credentials, model, region }),
+            });
+          } catch (error) {
+            if (controller.signal.aborted) return;
+            throw new Error(error.name === 'TimeoutError' ? '연결 시간이 초과되었습니다. 잠시 후 다시 시도해 주세요.' : '로컬 서버에 연결하지 못했습니다. 게임 서버가 실행 중인지 확인해 주세요.');
+          }
+          let data;
+          try { data = await response.json(); }
+          catch { throw new Error('연결 테스트 서버를 찾지 못했습니다. 화면 미리보기 서버 대신 npm start로 게임 서버를 실행해 주세요.'); }
+          if (version !== testVersion) return;
+          if (!response.ok || !data.ok) throw new Error(data.error?.message || '연결 테스트에 실패했습니다.');
+          if (typeof data.text !== 'string' || !data.text.trim()) throw new Error('모델이 텍스트 응답을 반환하지 않았습니다.');
+          showConnectionResult('success', '연결 성공', data.text);
+        } catch (error) {
+          if (version === testVersion) showConnectionResult('error', '연결 실패', error.message || '연결 테스트에 실패했습니다.');
+        } finally {
+          if (version === testVersion) {
+            pendingTest = null;
+            testButton.disabled = modelType.value !== 'text';
+            testButton.textContent = '테스트 메시지 전송';
+            testButton.setAttribute('aria-busy', 'false');
+          }
+        }
+      });
+      // 키는 이 입력 화면의 메모리에서만 다루며 로컬 서버를 통해 Google 인증에 사용합니다.
       connectionForm.addEventListener('submit', (event) => event.preventDefault());
       function returnToConnectionList() {
         if (connectionEditor.hidden) return;
+        resetConnectionTest();
         connectionForm.reset();
         updateModelFields();
         apiKey.value = '';
