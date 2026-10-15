@@ -242,7 +242,7 @@
         margin: 24px auto 0;
         text-align: center;
       }
-      .text-model-fields { display: grid; gap: 30px; min-width: 0; }
+      .text-model-fields, .image-model-fields { display: grid; gap: 30px; min-width: 0; }
       .test-connection-button {
         width: 100%;
         min-height: 48px;
@@ -404,6 +404,33 @@
                 </div>
               </div>
             </div>
+            <div class="image-model-fields" id="image-model-fields" hidden>
+              <div class="connection-field">
+                <label for="connection-image-name">이름</label>
+                <input class="connection-input" type="text" id="connection-image-name" autocomplete="off" maxlength="80" disabled />
+              </div>
+              <div class="connection-field">
+                <label for="connection-image-model">모델</label>
+                <select class="connection-input" id="connection-image-model" name="image-model" disabled>
+                  <optgroup label="NovelAI Diffusion V5">
+                    <option value="v5-full" selected>NovelAI Diffusion V5 Full</option>
+                    <option value="v5-curated">NovelAI Diffusion V5 Curated</option>
+                  </optgroup>
+                  <optgroup label="NovelAI Diffusion V4.5">
+                    <option value="v4-5-full">NovelAI Diffusion V4.5 Full</option>
+                    <option value="v4-5-curated">NovelAI Diffusion V4.5 Curated</option>
+                  </optgroup>
+                  <optgroup label="NovelAI Diffusion V4">
+                    <option value="v4-full">NovelAI Diffusion V4 Full</option>
+                    <option value="v4-curated">NovelAI Diffusion V4 Curated</option>
+                  </optgroup>
+                  <optgroup label="NovelAI Diffusion V3">
+                    <option value="anime-v3">NovelAI Diffusion Anime V3</option>
+                    <option value="furry-v3">NovelAI Diffusion Furry V3</option>
+                  </optgroup>
+                </select>
+              </div>
+            </div>
           </form>
           </div>
         </div>
@@ -428,6 +455,9 @@
       function updateModelFields() {
         const isTextModel = modelType.value === 'text';
         textModelFields.hidden = !isTextModel;
+        const imageModelFields = document.getElementById('image-model-fields');
+        imageModelFields.hidden = isTextModel;
+        imageModelFields.querySelectorAll('input, select').forEach(control => { control.disabled = isTextModel; });
         editorFooter.hidden = connectionEditor.hidden || !isTextModel;
         const vertexKey = document.getElementById('connection-vertex-key');
         const imageKey = document.getElementById('connection-api-key');
