@@ -175,6 +175,34 @@
         outline: 2px solid var(--focus-ring);
         outline-offset: 4px;
       }
+      [hidden] { display: none !important; }
+      .connection-form {
+        display: grid;
+        gap: 30px;
+        width: min(100%, 360px);
+        margin: 12px auto 0;
+        text-align: center;
+      }
+      .connection-field { display: grid; gap: 12px; min-width: 0; }
+      .connection-field label { font-size: 14px; font-weight: 600; }
+      .connection-input {
+        width: 100%;
+        min-width: 0;
+        height: 48px;
+        padding: 0 16px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--surface-sidebar);
+        color: var(--text-primary);
+        font: inherit;
+        font-size: 14px;
+        text-align: center;
+      }
+      select.connection-input { cursor: pointer; text-align-last: center; }
+      .connection-input:focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 3px;
+      }
       .ai-panel { margin-top: 28px; }
       .ai-panel[hidden] { display: none; }
 
@@ -219,6 +247,7 @@
           <p>스토리를 만드는 AI와 이미지를 그리는 AI를 연결하세요.</p>
         </header>
         <div class="content-body">
+          <div id="connection-list-view">
           <div class="ai-toolbar">
           <div class="ai-tabs" role="tablist" aria-label="AI 종류">
             <button class="ai-tab" type="button" role="tab" id="text-ai-tab" aria-selected="true" aria-controls="text-ai-panel">텍스트 생성 AI</button>
@@ -229,10 +258,44 @@
           <!-- 각 모델의 연결 설정은 해당 패널 안에 추가합니다. -->
           <section class="ai-panel" role="tabpanel" id="text-ai-panel" aria-labelledby="text-ai-tab" tabindex="0"></section>
           <section class="ai-panel" role="tabpanel" id="image-ai-panel" aria-labelledby="image-ai-tab" tabindex="0" hidden></section>
+          </div>
+          <form class="connection-form" id="connection-form" aria-label="AI 연결 추가" autocomplete="off" hidden>
+            <div class="connection-field">
+              <label for="connection-model-type">연결할 모델</label>
+              <select class="connection-input" id="connection-model-type" name="model-type">
+                <option value="text">텍스트 모델</option>
+                <option value="image">이미지 생성 모델</option>
+              </select>
+            </div>
+            <div class="connection-field">
+              <label for="connection-api-key">API KEY</label>
+              <input class="connection-input" type="password" id="connection-api-key" autocomplete="off" spellcheck="false" autocapitalize="none" aria-label="API KEY" />
+            </div>
+          </form>
         </div>
       </main>
     </div>
     <script>
+      const connectionListView = document.getElementById('connection-list-view');
+      const connectionForm = document.getElementById('connection-form');
+      const modelType = document.getElementById('connection-model-type');
+      const apiKey = document.getElementById('connection-api-key');
+      document.querySelector('.add-ai-button').addEventListener('click', () => {
+        modelType.value = document.getElementById('image-ai-tab').getAttribute('aria-selected') === 'true' ? 'image' : 'text';
+        connectionListView.hidden = true;
+        connectionForm.hidden = false;
+        modelType.focus();
+      });
+      // 입력 화면만 구현한 단계이므로 키를 저장하거나 전송하지 않습니다.
+      connectionForm.addEventListener('submit', (event) => event.preventDefault());
+      document.querySelector('.nav-item').addEventListener('click', () => {
+        if (connectionForm.hidden) return;
+        connectionForm.reset();
+        apiKey.value = '';
+        connectionForm.hidden = true;
+        connectionListView.hidden = false;
+        document.querySelector('.add-ai-button').focus();
+      });
       const tabs = Array.from(document.querySelectorAll('.ai-tab'));
       function selectTab(selectedTab) {
         tabs.forEach((tab) => {
