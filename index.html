@@ -732,8 +732,8 @@
       #character-profile-background { display: grid; gap: 14px; }
       .character-equipment { display: grid; gap: 20px; padding: 2px 12px 12px 0; }
       .character-equipment h3 { margin: 0; font-size: 18px; font-weight: 600; }
-      .character-equipment-overview { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; gap: 20px; }
-      .character-equipment-slots { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+      .character-equipment-overview { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: stretch; min-height: 340px; gap: 20px; }
+      .character-equipment-slots { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 10px; }
       .character-equipment-slot { display: grid; align-content: center; gap: 10px; min-height: 94px; min-width: 0; padding: 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-sidebar); color: var(--text-primary); font: inherit; text-align: left; cursor: pointer; }
       .character-equipment-slot[aria-pressed="true"] { border-color: var(--accent); background: var(--surface-active); }
       .character-equipment-slot strong { color: var(--accent); font-size: 13px; }
@@ -744,7 +744,8 @@
       .character-equipment-remove { padding: 6px 0; border: 0; background: transparent; color: var(--text-secondary); font: inherit; font-size: 12px; cursor: pointer; }
       .character-equipment-remove:hover { color: var(--accent); }
       .character-equipment-remove:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
-      .character-equipment-list { display: grid; gap: 10px; }
+      .character-equipment-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 144px), 1fr)); gap: 14px; align-content: start; }
+      .character-equipment-list > .character-awakening-note { grid-column: 1 / -1; }
       .character-equipment-item { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-sidebar); }
       .character-equipment-item[data-equipped="true"] { border-color: var(--accent); }
       .character-equipment-item strong { font-size: 14px; overflow-wrap: anywhere; }
@@ -771,13 +772,19 @@
       .equipment-comparison-diff { margin: 0; color: var(--text-secondary); font-size: 12px; line-height: 1.8; white-space: pre-line; }
       .equipment-comparison > .character-growth-button { margin-top: auto; flex-shrink: 0; }
       .equipment-comparison > button:disabled { background: var(--surface-active); border-color: var(--border); color: var(--text-secondary); cursor: default; }
-      .character-equipment-choice { width: 100%; display: block; color: var(--text-primary); font: inherit; text-align: left; cursor: pointer; }
-      .character-equipment-choice > span { display: block; margin-top: 8px; color: var(--text-secondary); font-size: 13px; line-height: 1.7; }
+      .character-equipment-choice { width: 100%; aspect-ratio: 1; min-width: 0; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 14px; color: var(--text-primary); font: inherit; text-align: center; cursor: pointer; }
+      .character-equipment-choice strong { display: block; width: 100%; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
+      .character-equipment-icon { display: grid; place-items: center; flex: 1; min-height: 0; color: var(--accent); }
+      .character-equipment-icon svg { width: 52px; height: 52px; max-width: 100%; max-height: 100%; }
       .character-equipment-choice[aria-pressed="true"] { border-color: var(--accent); background: var(--surface-active); }
       .character-equipment-choice:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -3px; }
       .equipment-hover { position: fixed; z-index: 110; width: 260px; max-width: calc(100vw - 24px); max-height: calc(100dvh - 24px); overflow-y: auto; padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-sidebar); color: var(--text-primary); box-shadow: var(--frame-shadow); pointer-events: none; font-size: 13px; line-height: 1.8; white-space: pre-line; }
       .equipment-context-menu { z-index: 120; }
-      .character-equipment-overview .character-equipment-stat-grid { grid-template-columns: minmax(0, 1fr); }
+      .character-equipment-overview > .character-equipment-box { grid-template-rows: auto minmax(0, 1fr); }
+      .character-equipment-overview .character-equipment-box h4 { font-size: 17px; }
+      .character-equipment-overview .character-equipment-stat-grid { grid-template-columns: minmax(0, 1fr); grid-template-rows: repeat(8, minmax(24px, 1fr)); gap: 8px; align-items: center; }
+      .character-equipment-overview .character-equipment-stat-grid dt { font-size: 14px; }
+      .character-equipment-overview .character-equipment-stat-grid dd { font-size: 16px; font-weight: 600; }
       @media (max-width: 640px) { .equipment-picker-screen { padding: 20px 16px; } .equipment-picker-layout { gap: 12px; } .character-equipment-overview { gap: 12px; } }
       @container (max-width: 650px) { .character-equipment-slots { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
       .character-profile-background p { margin: 0; color: var(--text-primary); font-size: 14px; line-height: 1.9; white-space: pre-wrap; overflow-wrap: anywhere; }
@@ -3082,6 +3089,20 @@
         });
         document.getElementById('character-equipment-status').textContent = '빈 슬롯을 눌러 장착하세요. 착용 장비는 마우스를 올려 효과 확인, 우클릭으로 교체·해제할 수 있습니다. 현재 수치는 미리보기용입니다.';
       }
+      function createEquipmentIcon(type) {
+        const paths = {
+          weapon: 'M14 3h7v7L10 21l-7-7L14 3Zm-8 8 7 7M3 21l4-4',
+          armor: 'm8 3-5 4 3 5 2-2v11h8V10l2 2 3-5-5-4c0 4-8 4-8 0Z',
+          gloves: 'M7 12V7a1.5 1.5 0 0 1 3 0v4-7a1.5 1.5 0 0 1 3 0v7-6a1.5 1.5 0 0 1 3 0v7-4a1.5 1.5 0 0 1 3 0v8c0 4-3 6-7 6H9l-6-7a1.5 1.5 0 0 1 2-2l2 2Z',
+          shoes: 'M8 3h8v10l5 3v5H3v-6l5-2V3Zm0 5h8M4 17h16',
+          ring: 'm12 2 4 4-4 4-4-4 4-4ZM8 10a7 7 0 1 0 8 0',
+          necklace: 'M4 3c0 8 3 13 8 15 5-2 8-7 8-15M12 15l4 4-4 4-4-4 4-4Z',
+        };
+        const icon = document.createElement('span'); icon.className = 'character-equipment-icon'; icon.setAttribute('aria-hidden', 'true');
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('fill', 'none'); svg.setAttribute('stroke', 'currentColor'); svg.setAttribute('stroke-width', '1.3'); svg.setAttribute('stroke-linecap', 'round'); svg.setAttribute('stroke-linejoin', 'round');
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path'); path.setAttribute('d', paths[type] || paths.weapon); svg.append(path); icon.append(svg); return icon;
+      }
       function renderCharacterEquipmentPicker(card) {
         const state = getCharacterEquipment(card);
         const type = characterEquipmentTypes.find(type => type.id === state.selectedType);
@@ -3092,14 +3113,9 @@
           const equipped = state.equipped[item.type] === item.id;
           const row = document.createElement('button'); row.type = 'button'; row.className = 'character-equipment-item character-equipment-choice'; row.dataset.equipmentId = item.id; row.dataset.equipped = String(equipped);
           row.setAttribute('aria-pressed', String(state.selectedItemId === item.id));
+          row.setAttribute('aria-label', item.name + (equipped ? ' · 장착 중' : ''));
           const name = document.createElement('strong'); name.textContent = item.name;
-          if (equipped) name.textContent += ' · 장착 중';
-          const detail = document.createElement('span'); detail.textContent = describeEquipmentStats(item.stats);
-          const setInfo = document.createElement('span'); const set = characterEquipmentSets[item.setId];
-          const counts = getCharacterEquipmentSetCounts(state);
-          setInfo.textContent = set.name + ' 세트 · 현재 ' + (counts[item.setId] || 0) + '개 착용';
-          const effects = document.createElement('span'); effects.textContent = set.bonuses.map(bonus => bonus.pieces + '세트: ' + describeEquipmentStats(bonus.stats)).join(' / ');
-          row.append(name, detail, setInfo, effects); list.append(row);
+          row.append(createEquipmentIcon(item.type), name); list.append(row);
         });
         if (!items.length) { const empty = document.createElement('p'); empty.className = 'character-awakening-note'; empty.textContent = '보유한 ' + type.name + ' 장비가 없습니다.'; list.append(empty); }
         renderEquipmentComparison(card);
