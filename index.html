@@ -734,10 +734,10 @@
       .character-equipment h3 { margin: 0; font-size: 18px; font-weight: 600; }
       .character-equipment-overview { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: stretch; min-height: 340px; gap: 20px; }
       .character-equipment-slots { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 10px; }
-      .character-equipment-slot { display: grid; align-content: center; gap: 10px; min-height: 94px; min-width: 0; padding: 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-sidebar); color: var(--text-primary); font: inherit; text-align: left; cursor: pointer; }
+      .character-equipment-slot { position: relative; min-height: 94px; min-width: 0; padding: 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-sidebar); color: var(--text-primary); font: inherit; text-align: left; cursor: pointer; }
       .character-equipment-slot[aria-pressed="true"] { border-color: var(--accent); background: var(--surface-active); }
-      .character-equipment-slot strong { color: var(--accent); font-size: 13px; }
-      .character-equipment-slot span { color: var(--text-secondary); font-size: 12px; overflow-wrap: anywhere; }
+      .character-equipment-slot strong { position: absolute; top: 12px; left: 14px; color: var(--accent); font-size: 13px; }
+      .character-equipment-slot span { position: absolute; inset: 0; display: grid; place-items: center; padding: 26px 10px; color: var(--text-secondary); font-size: 12px; text-align: center; overflow-wrap: anywhere; }
       .character-equipment-slot:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
       .character-equipment-list-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
       .character-equipment-list-heading h4 { margin: 0; font-size: 16px; }
@@ -3081,12 +3081,14 @@
         const counts = getCharacterEquipmentSetCounts(state);
         Object.entries(characterEquipmentSets).forEach(([id, set]) => {
           const count = counts[id] || 0;
+          if (count === 0) return;
           const heading = document.createElement('p'); heading.textContent = set.name + ' 세트 · ' + count + '개 착용'; sets.append(heading);
           set.bonuses.forEach(bonus => {
             const effect = document.createElement('p'); effect.className = 'character-equipment-set'; effect.dataset.active = String(count >= bonus.pieces);
             effect.textContent = bonus.pieces + '세트: ' + describeEquipmentStats(bonus.stats) + (count >= bonus.pieces ? ' · 활성' : ' · 미활성'); sets.append(effect);
           });
         });
+        if (!sets.children.length) { const empty = document.createElement('p'); empty.textContent = '착용한 세트 장비가 없습니다.'; sets.append(empty); }
         document.getElementById('character-equipment-status').textContent = '빈 슬롯을 눌러 장착하세요. 착용 장비는 마우스를 올려 효과 확인, 우클릭으로 교체·해제할 수 있습니다. 현재 수치는 미리보기용입니다.';
       }
       function createEquipmentIcon(type) {
