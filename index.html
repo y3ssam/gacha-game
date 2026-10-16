@@ -627,14 +627,13 @@
       #party-count { color: var(--text-secondary); font-size: 12px; line-height: 20px; }
       .party-slots { min-height: 0; flex: 1; display: flex; justify-content: flex-start; align-items: start; gap: var(--party-slot-gap); container-type: size; }
       .party-slot { position: relative; flex: none; width: min(calc((100cqw - 2 * var(--party-slot-gap)) / 3), calc(100cqh * 2 / 3)); aspect-ratio: 2 / 3; border: 1px solid var(--border); border-top: 3px solid var(--rarity-color, var(--border)); border-radius: 10px; background: var(--surface-main); overflow: hidden; }
-      .party-slot[data-selected="true"] { outline: 2px solid var(--accent); outline-offset: -2px; }
       .party-slot[data-drop-target="true"] { outline: 2px solid var(--accent); outline-offset: -2px; background: var(--surface-active); }
       .party-slot[data-drop-target="true"]::after { content: ''; position: absolute; inset: 0; background: color-mix(in srgb, var(--accent) 12%, transparent); pointer-events: none; }
       .party-member[draggable="true"], .party-slot-select[draggable="true"] { cursor: grab; user-select: none; }
       .party-member[data-dragging="true"], .party-slot-select[data-dragging="true"] { opacity: .45; cursor: grabbing; }
       .party-member img, .party-slot img { pointer-events: none; }
-      .party-slot-select { position: absolute; inset: 0; width: 100%; padding: 0; border: 0; background: transparent; color: var(--text-secondary); font: inherit; cursor: pointer; display: grid; place-items: center; }
-      .party-slot-select:focus-visible, .party-remove:focus-visible, .party-member:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -4px; }
+      .party-slot-select { position: absolute; inset: 0; width: 100%; padding: 0; border: 0; background: transparent; color: var(--text-secondary); font: inherit; display: grid; place-items: center; }
+      .party-remove:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -4px; }
       .party-empty { display: grid; gap: 9px; justify-items: center; font-size: 12px; }
       .party-empty b { font-size: 25px; font-weight: 300; color: var(--accent); }
       .party-slot img { width: 100%; height: 100%; object-fit: cover; }
@@ -676,7 +675,7 @@
       .party-formation-form .party-formation-icon { width: 24px; height: 20px; padding: 0; margin: 0; }
       .party-formation-form button:disabled { opacity: .35; cursor: default; }
       .party-formations button:focus-visible, .party-formation-form input:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -2px; }
-      .party-slot-select:disabled, .party-member:disabled { cursor: default; opacity: .5; }
+      .party-slot-select[aria-disabled="true"], .party-member[aria-disabled="true"] { cursor: default; opacity: .5; }
       #game-preview[data-view="party"] .party-layout { animation: character-toolbar-enter 450ms ease-out both; }
       @media (max-width: 760px) { .party-screen { padding: 18px 16px; gap: 12px; } .party-layout-frame { --party-column-gap: 14px; --party-slot-gap: 8px; } .party-roster-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; } .party-slot-caption { padding-inline: 6px; } .party-slot-caption strong { font-size: 12px; } .party-member-caption { padding-inline: 6px; } }
       @media (prefers-reduced-motion: reduce) { #game-preview[data-view="party"] .party-layout { animation: none; } #game-preview[data-view="party"] .game-bottom-menu { transition: none; } }
@@ -2956,7 +2955,6 @@
       let nextFormationNumber = 2;
       let editingFormation = null;
       let previewParty = previewFormations[0].members;
-      let selectedPartySlot = 0;
       function placePartyMember(party, index, card) {
         if (!Number.isInteger(index) || index < 0 || index >= 6 || !card) return party.slice();
         const next = party.map(member => member === card ? null : member);
@@ -3003,9 +3001,8 @@
           if (!canDrop()) return;
           event.preventDefault(); event.stopPropagation();
           const next = movePartyMember(previewParty, index, partyDragState.card);
-          previewParty.splice(0, 6, ...next); selectedPartySlot = index;
+          previewParty.splice(0, 6, ...next);
           clearPartyDrag(); renderParty();
-          document.querySelector('.party-slot-select[data-slot="' + index + '"]').focus({ preventScroll: true });
         });
       }
       document.addEventListener('dragend', clearPartyDrag);
@@ -3014,7 +3011,6 @@
         if (!Number.isInteger(index) || !previewFormations[index]) return;
         selectedFormation = index;
         previewParty = previewFormations[index].members;
-        selectedPartySlot = Math.max(0, previewParty.findIndex(member => !member));
         editingFormation = null;
       }
       function removePartyFormation(index) {
@@ -3022,7 +3018,7 @@
         const active = previewFormations[selectedFormation];
         previewFormations.splice(index, 1);
         if (!previewFormations.length) {
-          selectedFormation = -1; previewParty = Array(6).fill(null); selectedPartySlot = 0; editingFormation = null;
+          selectedFormation = -1; previewParty = Array(6).fill(null); editingFormation = null;
         } else {
           const activeIndex = previewFormations.indexOf(active);
           selectPartyFormation(activeIndex >= 0 ? activeIndex : Math.min(index, previewFormations.length - 1));
@@ -3150,18 +3146,16 @@
         front.replaceChildren(); back.replaceChildren();
         previewParty.forEach((card, index) => {
           const position = (index < 3 ? '전열 ' : '후열 ') + (index % 3 + 1);
-          const slot = document.createElement('div'); slot.className = 'party-slot'; slot.dataset.selected = String(index === selectedPartySlot);
+          const slot = document.createElement('div'); slot.className = 'party-slot';
           bindPartyDropSlot(slot, index);
-          const button = document.createElement('button'); button.type = 'button'; button.className = 'party-slot-select'; button.dataset.slot = index;
-          button.disabled = previewFormations.length === 0;
-          button.setAttribute('aria-pressed', String(index === selectedPartySlot));
-          button.addEventListener('click', () => { selectedPartySlot = index; renderParty(); document.querySelector('.party-slot-select[data-slot="' + index + '"]').focus({ preventScroll: true }); });
+          const button = document.createElement('div'); button.className = 'party-slot-select'; button.dataset.slot = index;
+          button.setAttribute('role', 'img'); button.setAttribute('aria-disabled', String(previewFormations.length === 0));
           if (card) {
             bindPartyDragSource(button, card);
             const name = card.querySelector('.character-card-name').textContent;
             const info = getCharacterBaseStats(card);
             slot.style.setProperty('--rarity-color', colors[card.dataset.rarity] || colors['3']);
-            button.setAttribute('aria-label', position + ' · ' + name + ' · 배치 위치 선택');
+            button.setAttribute('aria-label', position + ' · ' + name + ' · 드래그하여 이동');
             const image = card.querySelector('img');
             if (image) { const art = document.createElement('img'); art.src = image.getAttribute('src'); art.alt = ''; button.append(art); }
             const caption = document.createElement('span'); caption.className = 'party-slot-caption';
@@ -3169,10 +3163,10 @@
             const meta = document.createElement('small'); meta.textContent = info.role + ' · ' + info.element + ' · ' + card.querySelector('.character-card-level').textContent;
             caption.append(title, meta); button.append(caption); slot.append(button);
             const remove = document.createElement('button'); remove.type = 'button'; remove.className = 'party-remove'; remove.textContent = '×'; remove.setAttribute('aria-label', position + ' ' + name + ' 편성 해제');
-            remove.addEventListener('click', () => { previewParty[index] = null; selectedPartySlot = index; renderParty(); document.querySelector('.party-slot-select[data-slot="' + index + '"]').focus({ preventScroll: true }); });
+            remove.addEventListener('click', () => { previewParty[index] = null; renderParty(); });
             slot.append(remove);
           } else {
-            button.setAttribute('aria-label', position + ' · 빈 슬롯 선택');
+            button.setAttribute('aria-label', position + ' · 빈 슬롯 · 캐릭터를 드래그하여 배치');
             const empty = document.createElement('span'); empty.className = 'party-empty';
             const plus = document.createElement('b'); plus.textContent = '+';
             const label = document.createElement('span'); label.textContent = '캐릭터 배치';
@@ -3183,9 +3177,9 @@
         const roster = document.getElementById('party-roster-list');
         const scrollTop = roster.scrollTop; roster.replaceChildren();
         cards.forEach((card, index) => {
-          const button = document.createElement('button'); button.type = 'button'; button.className = 'party-member'; button.dataset.member = index;
-          button.disabled = previewFormations.length === 0;
-          if (!button.disabled) bindPartyDragSource(button, card);
+          const button = document.createElement('div'); button.className = 'party-member'; button.dataset.member = index;
+          button.setAttribute('role', 'img'); button.setAttribute('aria-disabled', String(previewFormations.length === 0));
+          if (previewFormations.length) bindPartyDragSource(button, card);
           button.style.setProperty('--rarity-color', colors[card.dataset.rarity] || colors['3']);
           const title = document.createElement('strong'); title.textContent = card.querySelector('.character-card-name').textContent;
           const info = getCharacterBaseStats(card);
@@ -3200,14 +3194,7 @@
           const level = document.createElement('span'); level.className = 'party-member-level'; level.textContent = card.querySelector('.character-card-level').textContent;
           caption.append(title, level, meta); button.append(caption);
           if (assigned >= 0) button.append(status);
-          button.setAttribute('aria-label', title.textContent + ' · ' + card.dataset.rarity + '성 · ' + level.textContent + ' · ' + meta.textContent + (assigned >= 0 ? ' · ' + status.textContent : '') + ' · ' + (selectedPartySlot < 3 ? '전열 ' : '후열 ') + (selectedPartySlot % 3 + 1) + '에 배치');
-          button.addEventListener('click', () => {
-            const next = placePartyMember(previewParty, selectedPartySlot, card);
-            previewParty.splice(0, 6, ...next);
-            const emptyIndex = previewParty.findIndex(member => !member);
-            if (emptyIndex >= 0) selectedPartySlot = emptyIndex;
-            renderParty(); document.querySelector('.party-member[data-member="' + index + '"]').focus({ preventScroll: true });
-          });
+          button.setAttribute('aria-label', title.textContent + ' · ' + card.dataset.rarity + '성 · ' + level.textContent + ' · ' + meta.textContent + (assigned >= 0 ? ' · ' + status.textContent : '') + ' · 드래그하여 배치');
           roster.append(button);
         });
         roster.scrollTop = scrollTop;
