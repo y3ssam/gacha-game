@@ -712,6 +712,7 @@
       .skill-upgrade-material { display: flex; align-items: center; gap: 12px; padding: 14px; border: 1px solid var(--border); border-radius: 10px; cursor: pointer; font-size: 13px; }
       .skill-upgrade-material:has(input:checked) { border-color: var(--accent); background: var(--surface-active); }
       .skill-upgrade-material input { accent-color: var(--accent); }
+      .skill-upgrade-material img { width: 44px; height: 44px; flex-shrink: 0; object-fit: contain; }
       .skill-upgrade-material span:last-child { margin-left: auto; color: var(--text-secondary); }
       .skill-upgrade-result { margin: 0; color: var(--accent); font-size: 14px; line-height: 1.8; white-space: pre-line; }
       .skill-upgrade-result[data-state="error"] { color: #ff9fb2; }
@@ -2858,6 +2859,11 @@
       const previewCharacterEquipment = new WeakMap();
       const previewGameWallet = { gold: 0 };
       const previewSkillMaterials = { common: 0, '불': 0, '물': 0, '바람': 0, '땅': 0, '전기': 0, '얼음': 0, '풀': 0, '빛': 0, '어둠': 0 };
+      const materialElements = {
+        '불': { id: 'fire', name: '화염' }, '물': { id: 'water', name: '물결' }, '바람': { id: 'wind', name: '바람' },
+        '땅': { id: 'earth', name: '대지' }, '전기': { id: 'lightning', name: '전격' }, '얼음': { id: 'ice', name: '빙결' },
+        '풀': { id: 'nature', name: '신록' }, '빛': { id: 'light', name: '빛의' }, '어둠': { id: 'dark', name: '어둠의' }, common: { id: 'common', name: '공용' },
+      };
       const skillUpgradeRules = { maxLevel: 10, goldCost: 300000, materialCount: 1 };
       let skillUpgradeTarget = null;
       let equipmentEnhancementTarget = null;
@@ -3106,8 +3112,10 @@
         [element, 'common'].forEach(key => {
           const label = document.createElement('label'); label.className = 'skill-upgrade-material';
           const input = document.createElement('input'); input.type = 'radio'; input.name = 'skill-upgrade-material'; input.value = key; input.checked = materialKey === key;
-          const name = document.createElement('span'); name.textContent = key === 'common' ? '공용 스킬 강화 재료' : key + ' 속성 스킬 강화 재료';
-          const count = document.createElement('span'); count.textContent = '보유 ' + previewSkillMaterials[key] + '개'; label.append(input, name, count); options.append(label);
+          const material = materialElements[key];
+          const image = document.createElement('img'); image.src = 'assets/materials/inscription-' + material.id + '.png'; image.alt = ''; image.width = 44; image.height = 44;
+          const name = document.createElement('span'); name.textContent = material.name + ' 각인석';
+          const count = document.createElement('span'); count.textContent = '보유 ' + previewSkillMaterials[key] + '개'; label.append(input, image, name, count); options.append(label);
         });
         const unavailable = !eligible.length || previewGameWallet.gold < skillUpgradeRules.goldCost || previewSkillMaterials[materialKey] < skillUpgradeRules.materialCount;
         const confirm = document.getElementById('skill-upgrade-confirm'); confirm.disabled = unavailable; confirm.textContent = !eligible.length ? '최대 레벨' : '강화';

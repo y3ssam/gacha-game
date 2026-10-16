@@ -1,0 +1,147 @@
+{
+  "format": "PNG",
+  "width": 1254,
+  "height": 1254,
+  "aspectRatio": "1:1",
+  "transparent": true,
+  "assets": [
+    {
+      "id": "growth-shard",
+      "name": "성장의 조각",
+      "category": "experience",
+      "file": "growth-shard.png"
+    },
+    {
+      "id": "growth-crystal",
+      "name": "성장의 결정",
+      "category": "experience",
+      "file": "growth-crystal.png"
+    },
+    {
+      "id": "growth-essence",
+      "name": "성장의 정수",
+      "category": "experience",
+      "file": "growth-essence.png"
+    },
+    {
+      "id": "inscription-fire",
+      "name": "화염 각인석",
+      "category": "skill",
+      "file": "inscription-fire.png"
+    },
+    {
+      "id": "inscription-water",
+      "name": "물결 각인석",
+      "category": "skill",
+      "file": "inscription-water.png"
+    },
+    {
+      "id": "inscription-wind",
+      "name": "바람 각인석",
+      "category": "skill",
+      "file": "inscription-wind.png"
+    },
+    {
+      "id": "inscription-earth",
+      "name": "대지 각인석",
+      "category": "skill",
+      "file": "inscription-earth.png"
+    },
+    {
+      "id": "inscription-lightning",
+      "name": "전격 각인석",
+      "category": "skill",
+      "file": "inscription-lightning.png"
+    },
+    {
+      "id": "inscription-ice",
+      "name": "빙결 각인석",
+      "category": "skill",
+      "file": "inscription-ice.png"
+    },
+    {
+      "id": "inscription-nature",
+      "name": "신록 각인석",
+      "category": "skill",
+      "file": "inscription-nature.png"
+    },
+    {
+      "id": "inscription-light",
+      "name": "빛의 각인석",
+      "category": "skill",
+      "file": "inscription-light.png"
+    },
+    {
+      "id": "inscription-dark",
+      "name": "어둠의 각인석",
+      "category": "skill",
+      "file": "inscription-dark.png"
+    },
+    {
+      "id": "inscription-common",
+      "name": "공용 각인석",
+      "category": "skill",
+      "file": "inscription-common.png"
+    },
+    {
+      "id": "catalyst-fire",
+      "name": "화염 촉매",
+      "category": "breakthrough",
+      "file": "catalyst-fire.png"
+    },
+    {
+      "id": "catalyst-water",
+      "name": "물결 촉매",
+      "category": "breakthrough",
+      "file": "catalyst-water.png"
+    },
+    {
+      "id": "catalyst-wind",
+      "name": "바람 촉매",
+      "category": "breakthrough",
+      "file": "catalyst-wind.png"
+    },
+    {
+      "id": "catalyst-earth",
+      "name": "대지 촉매",
+      "category": "breakthrough",
+      "file": "catalyst-earth.png"
+    },
+    {
+      "id": "catalyst-lightning",
+      "name": "전격 촉매",
+      "category": "breakthrough",
+      "file": "catalyst-lightning.png"
+    },
+    {
+      "id": "catalyst-ice",
+      "name": "빙결 촉매",
+      "category": "breakthrough",
+      "file": "catalyst-ice.png"
+    },
+    {
+      "id": "catalyst-nature",
+      "name": "신록 촉매",
+      "category": "breakthrough",
+      "file": "catalyst-nature.png"
+    },
+    {
+      "id": "catalyst-light",
+      "name": "빛의 촉매",
+      "category": "breakthrough",
+      "file": "catalyst-light.png"
+    },
+    {
+      "id": "catalyst-dark",
+      "name": "어둠의 촉매",
+      "category": "breakthrough",
+      "file": "catalyst-dark.png"
+    },
+    {
+      "id": "catalyst-common",
+      "name": "공용 촉매",
+      "category": "breakthrough",
+      "file": "catalyst-common.png"
+    }
+  ]
+}

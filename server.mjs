@@ -223,7 +223,22 @@ export function createAppServer({ testConnection = testVertexConnection, store =
         }
         return;
       }
-      // 정적 파일은 화면 한 개만 제공합니다. 키 파일과 서버 소스는 제공하지 않습니다.
+      // 생성한 재료 아이콘과 미리보기만 허용하며 키 파일과 서버 소스는 제공하지 않습니다.
+      const materialAsset = route.match(/^\/assets\/materials\/(?:([a-z0-9-]+\.png|manifest\.json|generation-prompts\.json|index\.html))?$/);
+      if (materialAsset) {
+        if (req.method !== 'GET' && req.method !== 'HEAD') return sendJson(res, 405, { ok: false });
+        const filename = materialAsset[1] || 'index.html';
+        let asset;
+        try { asset = await readFile(path.join(ROOT, 'assets', 'materials', filename)); }
+        catch (error) { if (error.code === 'ENOENT') return sendJson(res, 404, { ok: false }); throw error; }
+        res.writeHead(200, {
+          'Content-Type': filename.endsWith('.png') ? 'image/png' : filename.endsWith('.json') ? 'application/json; charset=utf-8' : 'text/html; charset=utf-8',
+          'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer',
+          'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'self'",
+        });
+        res.end(req.method === 'HEAD' ? undefined : asset);
+        return;
+      }
       if (route === '/' || route === '/index.html') {
         if (req.method !== 'GET' && req.method !== 'HEAD') return sendJson(res, 405, { ok: false });
         const page = await readFile(path.join(ROOT, 'index.html'));
