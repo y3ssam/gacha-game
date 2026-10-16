@@ -619,12 +619,13 @@
       .party-heading { display: flex; align-items: center; justify-content: space-between; }
       .party-heading h2 { margin: 0; font-size: 20px; }
       .party-heading span { color: var(--text-secondary); font-size: 13px; }
-      .party-layout { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 28px; }
+      .party-layout-frame { flex: 1; min-height: 0; container-type: size; --party-column-gap: 28px; --party-slot-gap: 12px; }
+      .party-layout { height: 100%; min-height: 0; display: grid; grid-template-columns: minmax(0, min(calc((100cqw - var(--party-column-gap)) * .6), calc(100cqh - 78px + 2 * var(--party-slot-gap)))) minmax(0, 1fr); gap: var(--party-column-gap); }
       .party-rows { min-height: 0; display: grid; grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 20px; }
       .party-row { min-height: 0; display: flex; flex-direction: column; gap: 9px; }
       .party-row h3 { margin: 0 0 0 3px; height: 20px; flex: none; line-height: 20px; color: var(--text-secondary); font-size: 12px; font-weight: 500; letter-spacing: .12em; }
-      .party-slots { min-height: 0; flex: 1; display: flex; justify-content: space-between; align-items: start; gap: var(--party-slot-gap, 16px); container-type: size; }
-      .party-slot { position: relative; flex: none; width: min(calc((100cqw - 2 * var(--party-slot-gap, 16px)) / 3), calc(100cqh * 2 / 3)); aspect-ratio: 2 / 3; border: 1px solid var(--border); border-top: 3px solid var(--rarity-color, var(--border)); border-radius: 10px; background: var(--surface-main); overflow: hidden; }
+      .party-slots { min-height: 0; flex: 1; display: flex; justify-content: flex-start; align-items: start; gap: var(--party-slot-gap); container-type: size; }
+      .party-slot { position: relative; flex: none; width: min(calc((100cqw - 2 * var(--party-slot-gap)) / 3), calc(100cqh * 2 / 3)); aspect-ratio: 2 / 3; border: 1px solid var(--border); border-top: 3px solid var(--rarity-color, var(--border)); border-radius: 10px; background: var(--surface-main); overflow: hidden; }
       .party-slot[data-selected="true"] { outline: 2px solid var(--accent); outline-offset: 3px; }
       .party-slot-select { position: absolute; inset: 0; width: 100%; padding: 0; border: 0; background: transparent; color: var(--text-secondary); font: inherit; cursor: pointer; display: grid; place-items: center; }
       .party-slot-select:focus-visible, .party-remove:focus-visible, .party-member:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -4px; }
@@ -644,7 +645,7 @@
       .party-member small { display: block; margin-top: 7px; color: var(--text-secondary); font-size: 11px; }
       .party-member em { display: block; margin-top: 10px; color: var(--accent); font-size: 10px; font-style: normal; }
       #game-preview[data-view="party"] .party-layout { animation: character-toolbar-enter 450ms ease-out both; }
-      @media (max-width: 760px) { .party-screen { padding: 18px 16px; gap: 12px; } .party-layout { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 14px; } .party-slots { --party-slot-gap: 8px; } .party-roster-list { grid-template-columns: minmax(0, 1fr); } .party-slot-caption { padding-inline: 6px; } .party-slot-caption strong { font-size: 12px; } }
+      @media (max-width: 760px) { .party-screen { padding: 18px 16px; gap: 12px; } .party-layout-frame { --party-column-gap: 14px; --party-slot-gap: 8px; } .party-roster-list { grid-template-columns: minmax(0, 1fr); } .party-slot-caption { padding-inline: 6px; } .party-slot-caption strong { font-size: 12px; } }
       @media (prefers-reduced-motion: reduce) { #game-preview[data-view="party"] .party-layout { animation: none; } #game-preview[data-view="party"] .game-bottom-menu { transition: none; } }
       .characters-screen { height: 100%; min-height: 0; padding: 24px 28px; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; }
       .characters-toolbar { display: grid; grid-template-columns: minmax(180px, 1fr) auto; align-items: end; gap: 20px; }
@@ -1030,13 +1031,13 @@
           <div class="game-stage" id="game-stage">
             <section class="party-screen" id="party-screen" aria-labelledby="party-title" hidden>
               <div class="party-heading"><h2 id="party-title">편성</h2><span id="party-count" aria-live="polite">0 / 6</span></div>
-              <div class="party-layout">
+              <div class="party-layout-frame"><div class="party-layout">
                 <div class="party-rows">
                   <section class="party-row" aria-labelledby="party-front-title"><h3 id="party-front-title">전열</h3><div class="party-slots" id="party-front"></div></section>
                   <section class="party-row" aria-labelledby="party-back-title"><h3 id="party-back-title">후열</h3><div class="party-slots" id="party-back"></div></section>
                 </div>
                 <aside class="party-roster" aria-labelledby="party-roster-title"><h3 id="party-roster-title">내 캐릭터</h3><div class="party-roster-list" id="party-roster-list"></div></aside>
-              </div>
+              </div></div>
             </section>
             <section class="characters-screen" id="characters-screen" aria-label="캐릭터 목록" hidden>
               <div class="characters-toolbar">
