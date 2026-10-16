@@ -668,6 +668,8 @@
       .character-skill-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
       .character-skill-heading h3 { margin: 0; font-size: 17px; font-weight: 600; }
       .character-skill-cooldown { color: var(--text-secondary); font-size: 12px; }
+      .character-skill-cooldown[data-reduced="true"] { color: var(--accent); }
+      .character-skill-rule { margin: -8px 0 18px; color: var(--text-secondary); font-size: 12px; line-height: 1.7; }
       .character-skill-description { margin: 12px 0 18px; color: var(--text-secondary); font-size: 13px; line-height: 1.7; word-break: keep-all; overflow-wrap: anywhere; }
       .character-skill-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
       .character-skill-level { color: var(--accent); font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; }
@@ -1059,15 +1061,21 @@
                       <p class="character-skill-description">적 하나를 공격하는 기본 스킬입니다.</p>
                       <div class="character-skill-footer"><span class="character-skill-level" aria-live="polite">Lv. 1 / 10</span><button class="character-growth-button" type="button" aria-label="기본 스킬 레벨업">레벨업</button></div>
                     </article>
-                    <article class="character-skill" data-skill="passive">
-                      <div class="character-skill-heading"><h3>패시브 스킬</h3><span class="character-skill-cooldown">자동 효과</span></div>
-                      <p class="character-skill-description">전투 중 조건을 만족하면 자동으로 효과가 적용됩니다.</p>
-                      <div class="character-skill-footer"><span class="character-skill-level" aria-live="polite">Lv. 1 / 10</span><button class="character-growth-button" type="button" aria-label="패시브 스킬 레벨업">레벨업</button></div>
+                    <article class="character-skill" data-skill="active">
+                      <div class="character-skill-heading"><h3>액티브 스킬</h3><span class="character-skill-cooldown" id="character-active-cooldown"></span></div>
+                      <p class="character-skill-description">캐릭터 고유의 능력을 사용합니다. 기본 쿨타임은 스킬의 효과와 밸런스에 따라 2~5턴으로 정해집니다.</p>
+                      <p class="character-skill-rule" id="character-active-cooldown-rule"></p>
+                      <div class="character-skill-footer"><span class="character-skill-level" aria-live="polite">Lv. 1 / 10</span><button class="character-growth-button" type="button" aria-label="액티브 스킬 레벨업">레벨업</button></div>
                     </article>
                     <article class="character-skill" data-skill="ultimate">
-                      <div class="character-skill-heading"><h3>궁극기</h3></div>
-                      <p class="character-skill-description">캐릭터의 강력한 고유 능력을 사용하는 스킬입니다.</p>
+                      <div class="character-skill-heading"><h3>궁극기</h3><span class="character-skill-cooldown">전투 에너지 100%</span></div>
+                      <p class="character-skill-description">캐릭터의 강력한 고유 능력을 사용하는 스킬입니다. 해당 캐릭터의 전투 에너지 게이지가 100%일 때 사용할 수 있습니다.</p>
                       <div class="character-skill-footer"><span class="character-skill-level" aria-live="polite">Lv. 1 / 10</span><button class="character-growth-button" type="button" aria-label="궁극기 레벨업">레벨업</button></div>
+                    </article>
+                    <article class="character-skill" data-skill="passive">
+                      <div class="character-skill-heading"><h3>패시브</h3><span class="character-skill-cooldown">자동 효과</span></div>
+                      <p class="character-skill-description">전투 중 조건을 만족하면 자동으로 효과가 적용됩니다.</p>
+                      <div class="character-skill-footer"><span class="character-skill-level" aria-live="polite">Lv. 1 / 10</span><button class="character-growth-button" type="button" aria-label="패시브 레벨업">레벨업</button></div>
                     </article>
                   </div>
                 </div>
@@ -1080,8 +1088,9 @@
                     <h3 class="character-awakening-effects-heading">스킬 강화 효과</h3>
                     <dl class="character-awakening-effects">
                       <div><dt>기본 스킬</dt><dd>각성에 따른 기본 스킬 강화 효과가 여기에 표시됩니다.</dd></div>
-                      <div><dt>패시브 스킬</dt><dd>각성에 따른 패시브 스킬 강화 효과가 여기에 표시됩니다.</dd></div>
+                      <div><dt>액티브 스킬</dt><dd>각성에 따른 액티브 스킬 강화 효과가 여기에 표시됩니다.</dd></div>
                       <div><dt>궁극기</dt><dd>각성에 따른 궁극기 강화 효과가 여기에 표시됩니다.</dd></div>
+                      <div><dt>패시브</dt><dd>각성에 따른 패시브 강화 효과가 여기에 표시됩니다.</dd></div>
                     </dl>
                   </div>
                 </div>
@@ -2868,11 +2877,28 @@
         document.getElementById('character-panel-info').scrollTop = 0;
       }
       function getCharacterSkillLevels(card) {
-        if (!previewCharacterSkillLevels.has(card)) previewCharacterSkillLevels.set(card, { basic: 1, passive: 1, ultimate: 1 });
+        if (!previewCharacterSkillLevels.has(card)) previewCharacterSkillLevels.set(card, { basic: 1, active: 1, ultimate: 1, passive: 1 });
         return previewCharacterSkillLevels.get(card);
+      }
+      function getCharacterActiveCooldown(card, skillLevel = getCharacterSkillLevels(card).active) {
+        // 캐릭터 생성 결과의 쿨타임을 우선합니다. 미리보기 캐릭터는 각각 2·4·5턴입니다.
+        const preview = { '3': 2, '4': 4, '5': 5 }[card.dataset.rarity] || 3;
+        const configured = Number(card.dataset.activeCooldown);
+        const base = Number.isFinite(configured) && configured >= 2 && configured <= 5 ? Math.floor(configured) : preview;
+        // 감소 시점은 임시로 4·8레벨에 배치합니다.
+        const reductionLevels = [4, 8];
+        const reduction = base >= 4 ? reductionLevels.filter(level => skillLevel >= level).length : 0;
+        return { base, current: base - Math.min(2, reduction), reductionLevels };
       }
       function renderCharacterSkills(card) {
         const levels = getCharacterSkillLevels(card);
+        const cooldown = getCharacterActiveCooldown(card);
+        const cooldownLabel = document.getElementById('character-active-cooldown');
+        cooldownLabel.textContent = '쿨타임 ' + cooldown.current + '턴';
+        cooldownLabel.dataset.reduced = String(cooldown.current < cooldown.base);
+        document.getElementById('character-active-cooldown-rule').textContent = cooldown.base >= 4
+          ? '기본 ' + cooldown.base + '턴 · Lv. ' + cooldown.reductionLevels[0] + '에서 ' + (cooldown.base - 1) + '턴, Lv. ' + cooldown.reductionLevels[1] + '에서 ' + (cooldown.base - 2) + '턴'
+          : '기본 쿨타임 ' + cooldown.base + '턴 · 레벨업에 따른 쿨타임 감소 없음';
         document.querySelectorAll('.character-skill').forEach(skill => {
           const level = levels[skill.dataset.skill];
           skill.querySelector('.character-skill-level').textContent = 'Lv. ' + level + ' / 10';
@@ -2883,7 +2909,7 @@
         });
       }
       function upgradeCharacterSkill(card, key) {
-        if (!card || !['basic', 'passive', 'ultimate'].includes(key)) return;
+        if (!card || !['basic', 'active', 'ultimate', 'passive'].includes(key)) return;
         const levels = getCharacterSkillLevels(card);
         if (levels[key] >= 10) return;
         levels[key]++;
