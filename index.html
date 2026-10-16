@@ -614,6 +614,38 @@
       #game-preview[data-view="combat-preview"] .game-bottom-menu { transform: translateY(100%); visibility: hidden; pointer-events: none; transition: none; }
       .combat-speed-button { display: inline-grid; place-items: center; width: 40px; min-width: 40px; height: 40px; padding: 0; font-variant-numeric: tabular-nums; }
       #combat-preview-screen:is([data-speed="2"], [data-speed="3"]) .combat-speed-button { color: var(--accent); border-color: var(--accent); background: var(--surface-active); }
+      #game-preview[data-view="party"] .game-bottom-menu { transform: translateY(100%); visibility: hidden; pointer-events: none; transition: transform 280ms ease, visibility 0s 280ms; }
+      .party-screen { height: 100%; padding: 24px 28px; display: flex; flex-direction: column; gap: 18px; }
+      .party-heading { display: flex; align-items: center; justify-content: space-between; }
+      .party-heading h2 { margin: 0; font-size: 20px; }
+      .party-heading span { color: var(--text-secondary); font-size: 13px; }
+      .party-layout { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 28px; }
+      .party-rows { min-height: 0; display: grid; grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 20px; }
+      .party-row { min-height: 0; display: flex; flex-direction: column; gap: 9px; }
+      .party-row h3 { margin: 0 0 0 3px; color: var(--text-secondary); font-size: 12px; font-weight: 500; letter-spacing: .12em; }
+      .party-slots { min-height: 0; flex: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+      .party-slot { position: relative; min-height: 0; border: 1px solid var(--border); border-top: 3px solid var(--rarity-color, var(--border)); border-radius: 10px; background: var(--surface-main); overflow: hidden; }
+      .party-slot[data-selected="true"] { outline: 2px solid var(--accent); outline-offset: 3px; }
+      .party-slot-select { position: absolute; inset: 0; width: 100%; padding: 0; border: 0; background: transparent; color: var(--text-secondary); font: inherit; cursor: pointer; display: grid; place-items: center; }
+      .party-slot-select:focus-visible, .party-remove:focus-visible, .party-member:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -4px; }
+      .party-empty { display: grid; gap: 9px; justify-items: center; font-size: 12px; }
+      .party-empty b { font-size: 25px; font-weight: 300; color: var(--accent); }
+      .party-slot img { width: 100%; height: 100%; object-fit: cover; }
+      .party-slot-caption { position: absolute; left: 0; right: 0; bottom: 0; padding: 24px 10px 12px; background: linear-gradient(transparent, #090d14ee); text-align: left; }
+      .party-slot-caption strong { display: block; font-size: 14px; color: var(--text-primary); }
+      .party-slot-caption small { display: block; margin-top: 5px; font-size: 11px; color: var(--text-secondary); }
+      .party-remove { position: absolute; top: 8px; right: 8px; width: 24px; height: 24px; border: 1px solid var(--border); border-radius: 6px; background: #10151de6; color: var(--text-primary); cursor: pointer; font-size: 17px; }
+      .party-roster { min-height: 0; display: flex; flex-direction: column; padding: 18px; gap: 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-main); }
+      .party-roster h3 { margin: 0; font-size: 16px; }
+      .party-roster-list { flex: 1; min-height: 0; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-content: start; gap: 10px; }
+      .party-member { position: relative; min-width: 0; padding: 12px; border: 1px solid var(--border); border-left: 3px solid var(--rarity-color); border-radius: 8px; background: var(--surface-hover); text-align: left; font: inherit; cursor: pointer; color: var(--text-primary); }
+      .party-member:hover { border-color: var(--accent); }
+      .party-member strong { display: block; font-size: 13px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+      .party-member small { display: block; margin-top: 7px; color: var(--text-secondary); font-size: 11px; }
+      .party-member em { display: block; margin-top: 10px; color: var(--accent); font-size: 10px; font-style: normal; }
+      #game-preview[data-view="party"] .party-layout { animation: character-toolbar-enter 450ms ease-out both; }
+      @media (max-width: 760px) { .party-screen { padding: 18px 16px; gap: 12px; } .party-layout { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 14px; } .party-slots { gap: 8px; } .party-roster { padding: 12px; } .party-roster-list { grid-template-columns: minmax(0, 1fr); } .party-slot-caption { padding-inline: 6px; } .party-slot-caption strong { font-size: 12px; } }
+      @media (prefers-reduced-motion: reduce) { #game-preview[data-view="party"] .party-layout { animation: none; } #game-preview[data-view="party"] .game-bottom-menu { transition: none; } }
       .characters-screen { height: 100%; min-height: 0; padding: 24px 28px; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; }
       .characters-toolbar { display: grid; grid-template-columns: minmax(180px, 1fr) auto; align-items: end; gap: 20px; }
       .character-search { position: relative; min-width: 0; }
@@ -996,6 +1028,16 @@
             </div>
           </div>
           <div class="game-stage" id="game-stage">
+            <section class="party-screen" id="party-screen" aria-labelledby="party-title" hidden>
+              <div class="party-heading"><h2 id="party-title">편성</h2><span id="party-count" aria-live="polite">0 / 6</span></div>
+              <div class="party-layout">
+                <div class="party-rows">
+                  <section class="party-row" aria-labelledby="party-front-title"><h3 id="party-front-title">전열</h3><div class="party-slots" id="party-front"></div></section>
+                  <section class="party-row" aria-labelledby="party-back-title"><h3 id="party-back-title">후열</h3><div class="party-slots" id="party-back"></div></section>
+                </div>
+                <aside class="party-roster" aria-labelledby="party-roster-title"><h3 id="party-roster-title">내 캐릭터</h3><div class="party-roster-list" id="party-roster-list"></div></aside>
+              </div>
+            </section>
             <section class="characters-screen" id="characters-screen" aria-label="캐릭터 목록" hidden>
               <div class="characters-toolbar">
                 <div class="character-search-field">
@@ -2506,6 +2548,7 @@
       document.addEventListener('visibilitychange', () => { if (!document.hidden) updateGameEnergy(); });
       function showGameView(view) {
         hideEquipmentOverlays();
+        const isParty = view === 'party';
         const isEquipmentPicker = view === 'equipment-picker';
         const isEquipmentEnhancement = view === 'equipment-enhancement';
         const isCharacterDetail = view === 'character-detail';
@@ -2527,13 +2570,13 @@
             card.style.setProperty('--card-enter-delay', 100 + index * 100 + 'ms');
           });
         }
-        const isSubscreen = isBattle || isScenarios || isChapters || isStoryPreview || isCombatPreview || isCharacters || isCharacterDetail || isEquipmentPicker || isEquipmentEnhancement;
+        const isSubscreen = isParty || isBattle || isScenarios || isChapters || isStoryPreview || isCombatPreview || isCharacters || isCharacterDetail || isEquipmentPicker || isEquipmentEnhancement;
         const game = document.getElementById('game-preview');
         if (game.dataset.view === 'story-preview' && !isStoryPreview) {
           stopDialogueTyping();
           setDialogueAuto(false);
         }
-        game.dataset.view = isEquipmentEnhancement ? 'equipment-enhancement' : isEquipmentPicker ? 'equipment-picker' : isCharacterDetail ? 'character-detail' : isCharacters ? 'characters' : isCombatPreview ? 'combat-preview' : isStoryPreview ? 'story-preview' : isChapters ? 'chapters' : isScenarios ? 'scenarios' : isBattle ? 'battle' : 'home';
+        game.dataset.view = isParty ? 'party' : isEquipmentEnhancement ? 'equipment-enhancement' : isEquipmentPicker ? 'equipment-picker' : isCharacterDetail ? 'character-detail' : isCharacters ? 'characters' : isCombatPreview ? 'combat-preview' : isStoryPreview ? 'story-preview' : isChapters ? 'chapters' : isScenarios ? 'scenarios' : isBattle ? 'battle' : 'home';
         game.setAttribute('aria-label', isCharacters ? '캐릭터 화면' : isCombatPreview ? '전투 미리보기' : isStoryPreview ? '시나리오 미리보기' : isChapters ? '챕터 목록 화면' : isScenarios ? '시나리오 목록 화면' : isBattle ? '전투 화면' : '게임 메인 화면');
         const menu = document.querySelector('.game-bottom-menu');
         menu.inert = isSubscreen;
@@ -2544,6 +2587,12 @@
         homeButton.setAttribute('aria-hidden', String(!isSubscreen));
         document.getElementById('game-stage').setAttribute('aria-label', isCharacters ? '캐릭터 화면' : isCombatPreview ? '전투 미리보기' : isStoryPreview ? '시나리오 미리보기' : isChapters ? '챕터 목록 화면' : isScenarios ? '시나리오 목록 화면' : isBattle ? '전투 화면' : '메인 화면');
         document.getElementById('characters-screen').hidden = !isCharacters;
+        document.getElementById('party-screen').hidden = !isParty;
+        if (isParty) {
+          game.setAttribute('aria-label', '편성 화면');
+          document.getElementById('game-stage').setAttribute('aria-label', '편성 화면');
+          renderParty();
+        }
         document.getElementById('character-detail-screen').hidden = !isCharacterDetail;
         document.getElementById('equipment-picker-screen').hidden = !isEquipmentPicker;
         document.getElementById('equipment-enhancement-screen').hidden = !isEquipmentEnhancement;
@@ -2570,9 +2619,10 @@
         document.getElementById('game-home').focus({ preventScroll: true });
       });
       document.getElementById('game-home').addEventListener('click', () => {
+        const fromParty = document.getElementById('game-preview').dataset.view === 'party';
         const fromCharacters = ['characters', 'character-detail', 'equipment-picker', 'equipment-enhancement'].includes(document.getElementById('game-preview').dataset.view);
         showGameView('home');
-        document.getElementById(fromCharacters ? 'game-characters' : 'game-battle').focus({ preventScroll: true });
+        document.getElementById(fromParty ? 'game-party' : fromCharacters ? 'game-characters' : 'game-battle').focus({ preventScroll: true });
       });
       document.getElementById('story-entry-card').addEventListener('click', () => {
         showGameView('chapters');
@@ -2850,6 +2900,76 @@
         document.getElementById('game-home').focus({ preventScroll: true });
       });
       let selectedCharacterCard = null;
+      // 실제 게임 저장 데이터 연결 전까지 유지하는 편성 미리보기입니다.
+      const previewParty = Array(6).fill(null);
+      let selectedPartySlot = 0;
+      function placePartyMember(party, index, card) {
+        if (!Number.isInteger(index) || index < 0 || index >= 6 || !card) return party.slice();
+        const next = party.map(member => member === card ? null : member);
+        next[index] = card;
+        return next;
+      }
+      function renderParty() {
+        const cards = Array.from(document.querySelectorAll('#characters-screen .character-portrait-card'));
+        const colors = { '3': '#858b95', '4': '#b18ae5', '5': '#e8c56c' };
+        document.getElementById('party-count').textContent = previewParty.filter(Boolean).length + ' / 6';
+        const front = document.getElementById('party-front'), back = document.getElementById('party-back');
+        front.replaceChildren(); back.replaceChildren();
+        previewParty.forEach((card, index) => {
+          const position = (index < 3 ? '전열 ' : '후열 ') + (index % 3 + 1);
+          const slot = document.createElement('div'); slot.className = 'party-slot'; slot.dataset.selected = String(index === selectedPartySlot);
+          const button = document.createElement('button'); button.type = 'button'; button.className = 'party-slot-select'; button.dataset.slot = index;
+          button.setAttribute('aria-pressed', String(index === selectedPartySlot));
+          button.addEventListener('click', () => { selectedPartySlot = index; renderParty(); document.querySelector('.party-slot-select[data-slot="' + index + '"]').focus({ preventScroll: true }); });
+          if (card) {
+            const name = card.querySelector('.character-card-name').textContent;
+            const info = getCharacterBaseStats(card);
+            slot.style.setProperty('--rarity-color', colors[card.dataset.rarity] || colors['3']);
+            button.setAttribute('aria-label', position + ' · ' + name + ' · 배치 위치 선택');
+            const image = card.querySelector('img');
+            if (image) { const art = document.createElement('img'); art.src = image.getAttribute('src'); art.alt = ''; button.append(art); }
+            const caption = document.createElement('span'); caption.className = 'party-slot-caption';
+            const title = document.createElement('strong'); title.textContent = name;
+            const meta = document.createElement('small'); meta.textContent = info.role + ' · ' + info.element + ' · ' + card.querySelector('.character-card-level').textContent;
+            caption.append(title, meta); button.append(caption); slot.append(button);
+            const remove = document.createElement('button'); remove.type = 'button'; remove.className = 'party-remove'; remove.textContent = '×'; remove.setAttribute('aria-label', position + ' ' + name + ' 편성 해제');
+            remove.addEventListener('click', () => { previewParty[index] = null; selectedPartySlot = index; renderParty(); document.querySelector('.party-slot-select[data-slot="' + index + '"]').focus({ preventScroll: true }); });
+            slot.append(remove);
+          } else {
+            button.setAttribute('aria-label', position + ' · 빈 슬롯 선택');
+            const empty = document.createElement('span'); empty.className = 'party-empty';
+            const plus = document.createElement('b'); plus.textContent = '+';
+            const label = document.createElement('span'); label.textContent = '캐릭터 배치';
+            empty.append(plus, label); button.append(empty); slot.append(button);
+          }
+          (index < 3 ? front : back).append(slot);
+        });
+        const roster = document.getElementById('party-roster-list');
+        const scrollTop = roster.scrollTop; roster.replaceChildren();
+        cards.forEach((card, index) => {
+          const button = document.createElement('button'); button.type = 'button'; button.className = 'party-member'; button.dataset.member = index;
+          button.style.setProperty('--rarity-color', colors[card.dataset.rarity] || colors['3']);
+          const title = document.createElement('strong'); title.textContent = card.querySelector('.character-card-name').textContent;
+          const info = getCharacterBaseStats(card);
+          const meta = document.createElement('small'); meta.textContent = info.role + ' · ' + info.element;
+          const status = document.createElement('em'); const assigned = previewParty.indexOf(card);
+          status.textContent = assigned < 0 ? '★'.repeat(Number(card.dataset.rarity)) + ' · ' + card.querySelector('.character-card-level').textContent : (assigned < 3 ? '전열 ' : '후열 ') + (assigned % 3 + 1) + ' · 편성 중';
+          button.append(title, meta, status);
+          button.setAttribute('aria-label', title.textContent + ' · ' + status.textContent + ' · ' + (selectedPartySlot < 3 ? '전열 ' : '후열 ') + (selectedPartySlot % 3 + 1) + '에 배치');
+          button.addEventListener('click', () => {
+            const next = placePartyMember(previewParty, selectedPartySlot, card);
+            previewParty.splice(0, 6, ...next);
+            const emptyIndex = previewParty.findIndex(member => !member);
+            if (emptyIndex >= 0) selectedPartySlot = emptyIndex;
+            renderParty(); document.querySelector('.party-member[data-member="' + index + '"]').focus({ preventScroll: true });
+          });
+          roster.append(button);
+        });
+        roster.scrollTop = scrollTop;
+      }
+      document.getElementById('game-party').addEventListener('click', () => {
+        showGameView('party'); document.getElementById('game-home').focus({ preventScroll: true });
+      });
       // 실제 성장 데이터 연결 전, 캐릭터별로 보관하는 미리보기 세션의 스킬 레벨입니다.
       const previewCharacterSkillLevels = new WeakMap();
       const previewCharacterOutfits = new WeakMap();
