@@ -787,9 +787,10 @@
       .dungeon-screen-heading h2 { margin: 0; font-size: 22px; line-height: 1.4; }
       .dungeon-reset { margin: 0 0 0 auto; color: var(--text-secondary); font-size: 12px; text-align: right; line-height: 1.7; font-variant-numeric: tabular-nums; }
       .dungeon-reset strong { display: block; color: var(--accent); font-size: 14px; font-weight: 500; }
-      .dungeon-selection-scroll { flex: 1; min-height: 0; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; scrollbar-width: thin; container-type: size; }
+      .dungeon-selection-scroll { flex: 1; min-height: 0; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; scrollbar-width: thin; container-type: size; cursor: grab; touch-action: pan-x; user-select: none; }
+      .dungeon-selection-scroll[data-dragging="true"], .dungeon-selection-scroll[data-dragging="true"] * { cursor: grabbing; }
       .dungeon-selection-track { min-width: 100%; width: max-content; height: 100%; display: flex; align-items: center; justify-content: center; gap: 16px; padding: 8px 3px 20px; }
-      .dungeon-choice { flex: none; position: relative; width: clamp(100px, min(calc((100cqw - 70px) / 5), calc((100cqh - 28px) * 2 / 3)), 240px); aspect-ratio: 2 / 3; min-width: 160px; padding: 0; overflow: hidden; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-sidebar); color: var(--text-primary); text-align: left; font: inherit; cursor: pointer; transition: border-color 180ms ease, translate 180ms ease; }
+      .dungeon-choice { flex: none; position: relative; width: clamp(100px, calc((100cqh - 44px) * 2 / 3), 340px); aspect-ratio: 2 / 3; min-width: 100px; padding: 0; overflow: hidden; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-sidebar); color: var(--text-primary); text-align: left; font: inherit; cursor: inherit; transition: border-color 180ms ease, translate 180ms ease; }
       .dungeon-choice:hover { border-color: var(--accent); translate: 0 -4px; }
       .dungeon-choice > img { display: block; width: 100%; height: 100%; object-fit: cover; }
       .dungeon-choice-copy { position: absolute; inset: auto 0 0; display: grid; gap: 7px; padding: 40px 16px 20px; background: linear-gradient(transparent, #090d14f2 65%); border-bottom: 3px solid var(--accent); }
@@ -817,7 +818,9 @@
       .dungeon-floor-list { min-height: 0; flex: 1; overflow-y: auto; overscroll-behavior-y: contain; scrollbar-gutter: stable; scrollbar-width: thin; display: flex; flex-direction: column; gap: 10px; }
       .dungeon-floor { flex: none; width: 100%; height: 54px; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-sidebar); color: var(--text-primary); font: inherit; font-size: 15px; cursor: pointer; }
       .dungeon-floor[aria-pressed="true"] { border-color: var(--accent); background: var(--surface-active); color: var(--accent); }
+      .dungeon-floor:disabled { opacity: .4; cursor: not-allowed; }
       .dungeon-floor-stars { color: var(--text-secondary); font-size: 18px; letter-spacing: 2px; }
+      .dungeon-floor-stars[data-cleared="true"] { color: #e8c56c; }
       .dungeon-floor-footer { flex: none; display: grid; gap: 10px; }
       .dungeon-prepare-status { margin: 0; min-height: 20px; color: var(--text-secondary); font-size: 12px; line-height: 20px; }
       .dungeon-prepare { width: 100%; height: 48px; border: 1px solid var(--action-background); border-radius: 9px; background: var(--action-background); color: var(--action-text); font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; }
@@ -3671,6 +3674,19 @@
         return { key: local.toISOString().slice(0, 10), elements: dungeonWeekElements[local.getUTCDay()].slice(), nextAt: (Math.floor((now + offset) / 86400000) + 1) * 86400000 - offset };
       }
       const dungeonScreenState = { category: 'growth', element: null, floor: 1 };
+      const dungeonFloorProgress = new Map();
+      function getDungeonProgressKey(category, element) { return category + ':' + (['skill', 'breakthrough'].includes(category) ? element : 'common'); }
+      function getDungeonFloorState(category, element, floor) {
+        const progress = dungeonFloorProgress.get(getDungeonProgressKey(category, element)) || [0, 0, 0, 0, 0];
+        return { stars: progress[floor - 1] || 0, unlocked: floor === 1 || (progress[floor - 2] || 0) > 0 };
+      }
+      function recordDungeonFloorClear(category, element, floor, stars = 3) {
+        if (!materialDungeonKinds.some(kind => kind.id === category) || !Number.isInteger(floor) || floor < 1 || floor > 5 || !Number.isInteger(stars) || stars < 1 || stars > 3) return false;
+        if (['skill', 'breakthrough'].includes(category) && !Object.hasOwn(dungeonElementNames, element)) return false;
+        if (!getDungeonFloorState(category, element, floor).unlocked) return false;
+        const key = getDungeonProgressKey(category, element), progress = (dungeonFloorProgress.get(key) || [0, 0, 0, 0, 0]).slice();
+        progress[floor - 1] = Math.max(progress[floor - 1], stars); dungeonFloorProgress.set(key, progress); return true;
+      }
       let currentDungeonDay = getKoreanDungeonDay();
       function getDungeonImage(category, element) {
         return 'assets/dungeons/' + category + (['skill', 'breakthrough'].includes(category) ? '-' + element : '') + '.png';
@@ -3722,6 +3738,7 @@
         const kind = materialDungeonKinds.find(kind => kind.id === dungeonScreenState.category) || materialDungeonKinds[0];
         if (!currentDungeonDay.elements.includes(dungeonScreenState.element)) dungeonScreenState.element = currentDungeonDay.elements[0];
         const element = dungeonScreenState.element;
+        if (!getDungeonFloorState(kind.id, element, dungeonScreenState.floor).unlocked) dungeonScreenState.floor = 1;
         document.getElementById('material-dungeon-title').textContent = kind.name + ' 던전';
         const name = (kind.elemental ? dungeonElementNames[element] + ' · ' : '') + kind.name + ' 던전';
         document.getElementById('dungeon-detail-name').textContent = name + ' · ' + dungeonScreenState.floor + '층';
@@ -3729,17 +3746,18 @@
         if (image.getAttribute('src') !== src) image.src = src;
         image.alt = name;
         document.getElementById('dungeon-reset-countdown').parentElement.hidden = !kind.elemental;
-        const tabs = document.getElementById('dungeon-element-tabs'); tabs.replaceChildren(); tabs.hidden = !kind.elemental;
-        if (kind.elemental) currentDungeonDay.elements.forEach(id => {
+        const tabs = document.getElementById('dungeon-element-tabs'); tabs.replaceChildren(); tabs.hidden = !kind.elemental || currentDungeonDay.elements.length < 2;
+        if (!tabs.hidden) currentDungeonDay.elements.forEach(id => {
           const tab = document.createElement('button'); tab.type = 'button'; tab.className = 'dungeon-element-tab'; tab.dataset.element = id; tab.setAttribute('role', 'tab'); tab.setAttribute('aria-selected', String(id === element)); tab.tabIndex = id === element ? 0 : -1; tab.textContent = dungeonElementNames[id];
           tab.addEventListener('click', () => { refreshDungeonSchedule(); if (!currentDungeonDay.elements.includes(id)) return; dungeonScreenState.element = id; renderMaterialDungeon(); document.querySelector('.dungeon-element-tab[aria-selected="true"]').focus({ preventScroll: true }); }); tabs.append(tab);
         });
         const floors = document.getElementById('dungeon-floor-list'), scrollTop = floors.scrollTop; floors.replaceChildren();
-        // 화면 확인용으로 5개 층을 열어 둡니다. 실제 해금 조건·보상량·에너지 비용은 추후 연결합니다.
+        // 이전 층을 클리어해야 다음 층이 열립니다. 전투 결과에서 recordDungeonFloorClear를 호출합니다.
         for (let floor = 1; floor <= 5; floor++) {
-          const button = document.createElement('button'); button.type = 'button'; button.className = 'dungeon-floor'; button.dataset.floor = floor; button.setAttribute('aria-pressed', String(floor === dungeonScreenState.floor)); button.setAttribute('aria-label', floor + '층 · 미클리어');
-          const label = document.createElement('span'); label.textContent = floor + '층'; const stars = document.createElement('span'); stars.className = 'dungeon-floor-stars'; stars.textContent = '☆☆☆'; stars.setAttribute('aria-hidden', 'true'); button.append(label, stars);
-          button.addEventListener('click', () => { refreshDungeonSchedule(); dungeonScreenState.floor = floor; renderMaterialDungeon(); document.querySelector('.dungeon-floor[data-floor="' + floor + '"]').focus({ preventScroll: true }); }); floors.append(button);
+          const state = getDungeonFloorState(kind.id, element, floor);
+          const button = document.createElement('button'); button.type = 'button'; button.className = 'dungeon-floor'; button.dataset.floor = floor; button.disabled = !state.unlocked; button.setAttribute('aria-pressed', String(floor === dungeonScreenState.floor)); button.setAttribute('aria-label', floor + '층 · ' + (!state.unlocked ? '잠김 · ' + (floor - 1) + '층 클리어 후 개방' : state.stars ? state.stars + '별 클리어' : '미클리어'));
+          const label = document.createElement('span'); label.textContent = floor + '층'; const stars = document.createElement('span'); stars.className = 'dungeon-floor-stars'; stars.textContent = '★'.repeat(state.stars) + '☆'.repeat(3 - state.stars); stars.dataset.cleared = String(state.stars > 0); stars.setAttribute('aria-hidden', 'true'); button.append(label, stars);
+          button.addEventListener('click', () => { refreshDungeonSchedule(); if (!getDungeonFloorState(kind.id, dungeonScreenState.element, floor).unlocked) return; dungeonScreenState.floor = floor; renderMaterialDungeon(); document.querySelector('.dungeon-floor[data-floor="' + floor + '"]').focus({ preventScroll: true }); }); floors.append(button);
         }
         floors.scrollTop = scrollTop;
         const rewards = document.getElementById('dungeon-rewards'); rewards.replaceChildren();
@@ -3763,6 +3781,36 @@
         const next = event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : (current + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
         tabs[next]?.click();
       });
+      const dungeonCardScroll = document.getElementById('dungeon-selection-scroll');
+      let dungeonCardDrag = null;
+      let dungeonCardClickBlockedUntil = 0;
+      dungeonCardScroll.addEventListener('pointerdown', event => {
+        if (event.pointerType !== 'mouse' || event.button !== 0 || dungeonCardScroll.scrollWidth <= dungeonCardScroll.clientWidth) return;
+        dungeonCardDrag = { pointerId: event.pointerId, x: event.clientX, scrollLeft: dungeonCardScroll.scrollLeft, moved: false };
+      });
+      dungeonCardScroll.addEventListener('pointermove', event => {
+        if (!dungeonCardDrag || event.pointerId !== dungeonCardDrag.pointerId) return;
+        const distance = event.clientX - dungeonCardDrag.x;
+        if (!dungeonCardDrag.moved && Math.abs(distance) < 6) return;
+        if (!dungeonCardDrag.moved) {
+          dungeonCardDrag.moved = true; dungeonCardScroll.dataset.dragging = 'true';
+          dungeonCardScroll.setPointerCapture(event.pointerId);
+        }
+        event.preventDefault(); dungeonCardScroll.scrollLeft = dungeonCardDrag.scrollLeft - distance;
+      });
+      function finishDungeonCardDrag(event) {
+        if (!dungeonCardDrag || event.pointerId !== dungeonCardDrag.pointerId) return;
+        const moved = dungeonCardDrag.moved; dungeonCardDrag = null;
+        delete dungeonCardScroll.dataset.dragging;
+        if (moved) dungeonCardClickBlockedUntil = Date.now() + 350;
+        if (dungeonCardScroll.hasPointerCapture(event.pointerId)) dungeonCardScroll.releasePointerCapture(event.pointerId);
+      }
+      window.addEventListener('pointerup', finishDungeonCardDrag);
+      window.addEventListener('pointercancel', finishDungeonCardDrag);
+      dungeonCardScroll.addEventListener('lostpointercapture', finishDungeonCardDrag);
+      dungeonCardScroll.addEventListener('click', event => {
+        if (event.detail > 0 && Date.now() < dungeonCardClickBlockedUntil) { event.preventDefault(); event.stopImmediatePropagation(); }
+      }, true);
       setInterval(() => { if (['materials', 'material-dungeon'].includes(document.getElementById('game-preview').dataset.view)) refreshDungeonSchedule(); }, 1000);
       document.addEventListener('visibilitychange', () => { if (!document.hidden && ['materials', 'material-dungeon'].includes(document.getElementById('game-preview').dataset.view)) refreshDungeonSchedule(); });
       const skillUpgradeRules = { maxLevel: 10, goldCost: 300000, materialCount: 1 };
