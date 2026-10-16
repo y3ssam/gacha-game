@@ -718,6 +718,66 @@
       #game-preview[data-view="inventory"] .inventory-layout { animation: character-toolbar-enter 450ms ease-out both; }
       @media (max-width: 760px) { .inventory-screen { padding: 18px 16px; gap: 14px; } .inventory-layout { grid-template-columns: 64px minmax(0, 1fr); gap: 14px; } .inventory-category { padding-inline: 9px; font-size: 13px; } .inventory-body { grid-template-columns: minmax(0, 1fr) minmax(180px, 1fr); gap: 12px; } .inventory-details { padding-left: 12px; } .inventory-toolbar { gap: 8px; } .inventory-item-grid { gap: 8px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 86px), 1fr)); } }
       @media (prefers-reduced-motion: reduce) { #game-preview[data-view="inventory"] .inventory-layout { animation: none; } #game-preview[data-view="inventory"] .game-bottom-menu { transition: none; } }
+      #game-preview[data-view="summon"] .game-bottom-menu { transform: translateY(100%); visibility: hidden; pointer-events: none; transition: transform 280ms ease, visibility 0s 280ms; }
+      .summon-screen { height: 100%; min-height: 0; padding: 24px 28px; display: flex; flex-direction: column; gap: 20px; }
+      .summon-screen > h2 { margin: 0; font-size: 20px; line-height: 28px; flex: none; }
+      .summon-layout { flex: 1; min-height: 0; display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 24px; }
+      .summon-banner-list { min-width: 0; min-height: 0; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; display: flex; flex-direction: column; gap: 12px; padding-right: 4px; }
+      .summon-banner-choice { position: relative; flex: none; width: 100%; min-height: 88px; display: flex; align-items: center; gap: 12px; padding: 12px; border: 1px solid var(--border); border-left: 3px solid transparent; border-radius: 9px; background: var(--surface-sidebar); color: var(--text-primary); font: inherit; text-align: left; cursor: pointer; }
+      .summon-banner-choice[aria-selected="true"] { border-color: var(--accent); background: var(--surface-active); }
+      .summon-banner-choice:hover { background: var(--surface-hover); }
+      .summon-banner-thumbnail { flex: none; width: 46px; height: 60px; display: grid; place-items: center; border: 1px solid var(--border); border-radius: 5px; color: var(--accent); background: linear-gradient(145deg, var(--summon-tint), var(--surface-sidebar)); }
+      .summon-banner-thumbnail svg { width: 24px; height: 24px; }
+      .summon-banner-thumbnail img { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
+      .summon-banner-choice-copy { min-width: 0; }
+      .summon-banner-choice strong { display: block; font-size: 14px; font-weight: 600; overflow-wrap: anywhere; line-height: 1.5; }
+      .summon-banner-choice small { display: block; margin-top: 7px; font-size: 11px; color: var(--text-secondary); }
+      .summon-banner { position: relative; min-width: 0; min-height: 0; overflow: hidden; border: 1px solid var(--border); border-radius: 12px; isolation: isolate; background: var(--surface-sidebar); }
+      .summon-banner-art { position: absolute; inset: 0; z-index: -2; background: radial-gradient(ellipse at 65% 40%, var(--summon-tint), transparent 65%), linear-gradient(135deg, var(--surface-active), var(--surface-sidebar)); }
+      .summon-banner-art > img { width: 100%; height: 100%; object-fit: cover; }
+      .summon-banner::after { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(to bottom, #090d1466, transparent 35%, #090d14db); }
+      .summon-art-placeholder { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 16px; color: var(--text-secondary); }
+      .summon-art-placeholder svg { width: 64px; height: 64px; opacity: .25; color: var(--accent); }
+      .summon-art-placeholder span { font-size: 12px; opacity: .7; }
+      .summon-banner-top { position: absolute; left: 24px; right: 24px; top: 24px; display: flex; justify-content: space-between; align-items: start; gap: 20px; }
+      .summon-banner-heading { min-width: 0; }
+      .summon-banner-kind { display: block; color: var(--accent); font-size: 11px; letter-spacing: .12em; margin-bottom: 9px; }
+      .summon-banner-heading h3 { margin: 0; font-size: clamp(22px, 2.6vw, 34px); font-weight: 650; line-height: 1.25; overflow-wrap: anywhere; }
+      .summon-banner-heading p { margin: 12px 0 0; color: var(--text-secondary); font-size: 13px; line-height: 1.7; }
+      .summon-banner-actions { display: flex; gap: 8px; flex: none; }
+      .summon-overlay-button { min-height: 36px; padding: 8px 11px; border: 1px solid #ffffff30; border-radius: 7px; background: #10151dc9; color: var(--text-primary); font: inherit; font-size: 12px; line-height: 18px; white-space: nowrap; cursor: pointer; }
+      .summon-overlay-button:hover { border-color: var(--accent); background: var(--surface-active); }
+      .summon-regenerate { width: 36px; padding: 8px; display: grid; place-items: center; }
+      .summon-regenerate svg { width: 18px; height: 18px; }
+      .summon-banner-bottom { position: absolute; left: 24px; right: 24px; bottom: 24px; display: flex; align-items: end; justify-content: space-between; gap: 20px; }
+      .summon-status { margin: 0; max-width: 260px; min-width: 0; color: var(--text-secondary); font-size: 12px; line-height: 1.7; }
+      .summon-pull-actions { margin-left: auto; flex: none; display: grid; grid-template-columns: repeat(2, 160px); gap: 12px; }
+      .summon-pull { height: 60px; padding: 10px 16px; border: 1px solid var(--action-background); border-radius: 9px; background: var(--action-background); color: var(--action-text); font: inherit; font-size: 18px; font-weight: 650; cursor: pointer; }
+      .summon-pull:first-child { background: #10151dc9; color: var(--action-background); }
+      .summon-pull:hover { background: var(--action-hover); color: var(--action-text); }
+      .summon-dialog { width: min(760px, calc(100vw - 48px)); height: min(520px, calc(100dvh - 80px)); padding: 24px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface-main); color: var(--text-primary); overflow: hidden; }
+      .summon-dialog[open] { display: flex; flex-direction: column; gap: 20px; }
+      .summon-dialog::backdrop { background: #0008; backdrop-filter: none; }
+      .summon-dialog-heading { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+      .summon-dialog-heading h2 { margin: 0; font-size: 20px; }
+      .summon-dialog-heading p { margin: 7px 0 0; color: var(--text-secondary); font-size: 12px; }
+      .summon-dialog-close { width: 34px; height: 34px; flex: none; border: 1px solid var(--border); border-radius: 7px; background: transparent; color: var(--text-primary); font-size: 22px; cursor: pointer; }
+      .summon-dialog-body { flex: 1; min-height: 0; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; }
+      .summon-dialog-empty { min-height: 100%; margin: 0; display: grid; place-items: center; color: var(--text-secondary); font-size: 13px; }
+      .summon-appearance-portrait { flex: none; width: 42px; height: 54px; display: grid; place-items: center; overflow: hidden; border: 1px solid var(--border); border-radius: 5px; background: var(--surface-active); color: var(--accent); }
+      .summon-appearance-portrait img { width: 100%; height: 100%; object-fit: cover; }
+      .summon-appearance-portrait svg { width: 22px; height: 22px; }
+      .summon-appearance-row { display: flex; align-items: center; gap: 14px; padding: 14px 8px; border-bottom: 1px solid var(--border); }
+      .summon-appearance-row .character-equipment-icon { flex: 0 0 38px; height: 38px; }
+      .summon-appearance-row .character-equipment-icon svg { width: 30px; height: 30px; }
+      .summon-appearance-name { flex: 1; min-width: 0; font-size: 14px; overflow-wrap: anywhere; }
+      .summon-appearance-name small { display: block; margin-top: 5px; color: var(--text-secondary); font-size: 12px; }
+      .summon-character-stars { flex: none; font-size: 12px; color: var(--rarity-color); letter-spacing: 1px; }
+      .summon-screen button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -3px; }
+      #game-preview[data-view="summon"] .summon-layout { animation: character-toolbar-enter 450ms ease-out both; }
+      @media (max-width: 900px) { .summon-layout { grid-template-columns: 170px minmax(0, 1fr); gap: 16px; } .summon-banner-top { flex-direction: column-reverse; gap: 20px; left: 18px; right: 18px; top: 18px; } .summon-banner-actions { align-self: flex-end; } .summon-banner-bottom { left: 18px; right: 18px; bottom: 18px; flex-direction: column; align-items: stretch; gap: 12px; } .summon-pull-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-left: 0; } .summon-pull { height: 52px; font-size: 16px; } }
+      @media (max-width: 640px) { .summon-screen { padding: 18px 16px; gap: 14px; } .summon-layout { grid-template-columns: 116px minmax(0, 1fr); gap: 12px; } .summon-banner-choice { padding: 10px 8px; min-height: 76px; } .summon-banner-thumbnail { display: none; } .summon-banner-choice strong { font-size: 12px; } .summon-banner-actions { gap: 5px; flex-wrap: wrap; } .summon-overlay-button { font-size: 11px; padding-inline: 7px; } .summon-banner-top, .summon-banner-bottom { left: 12px; right: 12px; } .summon-banner-heading h3 { font-size: 22px; } .summon-pull-actions { gap: 8px; } .summon-pull { padding-inline: 5px; font-size: 14px; } }
+      @media (prefers-reduced-motion: reduce) { #game-preview[data-view="summon"] .summon-layout { animation: none; } #game-preview[data-view="summon"] .game-bottom-menu { transition: none; } }
       .characters-screen { height: 100%; min-height: 0; padding: 24px 28px; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; }
       .characters-toolbar { display: grid; grid-template-columns: minmax(180px, 1fr) auto; align-items: end; gap: 20px; }
       .character-search { position: relative; min-width: 0; }
@@ -1111,6 +1171,28 @@
             </div>
           </div>
           <div class="game-stage" id="game-stage">
+            <section class="summon-screen" id="summon-screen" aria-labelledby="summon-title" hidden>
+              <h2 id="summon-title">소환</h2>
+              <div class="summon-layout">
+                <div class="summon-banner-list" id="summon-banner-list" role="tablist" aria-label="소환 배너" aria-orientation="vertical"></div>
+                <section class="summon-banner" id="summon-banner" role="tabpanel" aria-label="선택한 소환 배너">
+                  <div class="summon-banner-art" id="summon-banner-art"></div>
+                  <div class="summon-banner-top">
+                    <div class="summon-banner-heading"><span class="summon-banner-kind" id="summon-banner-kind"></span><h3 id="summon-banner-name"></h3><p id="summon-banner-description"></p></div>
+                    <div class="summon-banner-actions">
+                      <button class="summon-overlay-button summon-regenerate" id="summon-regenerate" type="button" aria-label="배너 이미지 재생성" title="배너 이미지 재생성"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M6 6a8 8 0 0 1 13 3l1 3M4 12l1 3a8 8 0 0 0 13 3"/></svg></button>
+                      <button class="summon-overlay-button" id="summon-history" type="button">소환 기록</button>
+                      <button class="summon-overlay-button" id="summon-appearances" type="button">출현 목록</button>
+                    </div>
+                  </div>
+                  <div class="summon-banner-bottom"><p class="summon-status" id="summon-status" role="status" aria-live="polite"></p><div class="summon-pull-actions"><button class="summon-pull" id="summon-once" type="button">1회 소환</button><button class="summon-pull" id="summon-ten" type="button">10회 소환</button></div></div>
+                </section>
+              </div>
+              <dialog class="summon-dialog" id="summon-dialog" aria-labelledby="summon-dialog-title" aria-describedby="summon-dialog-subtitle">
+                <div class="summon-dialog-heading"><div><h2 id="summon-dialog-title"></h2><p id="summon-dialog-subtitle"></p></div><button class="summon-dialog-close" id="summon-dialog-close" type="button" aria-label="닫기">×</button></div>
+                <div class="summon-dialog-body" id="summon-dialog-body"></div>
+              </dialog>
+            </section>
             <section class="inventory-screen" id="inventory-screen" aria-labelledby="inventory-title" hidden>
               <h2 id="inventory-title">인벤토리</h2>
               <div class="inventory-layout">
@@ -2666,6 +2748,8 @@
         if (view !== 'party' && document.getElementById('party-delete-dialog').open) document.getElementById('party-delete-dialog').close();
         const isParty = view === 'party';
         const isInventory = view === 'inventory';
+        const isSummon = view === 'summon';
+        if (!isSummon && document.getElementById('summon-dialog').open) document.getElementById('summon-dialog').close();
         const isEquipmentPicker = view === 'equipment-picker';
         const isEquipmentEnhancement = view === 'equipment-enhancement';
         const isCharacterDetail = view === 'character-detail';
@@ -2687,13 +2771,13 @@
             card.style.setProperty('--card-enter-delay', 100 + index * 100 + 'ms');
           });
         }
-        const isSubscreen = isInventory || isParty || isBattle || isScenarios || isChapters || isStoryPreview || isCombatPreview || isCharacters || isCharacterDetail || isEquipmentPicker || isEquipmentEnhancement;
+        const isSubscreen = isSummon || isInventory || isParty || isBattle || isScenarios || isChapters || isStoryPreview || isCombatPreview || isCharacters || isCharacterDetail || isEquipmentPicker || isEquipmentEnhancement;
         const game = document.getElementById('game-preview');
         if (game.dataset.view === 'story-preview' && !isStoryPreview) {
           stopDialogueTyping();
           setDialogueAuto(false);
         }
-        game.dataset.view = isInventory ? 'inventory' : isParty ? 'party' : isEquipmentEnhancement ? 'equipment-enhancement' : isEquipmentPicker ? 'equipment-picker' : isCharacterDetail ? 'character-detail' : isCharacters ? 'characters' : isCombatPreview ? 'combat-preview' : isStoryPreview ? 'story-preview' : isChapters ? 'chapters' : isScenarios ? 'scenarios' : isBattle ? 'battle' : 'home';
+        game.dataset.view = isSummon ? 'summon' : isInventory ? 'inventory' : isParty ? 'party' : isEquipmentEnhancement ? 'equipment-enhancement' : isEquipmentPicker ? 'equipment-picker' : isCharacterDetail ? 'character-detail' : isCharacters ? 'characters' : isCombatPreview ? 'combat-preview' : isStoryPreview ? 'story-preview' : isChapters ? 'chapters' : isScenarios ? 'scenarios' : isBattle ? 'battle' : 'home';
         game.setAttribute('aria-label', isCharacters ? '캐릭터 화면' : isCombatPreview ? '전투 미리보기' : isStoryPreview ? '시나리오 미리보기' : isChapters ? '챕터 목록 화면' : isScenarios ? '시나리오 목록 화면' : isBattle ? '전투 화면' : '게임 메인 화면');
         const menu = document.querySelector('.game-bottom-menu');
         menu.inert = isSubscreen;
@@ -2705,6 +2789,12 @@
         document.getElementById('game-stage').setAttribute('aria-label', isCharacters ? '캐릭터 화면' : isCombatPreview ? '전투 미리보기' : isStoryPreview ? '시나리오 미리보기' : isChapters ? '챕터 목록 화면' : isScenarios ? '시나리오 목록 화면' : isBattle ? '전투 화면' : '메인 화면');
         document.getElementById('characters-screen').hidden = !isCharacters;
         document.getElementById('inventory-screen').hidden = !isInventory;
+        document.getElementById('summon-screen').hidden = !isSummon;
+        if (isSummon) {
+          game.setAttribute('aria-label', '소환 화면');
+          document.getElementById('game-stage').setAttribute('aria-label', '소환 화면');
+          renderSummon();
+        }
         if (isInventory) {
           game.setAttribute('aria-label', '인벤토리 화면');
           document.getElementById('game-stage').setAttribute('aria-label', '인벤토리 화면');
@@ -2742,11 +2832,12 @@
         document.getElementById('game-home').focus({ preventScroll: true });
       });
       document.getElementById('game-home').addEventListener('click', () => {
+        const fromSummon = document.getElementById('game-preview').dataset.view === 'summon';
         const fromInventory = document.getElementById('game-preview').dataset.view === 'inventory';
         const fromParty = document.getElementById('game-preview').dataset.view === 'party';
         const fromCharacters = ['characters', 'character-detail', 'equipment-picker', 'equipment-enhancement'].includes(document.getElementById('game-preview').dataset.view);
         showGameView('home');
-        document.getElementById(fromInventory ? 'game-inventory' : fromParty ? 'game-party' : fromCharacters ? 'game-characters' : 'game-battle').focus({ preventScroll: true });
+        document.getElementById(fromSummon ? 'game-summon' : fromInventory ? 'game-inventory' : fromParty ? 'game-party' : fromCharacters ? 'game-characters' : 'game-battle').focus({ preventScroll: true });
       });
       document.getElementById('story-entry-card').addEventListener('click', () => {
         showGameView('chapters');
@@ -3404,6 +3495,93 @@
       document.querySelector('.inventory-categories').addEventListener('keydown', inventoryTabKeyboard);
       document.getElementById('inventory-filters').addEventListener('keydown', inventoryTabKeyboard);
       document.getElementById('game-inventory').addEventListener('click', () => { showGameView('inventory'); document.getElementById('game-home').focus({ preventScroll: true }); });
+      // 배너 구성과 출현 대상은 화면 확인용이며 실제 소환 규칙은 아직 연결하지 않았습니다.
+      const previewSummonBanners = [
+        { id: 'standard', name: '일반 소환', label: '상시 배너', kind: 'character', description: '함께할 동료를 만나보세요.', tint: '#2b3c59', imageUrl: null },
+        { id: 'featured', name: '캐릭터 픽업', label: '픽업 배너', kind: 'featured', description: '새로운 만남이 기다리고 있습니다.', tint: '#49365d', imageUrl: null },
+        { id: 'equipment', name: '장비 소환', label: '장비 배너', kind: 'equipment', description: '여정을 함께할 장비를 만나보세요.', tint: '#4b4330', imageUrl: null },
+      ];
+      let selectedSummonBanner = 'standard';
+      let summonDialogReturnFocus = null;
+      function getSelectedSummonBanner() { return previewSummonBanners.find(banner => banner.id === selectedSummonBanner) || previewSummonBanners[0]; }
+      function createSummonMark() {
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('fill', 'none'); svg.setAttribute('stroke', 'currentColor'); svg.setAttribute('stroke-width', '1.2'); svg.setAttribute('aria-hidden', 'true');
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path'); path.setAttribute('d', 'm12 2 3 7 7 3-7 3-3 7-3-7-7-3 7-3Z'); svg.append(path); return svg;
+      }
+      function renderSummon() {
+        const selected = getSelectedSummonBanner();
+        const list = document.getElementById('summon-banner-list'), scrollTop = list.scrollTop; list.replaceChildren();
+        previewSummonBanners.forEach(banner => {
+          const button = document.createElement('button'); button.type = 'button'; button.className = 'summon-banner-choice'; button.id = 'summon-tab-' + banner.id; button.dataset.banner = banner.id;
+          button.setAttribute('role', 'tab'); button.setAttribute('aria-controls', 'summon-banner'); button.setAttribute('aria-selected', String(banner.id === selected.id)); button.tabIndex = banner.id === selected.id ? 0 : -1; button.style.setProperty('--summon-tint', banner.tint);
+          const thumbnail = document.createElement('span'); thumbnail.className = 'summon-banner-thumbnail';
+          if (banner.imageUrl) { const image = document.createElement('img'); image.src = banner.imageUrl; image.alt = ''; thumbnail.append(image); } else thumbnail.append(createSummonMark());
+          const copy = document.createElement('span'); copy.className = 'summon-banner-choice-copy';
+          const title = document.createElement('strong'); title.textContent = banner.name;
+          const label = document.createElement('small'); label.textContent = banner.label; copy.append(title, label); button.append(thumbnail, copy);
+          button.addEventListener('click', () => { selectedSummonBanner = banner.id; renderSummon(); document.getElementById('summon-tab-' + banner.id).focus({ preventScroll: true }); }); list.append(button);
+        });
+        list.scrollTop = scrollTop;
+        document.getElementById('summon-banner').style.setProperty('--summon-tint', selected.tint);
+        document.getElementById('summon-banner').setAttribute('aria-labelledby', 'summon-tab-' + selected.id);
+        document.getElementById('summon-banner-kind').textContent = selected.label;
+        document.getElementById('summon-banner-name').textContent = selected.name;
+        document.getElementById('summon-banner-description').textContent = selected.description;
+        document.getElementById('summon-status').textContent = '';
+        const art = document.getElementById('summon-banner-art'); art.replaceChildren();
+        if (selected.imageUrl) {
+          const image = document.createElement('img'); image.src = selected.imageUrl; image.alt = selected.name + ' 배너 이미지'; art.append(image);
+        } else {
+          const placeholder = document.createElement('div'); placeholder.className = 'summon-art-placeholder';
+          const label = document.createElement('span'); label.textContent = '배너 이미지 준비 중'; placeholder.append(createSummonMark(), label); art.append(placeholder);
+        }
+      }
+      function getSummonPreviewAppearances(banner) {
+        const cards = Array.from(document.querySelectorAll('#characters-screen .character-portrait-card'));
+        if (banner.kind === 'equipment') return cards.length ? getCharacterEquipment(cards[0]).items.map(item => ({ item })) : [];
+        const candidates = banner.kind === 'featured' ? cards.filter(card => Number(card.dataset.rarity) === 5) : cards;
+        return candidates.map(card => ({ card }));
+      }
+      function openSummonDialog(kind, trigger) {
+        const banner = getSelectedSummonBanner(), appearances = kind === 'appearances'; summonDialogReturnFocus = trigger;
+        document.getElementById('summon-dialog-title').textContent = appearances ? '출현 목록' : '소환 기록';
+        document.getElementById('summon-dialog-subtitle').textContent = banner.name + (appearances ? ' · 미리보기' : '');
+        const body = document.getElementById('summon-dialog-body'); body.replaceChildren();
+        const entries = appearances ? getSummonPreviewAppearances(banner) : [];
+        entries.forEach(entry => {
+          const row = document.createElement('div'); row.className = 'summon-appearance-row';
+          const name = document.createElement('div'); name.className = 'summon-appearance-name';
+          if (entry.item) {
+            applyEquipmentRarity(row, entry.item); row.append(createEquipmentIcon(entry.item.type));
+            name.textContent = entry.item.name;
+            const type = document.createElement('small'); type.textContent = characterEquipmentTypes.find(type => type.id === entry.item.type)?.name || '장비'; name.append(type); row.append(name, createEquipmentStars(entry.item));
+          } else {
+            const portrait = document.createElement('div'); portrait.className = 'summon-appearance-portrait';
+            const image = entry.card.querySelector('img');
+            if (image) { const art = document.createElement('img'); art.src = image.getAttribute('src'); art.alt = ''; portrait.append(art); } else portrait.append(createSummonMark());
+            name.textContent = entry.card.querySelector('.character-card-name').textContent;
+            const info = getCharacterBaseStats(entry.card), description = document.createElement('small'); description.textContent = info.role + ' · ' + info.element; name.append(description);
+            const stars = document.createElement('span'); stars.className = 'summon-character-stars'; stars.textContent = '★'.repeat(Number(entry.card.dataset.rarity)); stars.setAttribute('aria-label', entry.card.dataset.rarity + '성'); stars.style.setProperty('--rarity-color', { 3: '#858b95', 4: '#b18ae5', 5: '#e8c56c' }[entry.card.dataset.rarity]); row.append(portrait, name, stars);
+          }
+          body.append(row);
+        });
+        if (!entries.length) { const empty = document.createElement('p'); empty.className = 'summon-dialog-empty'; empty.textContent = appearances ? '출현 대상이 없습니다.' : '소환 기록이 없습니다.'; body.append(empty); }
+        document.getElementById('summon-dialog').showModal(); body.scrollTop = 0;
+        document.getElementById('summon-dialog-close').focus({ preventScroll: true });
+      }
+      document.getElementById('summon-banner-list').addEventListener('keydown', event => {
+        if (!['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) return;
+        event.preventDefault(); const current = previewSummonBanners.findIndex(banner => banner.id === selectedSummonBanner);
+        const next = event.key === 'Home' ? 0 : event.key === 'End' ? previewSummonBanners.length - 1 : (current + (event.key === 'ArrowDown' ? 1 : -1) + previewSummonBanners.length) % previewSummonBanners.length;
+        selectedSummonBanner = previewSummonBanners[next].id; renderSummon(); document.getElementById('summon-tab-' + selectedSummonBanner).focus({ preventScroll: true });
+      });
+      document.getElementById('summon-history').addEventListener('click', event => openSummonDialog('history', event.currentTarget));
+      document.getElementById('summon-appearances').addEventListener('click', event => openSummonDialog('appearances', event.currentTarget));
+      document.getElementById('summon-dialog-close').addEventListener('click', () => document.getElementById('summon-dialog').close());
+      document.getElementById('summon-dialog').addEventListener('close', () => { if (document.getElementById('game-preview').dataset.view === 'summon') summonDialogReturnFocus?.focus({ preventScroll: true }); });
+      document.getElementById('summon-regenerate').addEventListener('click', () => { document.getElementById('summon-status').textContent = '배너 이미지 재생성 기능은 준비 중이에요.'; });
+      ['summon-once', 'summon-ten'].forEach(id => document.getElementById(id).addEventListener('click', () => { document.getElementById('summon-status').textContent = '소환 기능은 준비 중이에요.'; }));
+      document.getElementById('game-summon').addEventListener('click', () => { showGameView('summon'); document.getElementById('game-home').focus({ preventScroll: true }); });
       const skillUpgradeRules = { maxLevel: 10, goldCost: 300000, materialCount: 1 };
       let skillUpgradeTarget = null;
       let equipmentEnhancementTarget = null;
