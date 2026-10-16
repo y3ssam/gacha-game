@@ -1,5 +1,5 @@
 import http from 'node:http';
-import { testNovelAI, ImageTestError } from './novelai.mjs';
+import { testNovelAI, buildImageTest, ImageTestError } from './novelai.mjs';
 import { createConnectionStore, StoreError } from './connection-store.mjs';
 import { readFile } from 'node:fs/promises';
 import { createPrivateKey, sign } from 'node:crypto';
@@ -185,9 +185,20 @@ export function createAppServer({ testConnection = testVertexConnection, store =
           const name = typeof input.name === 'string' ? input.name.trim() : '';
           if (!name || name.length > 80) throw new ConnectionError('이름은 1~80자로 입력해 주세요.', 'INVALID_NAME');
           if (input.id && (typeof input.id !== 'string' || !/^[a-f0-9-]{36}$/.test(input.id))) throw new ConnectionError('올바른 연결 ID가 필요합니다.');
-          if (!input.credentials && input.id) input.credentials = (await store.get(input.id)).credentials;
-          validateConnection(input);
-          const connection = await store.save({ id: input.id, name, credentials: input.credentials, model: input.model.trim(), region: input.region });
+          const provider = input.provider || 'vertex';
+          if (!['vertex', 'novelai'].includes(provider)) throw new ConnectionError('지원하지 않는 연결 종류입니다.', 'INVALID_PROVIDER');
+          if (input.id) {
+            const previous = await store.get(input.id);
+            if ((previous.provider || 'vertex') !== provider) throw new ConnectionError('기존 연결의 종류를 변경할 수 없습니다.', 'PROVIDER_MISMATCH');
+            if (!input.credentials) input.credentials = previous.credentials;
+          }
+          let settings;
+          if (provider === 'novelai') {
+            const options = input.settings;
+            buildImageTest({ ...options, model: input.model, token: input.credentials });
+            settings = Object.fromEntries(['prefix', 'suffix', 'negativePrefix', 'steps', 'guidance', 'rescale', 'ucPreset', 'qualityTags'].map(key => [key, options[key]]));
+          } else validateConnection(input);
+          const connection = await store.save({ id: input.id, provider, name, credentials: input.credentials, model: input.model.trim(), region: input.region, settings });
           return sendJson(res, 200, { ok: true, connection });
         }
         if (activeTests >= 2) throw new ConnectionError('다른 연결 테스트가 진행 중입니다. 잠시 후 다시 시도해 주세요.', 'BUSY', 429);
@@ -198,7 +209,12 @@ export function createAppServer({ testConnection = testVertexConnection, store =
         try {
           const input = await readJson(req);
           const isImage = route === '/api/images/test';
-          if (!isImage && !input.credentials && input.id) input.credentials = (await store.get(input.id)).credentials;
+          if (input.id) {
+            const previous = await store.get(input.id);
+            if ((previous.provider || 'vertex') !== (isImage ? 'novelai' : 'vertex')) throw new ConnectionError('연결 종류가 일치하지 않습니다.', 'PROVIDER_MISMATCH');
+            if (isImage && !input.token) input.token = previous.credentials;
+            if (!isImage && !input.credentials) input.credentials = previous.credentials;
+          }
           const result = await (isImage ? testImage : testConnection)(input, { signal: AbortSignal.any([controller.signal, AbortSignal.timeout(isImage ? 180000 : 60000)]) });
           if (!res.destroyed) sendJson(res, 200, result);
         } finally {

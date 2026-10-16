@@ -152,7 +152,7 @@
       .save-connection-button:disabled { opacity: .65; cursor: wait; }
       .save-status { margin: 0; color: var(--text-secondary); font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
       .save-status[data-state="error"] { color: #ff9fb2; }
-      #connection-list-status:not(:empty) { margin-bottom: 16px; }
+      #connection-list-status:not(:empty), #image-connection-list-status:not(:empty) { margin-bottom: 16px; }
       .saved-connections { display: grid; gap: 12px; }
       .saved-connection {
         display: flex; align-items: center; justify-content: space-between;
@@ -374,7 +374,7 @@
           </div>
           <!-- 각 모델의 연결 설정은 해당 패널 안에 추가합니다. -->
           <section class="ai-panel" role="tabpanel" id="text-ai-panel" aria-labelledby="text-ai-tab" tabindex="0"><p class="save-status" id="connection-list-status" role="status"></p><div class="saved-connections" id="saved-connections"></div></section>
-          <section class="ai-panel" role="tabpanel" id="image-ai-panel" aria-labelledby="image-ai-tab" tabindex="0" hidden></section>
+          <section class="ai-panel" role="tabpanel" id="image-ai-panel" aria-labelledby="image-ai-tab" tabindex="0" hidden><p class="save-status" id="image-connection-list-status" role="status"></p><div class="saved-connections" id="saved-image-connections"></div></section>
           </div>
           <div id="connection-editor-view" hidden>
             <button class="connection-back" id="connection-back" type="button" aria-label="뒤로가기" title="뒤로가기"><span aria-hidden="true">◀</span></button>
@@ -600,19 +600,9 @@
         if (pendingImageTest || modelType.value !== 'image') return;
         const version = ++imageTestVersion;
         const token = document.getElementById('connection-api-key').value.trim();
-        const body = {
-          token, model: document.getElementById('connection-image-model').value,
-          prefix: document.getElementById('connection-image-prefix').value,
-          suffix: document.getElementById('connection-image-suffix').value,
-          negativePrefix: document.getElementById('connection-image-negative-prefix').value,
-          steps: document.getElementById('image-steps-number').valueAsNumber,
-          guidance: document.getElementById('image-guidance-number').valueAsNumber,
-          rescale: document.getElementById('image-rescale-number').valueAsNumber,
-          ucPreset: document.getElementById('image-uc-preset').value,
-          qualityTags: document.getElementById('image-quality-tags').value,
-        };
+        const body = { token, id: editingConnectionId, model: document.getElementById('connection-image-model').value, ...readImageSettings() };
         try {
-          if (!token) throw new Error('API KEY에 NovelAI Persistent API Token을 입력해 주세요.');
+          if (!token && !editingConnectionId) throw new Error('API KEY에 NovelAI Persistent API Token을 입력해 주세요.');
           if (location.protocol !== 'http:' || !['127.0.0.1','localhost'].includes(location.hostname)) throw new Error('이미지 테스트는 PC의 로컬 게임 주소에서 사용해 주세요.');
           const controller = new AbortController();
           pendingImageTest = controller;
@@ -665,7 +655,7 @@
         imageModelFields.querySelectorAll('input, select, textarea, button').forEach(control => { control.disabled = isTextModel; });
         if (!isTextModel) updateImagePresets();
         imageTestButton.disabled = isTextModel || Boolean(pendingImageTest);
-        editorFooter.hidden = connectionEditor.hidden || !isTextModel;
+        editorFooter.hidden = connectionEditor.hidden;
         const vertexKey = document.getElementById('connection-vertex-key');
         const imageKey = document.getElementById('connection-api-key');
         vertexKey.hidden = !isTextModel;
@@ -685,6 +675,7 @@
         connectionForm.reset();
         saveStatus.textContent = '';
         document.getElementById('connection-vertex-key').placeholder = 'Google Vertex AI JSON 키 전체를 붙여넣으세요.';
+        document.getElementById('connection-api-key').placeholder = 'NovelAI Persistent API Token';
         modelType.value = document.getElementById('image-ai-tab').getAttribute('aria-selected') === 'true' ? 'image' : 'text';
         updateModelFields();
         connectionListView.hidden = true;
@@ -776,65 +767,101 @@
           }
         }
       });
+      function readImageSettings() {
+        return {
+          prefix: document.getElementById('connection-image-prefix').value,
+          suffix: document.getElementById('connection-image-suffix').value,
+          negativePrefix: document.getElementById('connection-image-negative-prefix').value,
+          steps: document.getElementById('image-steps-number').valueAsNumber,
+          guidance: document.getElementById('image-guidance-number').valueAsNumber,
+          rescale: document.getElementById('image-rescale-number').valueAsNumber,
+          ucPreset: document.getElementById('image-uc-preset').value,
+          qualityTags: document.getElementById('image-quality-tags').value,
+        };
+      }
+      function restoreImageSettings(settings) {
+        document.getElementById('connection-image-prefix').value = settings.prefix;
+        document.getElementById('connection-image-suffix').value = settings.suffix;
+        document.getElementById('connection-image-negative-prefix').value = settings.negativePrefix;
+        for (const [key, id] of [['steps','steps'],['guidance','guidance'],['rescale','rescale']]) {
+          document.getElementById('image-' + id + '-number').value = settings[key];
+          document.getElementById('image-' + id + '-range').value = settings[key];
+        }
+        document.getElementById('image-uc-preset').value = settings.ucPreset;
+        document.getElementById('image-quality-tags').value = settings.qualityTags;
+      }
       async function loadSavedConnections() {
-        const status = document.getElementById('connection-list-status');
+        const statuses = [document.getElementById('connection-list-status'), document.getElementById('image-connection-list-status')];
         if (location.protocol !== 'http:' || !['127.0.0.1', 'localhost'].includes(location.hostname)) return;
         try {
           const response = await fetch('/api/connections', { cache: 'no-store' });
           const data = await response.json();
           if (!response.ok || !data.ok || !Array.isArray(data.connections)) throw new Error(data.error?.message || '저장된 연결을 불러오지 못했습니다.');
           savedConnections = data.connections;
-          const list = document.getElementById('saved-connections');
-          list.replaceChildren();
+          const textList = document.getElementById('saved-connections');
+          const imageList = document.getElementById('saved-image-connections');
+          textList.replaceChildren(); imageList.replaceChildren();
           for (const connection of savedConnections) {
+            const isImage = connection.provider === 'novelai';
             const card = document.createElement('article');
             card.className = 'saved-connection';
             const info = document.createElement('div');
             const title = document.createElement('strong');
             title.textContent = connection.name;
             const detail = document.createElement('p');
-            detail.textContent = connection.model + ' · ' + connection.region;
+            const imageModelName = Array.from(document.getElementById('connection-image-model').options).find(option => option.value === connection.model)?.textContent;
+            detail.textContent = isImage ? imageModelName || connection.model : connection.model + ' · ' + connection.region;
             info.append(title, detail);
             const edit = document.createElement('button');
             edit.type = 'button';
             edit.textContent = '수정';
             edit.setAttribute('aria-label', connection.name + ' 수정');
             edit.addEventListener('click', () => {
-              resetConnectionTest();
+              resetConnectionTest(); resetImageTest(true);
               connectionForm.reset();
               editingConnectionId = connection.id;
-              modelType.value = 'text';
-              document.getElementById('connection-name').value = connection.name;
-              document.getElementById('connection-model').value = connection.model;
-              document.getElementById('connection-region').value = connection.region;
-              document.getElementById('connection-vertex-key').placeholder = '저장된 JSON 키를 사용합니다. 키를 변경할 때만 새 JSON을 입력하세요.';
+              modelType.value = isImage ? 'image' : 'text';
+              if (isImage) {
+                document.getElementById('connection-image-name').value = connection.name;
+                document.getElementById('connection-image-model').value = connection.model;
+                restoreImageSettings(connection.settings);
+                document.getElementById('connection-api-key').placeholder = '저장된 키를 사용합니다. 키를 바꿀 때만 새 토큰을 입력하세요.';
+              } else {
+                document.getElementById('connection-name').value = connection.name;
+                document.getElementById('connection-model').value = connection.model;
+                document.getElementById('connection-region').value = connection.region;
+                document.getElementById('connection-vertex-key').placeholder = '저장된 JSON 키를 사용합니다. 키를 변경할 때만 새 JSON을 입력하세요.';
+              }
               saveStatus.textContent = '';
               connectionListView.hidden = true;
               connectionEditor.hidden = false;
               updateModelFields();
-              document.getElementById('connection-name').focus();
+              document.getElementById(isImage ? 'connection-image-name' : 'connection-name').focus();
             });
             card.append(info, edit);
-            list.append(card);
+            (isImage ? imageList : textList).append(card);
           }
-          status.textContent = '';
+          statuses.forEach(status => { status.textContent = ''; });
         } catch (error) {
-          status.textContent = error.message || '저장된 연결을 불러오지 못했습니다.';
+          statuses.forEach(status => { status.textContent = error.message || '저장된 연결을 불러오지 못했습니다.'; });
         }
       }
       saveButton.addEventListener('click', async () => {
-        if (savingConnection || modelType.value !== 'text') return;
+        if (savingConnection) return;
+        const isImage = modelType.value === 'image';
         resetConnectionTest();
+        resetImageTest();
         saveStatus.dataset.state = '';
         saveStatus.textContent = '';
-        const name = document.getElementById('connection-name').value.trim();
-        const credentials = document.getElementById('connection-vertex-key').value.trim();
-        const model = document.getElementById('connection-model').value.trim();
-        const region = document.getElementById('connection-region').value;
+        const name = document.getElementById(isImage ? 'connection-image-name' : 'connection-name').value.trim();
+        const credentials = document.getElementById(isImage ? 'connection-api-key' : 'connection-vertex-key').value.trim();
+        const model = document.getElementById(isImage ? 'connection-image-model' : 'connection-model').value.trim();
+        const region = isImage ? undefined : document.getElementById('connection-region').value;
+        const settings = isImage ? readImageSettings() : undefined;
         try {
           if (!name || name.length > 80) throw new Error('이름은 1~80자로 입력해 주세요.');
-          if (!model) throw new Error('모델 ID를 입력해 주세요.');
-          if (!credentials && !editingConnectionId) throw new Error('저장할 JSON 키를 입력해 주세요.');
+          if (!model) throw new Error('모델을 선택하거나 모델 ID를 입력해 주세요.');
+          if (!credentials && !editingConnectionId) throw new Error('저장할 API KEY를 입력해 주세요.');
           if (location.protocol !== 'http:' || !['127.0.0.1', 'localhost'].includes(location.hostname)) throw new Error('연결 저장은 PC의 로컬 게임 주소에서 사용해 주세요.');
           savingConnection = true;
           connectionForm.inert = true;
@@ -843,15 +870,16 @@
           saveButton.textContent = '저장 중…';
           const response = await fetch('/api/connections', {
             method: 'POST', cache: 'no-store', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: editingConnectionId, name, credentials, model, region }),
+            body: JSON.stringify({ id: editingConnectionId, provider: isImage ? 'novelai' : 'vertex', name, credentials, model, region, settings }),
           });
           let data;
           try { data = await response.json(); } catch { throw new Error('로컬 저장 서버를 찾지 못했습니다. 게임 서버를 다시 실행해 주세요.'); }
           if (!response.ok || !data.ok) throw new Error(data.error?.message || '연결을 저장하지 못했습니다.');
           savingConnection = false;
           returnToConnectionList();
+          selectTab(document.getElementById(isImage ? 'image-ai-tab' : 'text-ai-tab'));
           await loadSavedConnections();
-          document.getElementById('connection-list-status').textContent = name + ' 연결을 이 PC에 저장했어요.';
+          document.getElementById(isImage ? 'image-connection-list-status' : 'connection-list-status').textContent = name + ' 연결을 이 PC에 저장했어요.';
         } catch (error) {
           saveStatus.dataset.state = 'error';
           saveStatus.textContent = error.message || '저장하지 못했습니다. 로컬 서버 연결을 확인해 주세요.';

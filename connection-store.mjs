@@ -56,7 +56,7 @@ export function createConnectionStore({ directory = path.join(process.env.LOCALA
       throw new StoreError('저장된 연결 파일을 해석하지 못했습니다. 기존 파일은 변경하지 않았습니다.', 'INVALID_STORE');
     }
   }
-  const summary = item => ({ id: item.id, name: item.name, provider: item.provider, model: item.model, region: item.region, createdAt: item.createdAt, updatedAt: item.updatedAt });
+  const summary = item => ({ id: item.id, name: item.name, provider: item.provider || 'vertex', model: item.model, region: item.region, settings: item.provider === 'novelai' ? item.settings : undefined, createdAt: item.createdAt, updatedAt: item.updatedAt });
   return {
     list: () => serialize(async () => (await load()).map(summary)),
     get: id => serialize(async () => {
@@ -68,8 +68,11 @@ export function createConnectionStore({ directory = path.join(process.env.LOCALA
       const items = await load();
       const existing = input.id ? items.find(item => item.id === input.id) : null;
       if (input.id && !existing) throw new StoreError('수정할 연결을 찾지 못했습니다.', 'CONNECTION_NOT_FOUND', 404);
+      const provider = input.provider || 'vertex';
+      if (!['vertex', 'novelai'].includes(provider)) throw new StoreError('지원하지 않는 연결 종류입니다.', 'INVALID_PROVIDER', 400);
+      if (existing && (existing.provider || 'vertex') !== provider) throw new StoreError('기존 연결의 모델 종류는 변경할 수 없습니다. 새 연결로 추가해 주세요.', 'PROVIDER_MISMATCH', 400);
       const now = new Date().toISOString();
-      const item = { id: existing?.id || randomUUID(), provider: 'vertex', name: input.name, model: input.model, region: input.region, credentials: input.credentials, createdAt: existing?.createdAt || now, updatedAt: now };
+      const item = { id: existing?.id || randomUUID(), provider, name: input.name, model: input.model, region: provider === 'vertex' ? input.region : undefined, settings: provider === 'novelai' ? input.settings : undefined, credentials: input.credentials, createdAt: existing?.createdAt || now, updatedAt: now };
       if (existing) items[items.indexOf(existing)] = item;
       else { if (items.length >= 100) throw new StoreError('저장 가능한 연결은 최대 100개입니다.', 'STORE_FULL', 400); items.push(item); }
       const encrypted = await protect(JSON.stringify({ version: 1, connections: items }));
