@@ -611,6 +611,9 @@
       .story-dialogue-complete:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
       @supports not (scrollbar-gutter: stable) { .story-log-list { overflow-y: scroll; } }
       @media (max-width: 640px) { .story-log-dialog { padding: 16px; } .story-log-heading { margin-bottom: 16px; } }
+      #game-preview[data-view="combat-preview"] .game-settings-row { display: none; }
+      #game-preview[data-view="combat-preview"] .game-bottom-menu { transform: translateY(100%); visibility: hidden; pointer-events: none; transition: none; }
+      .combat-speed-button { min-width: 44px; height: 40px; font-variant-numeric: tabular-nums; }
     </style>
   </head>
   <body>
@@ -687,6 +690,18 @@
             </div>
           </div>
           <div class="game-stage" id="game-stage">
+            <section class="story-preview-screen" id="combat-preview-screen" aria-label="전투 미리보기" hidden>
+              <div class="story-preview-top">
+                <div class="story-preview-heading-row">
+                  <button class="story-preview-back" id="combat-preview-back" type="button" aria-label="시나리오 목록으로 돌아가기" title="시나리오 목록으로 돌아가기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 6-6 6 6 6" /></svg></button>
+                  <div class="story-preview-titles"><h2 id="combat-preview-title"></h2><p id="combat-preview-chapter"></p></div>
+                  <div class="story-preview-actions">
+                    <button class="story-control-button story-icon-button" id="combat-auto" type="button" aria-label="전투 자동진행" title="전투 자동진행" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m8 5 11 7-11 7Z" /></svg></button>
+                    <button class="story-control-button combat-speed-button" id="combat-speed" type="button" aria-label="전투 배속 x1" title="전투 배속">x1</button>
+                  </div>
+                </div>
+              </div>
+            </section>
             <section class="story-preview-screen" id="story-preview-screen" aria-label="시나리오 미리보기" hidden>
               <div class="story-preview-top">
                 <div class="story-preview-heading-row">
@@ -1965,6 +1980,7 @@
       setInterval(updateGameEnergy, 1000);
       document.addEventListener('visibilitychange', () => { if (!document.hidden) updateGameEnergy(); });
       function showGameView(view) {
+        const isCombatPreview = view === 'combat-preview';
         const isStoryPreview = view === 'story-preview';
         const isBattle = view === 'battle';
         const isScenarios = view === 'scenarios';
@@ -1976,14 +1992,14 @@
             card.style.setProperty('--card-enter-delay', index * 120 + 'ms');
           });
         }
-        const isSubscreen = isBattle || isScenarios || isChapters || isStoryPreview;
+        const isSubscreen = isBattle || isScenarios || isChapters || isStoryPreview || isCombatPreview;
         const game = document.getElementById('game-preview');
         if (game.dataset.view === 'story-preview' && !isStoryPreview) {
           stopDialogueTyping();
           setDialogueAuto(false);
         }
-        game.dataset.view = isStoryPreview ? 'story-preview' : isChapters ? 'chapters' : isScenarios ? 'scenarios' : isBattle ? 'battle' : 'home';
-        game.setAttribute('aria-label', isStoryPreview ? '시나리오 미리보기' : isChapters ? '챕터 목록 화면' : isScenarios ? '시나리오 목록 화면' : isBattle ? '전투 화면' : '게임 메인 화면');
+        game.dataset.view = isCombatPreview ? 'combat-preview' : isStoryPreview ? 'story-preview' : isChapters ? 'chapters' : isScenarios ? 'scenarios' : isBattle ? 'battle' : 'home';
+        game.setAttribute('aria-label', isCombatPreview ? '전투 미리보기' : isStoryPreview ? '시나리오 미리보기' : isChapters ? '챕터 목록 화면' : isScenarios ? '시나리오 목록 화면' : isBattle ? '전투 화면' : '게임 메인 화면');
         const menu = document.querySelector('.game-bottom-menu');
         menu.inert = isSubscreen;
         menu.setAttribute('aria-hidden', String(isSubscreen));
@@ -1991,7 +2007,8 @@
         homeButton.hidden = false;
         homeButton.disabled = !isSubscreen;
         homeButton.setAttribute('aria-hidden', String(!isSubscreen));
-        document.getElementById('game-stage').setAttribute('aria-label', isStoryPreview ? '시나리오 미리보기' : isChapters ? '챕터 목록 화면' : isScenarios ? '시나리오 목록 화면' : isBattle ? '전투 화면' : '메인 화면');
+        document.getElementById('game-stage').setAttribute('aria-label', isCombatPreview ? '전투 미리보기' : isStoryPreview ? '시나리오 미리보기' : isChapters ? '챕터 목록 화면' : isScenarios ? '시나리오 목록 화면' : isBattle ? '전투 화면' : '메인 화면');
+        document.getElementById('combat-preview-screen').hidden = !isCombatPreview;
         document.getElementById('story-preview-screen').hidden = !isStoryPreview;
         document.getElementById('battle-content').hidden = !isBattle;
         document.getElementById('scenario-screen').hidden = !isScenarios;
@@ -2096,6 +2113,18 @@
         previewScenarioCard = card;
         const chapter = previewChapters.find(item => item.id === selectedPreviewChapter);
         const chapterWords = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
+        // 공통 전투 화면을 확인하기 위한 임시 진입 지점입니다.
+        if (chapter?.id === '2' && Number(card.querySelector('.scenario-number').textContent) === 3) {
+          document.getElementById('combat-preview-title').textContent = card.querySelector('.scenario-name')?.textContent || '전투';
+          document.getElementById('combat-preview-chapter').textContent = 'Chapter ' + (chapterWords[Number(chapter.id)] || chapter.id) + ' · ' + chapter.name;
+          document.getElementById('combat-auto').setAttribute('aria-pressed', 'false');
+          document.getElementById('combat-preview-screen').dataset.speed = '1';
+          document.getElementById('combat-speed').textContent = 'x1';
+          document.getElementById('combat-speed').setAttribute('aria-label', '전투 배속 x1');
+          showGameView('combat-preview');
+          document.getElementById('combat-preview-back').focus({ preventScroll: true });
+          return;
+        }
         document.getElementById('story-preview-title').textContent = card.querySelector('.scenario-name')?.textContent || '시나리오';
         document.getElementById('story-preview-chapter').textContent = chapter ? 'Chapter ' + (chapterWords[Number(chapter.id)] || chapter.id) + ' · ' + chapter.name : '';
         showGameView('story-preview');
@@ -2248,6 +2277,21 @@
         }
         renderPreviewChapters();
         openPreviewChapter(chapter);
+      });
+      document.getElementById('combat-preview-back').addEventListener('click', () => {
+        showGameView('scenarios');
+        previewScenarioCard?.focus({ preventScroll: true });
+      });
+      document.getElementById('combat-auto').addEventListener('click', event => {
+        const button = event.currentTarget;
+        button.setAttribute('aria-pressed', String(button.getAttribute('aria-pressed') !== 'true'));
+      });
+      document.getElementById('combat-speed').addEventListener('click', event => {
+        const screen = document.getElementById('combat-preview-screen');
+        const speed = Number(screen.dataset.speed || 1) % 3 + 1;
+        screen.dataset.speed = String(speed);
+        event.currentTarget.textContent = 'x' + speed;
+        event.currentTarget.setAttribute('aria-label', '전투 배속 x' + speed);
       });
     </script>
   </body>
