@@ -630,8 +630,10 @@
       .character-search-field > label, .character-filter > label { padding-left: 4px; }
       .character-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 224px), 224px)); gap: 20px; margin-top: 24px; }
       .character-portrait-card { width: 100%; aspect-ratio: 2 / 3; margin: 0; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-sidebar); overflow: hidden; }
-      .character-portrait-card { border-top: 5px solid #858b96; }
-      .character-card-stars { display: flex; justify-content: flex-start; gap: 2px; padding: 12px 12px 0; color: #858b96; }
+      .character-portrait-card { --rarity-color: #858b96; border-top: 5px solid var(--rarity-color); }
+      .character-portrait-card[data-rarity="4"] { --rarity-color: #b894ed; }
+      .character-portrait-card[data-rarity="5"] { --rarity-color: #f3d16b; }
+      .character-card-stars { display: flex; justify-content: flex-start; gap: 2px; padding: 12px 12px 0; color: var(--rarity-color); }
       .character-card-stars svg { width: 14px; height: 14px; }
     </style>
   </head>
@@ -725,8 +727,25 @@
                 </div>
               </div>
               <div class="character-card-grid" aria-label="캐릭터 카드 목록">
-                <div class="character-portrait-card" role="img" aria-label="회색 별 3개가 있는 빈 캐릭터 카드">
+                <div class="character-portrait-card" data-rarity="3" role="img" aria-label="회색 별 3개가 있는 빈 캐릭터 카드">
                   <div class="character-card-stars" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3.1 6.3L22 9.3l-5 4.9 1.2 6.8-6.2-3.2L5.8 21 7 14.2 2 9.3l6.9-1Z" /></svg>
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3.1 6.3L22 9.3l-5 4.9 1.2 6.8-6.2-3.2L5.8 21 7 14.2 2 9.3l6.9-1Z" /></svg>
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3.1 6.3L22 9.3l-5 4.9 1.2 6.8-6.2-3.2L5.8 21 7 14.2 2 9.3l6.9-1Z" /></svg>
+                  </div>
+                </div>
+                <div class="character-portrait-card" data-rarity="4" role="img" aria-label="보라색 별 4개가 있는 빈 캐릭터 카드">
+                  <div class="character-card-stars" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3.1 6.3L22 9.3l-5 4.9 1.2 6.8-6.2-3.2L5.8 21 7 14.2 2 9.3l6.9-1Z" /></svg>
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3.1 6.3L22 9.3l-5 4.9 1.2 6.8-6.2-3.2L5.8 21 7 14.2 2 9.3l6.9-1Z" /></svg>
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3.1 6.3L22 9.3l-5 4.9 1.2 6.8-6.2-3.2L5.8 21 7 14.2 2 9.3l6.9-1Z" /></svg>
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3.1 6.3L22 9.3l-5 4.9 1.2 6.8-6.2-3.2L5.8 21 7 14.2 2 9.3l6.9-1Z" /></svg>
+                  </div>
+                </div>
+                <div class="character-portrait-card" data-rarity="5" role="img" aria-label="노란색 별 5개가 있는 빈 캐릭터 카드">
+                  <div class="character-card-stars" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3.1 6.3L22 9.3l-5 4.9 1.2 6.8-6.2-3.2L5.8 21 7 14.2 2 9.3l6.9-1Z" /></svg>
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3.1 6.3L22 9.3l-5 4.9 1.2 6.8-6.2-3.2L5.8 21 7 14.2 2 9.3l6.9-1Z" /></svg>
                     <svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3.1 6.3L22 9.3l-5 4.9 1.2 6.8-6.2-3.2L5.8 21 7 14.2 2 9.3l6.9-1Z" /></svg>
                     <svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3.1 6.3L22 9.3l-5 4.9 1.2 6.8-6.2-3.2L5.8 21 7 14.2 2 9.3l6.9-1Z" /></svg>
                     <svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3.1 6.3L22 9.3l-5 4.9 1.2 6.8-6.2-3.2L5.8 21 7 14.2 2 9.3l6.9-1Z" /></svg>
