@@ -544,7 +544,8 @@
       .chapter-progress progress::-moz-progress-bar { background: var(--scenario-accent); border-radius: 999px; }
       #game-preview[data-view="chapters"] .chapter-card,
       #game-preview[data-view="scenarios"] .scenario-list .scenario-card {
-        animation: list-card-enter 500ms cubic-bezier(.22, 1, .36, 1) both;
+        animation: list-card-enter 800ms cubic-bezier(.22, 1, .36, 1) both;
+        animation-delay: var(--card-enter-delay, 0ms);
       }
       @keyframes list-card-enter {
         from { transform: translateX(100%); opacity: 0; }
@@ -1885,6 +1886,12 @@
         const isScenarios = view === 'scenarios';
         const isChapters = view === 'chapters';
         if (isScenarios) updateScenarioVisibility();
+        if (isChapters || isScenarios) {
+          const selector = isChapters ? '.chapter-list .chapter-card' : '.scenario-list .scenario-card';
+          Array.from(document.querySelectorAll(selector)).filter(card => !card.hidden).forEach((card, index) => {
+            card.style.setProperty('--card-enter-delay', index * 120 + 'ms');
+          });
+        }
         const isSubscreen = isBattle || isScenarios || isChapters;
         const game = document.getElementById('game-preview');
         game.dataset.view = isChapters ? 'chapters' : isScenarios ? 'scenarios' : isBattle ? 'battle' : 'home';
