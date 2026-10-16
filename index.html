@@ -431,6 +431,10 @@
       .lore-entry-card:focus-visible { outline: 2px solid var(--focus-ring); }
       .lore-entry-card strong { display: block; font-size: 14px; overflow-wrap: anywhere; }
       .lore-entry-card p { margin: 8px 0 0; color: var(--text-secondary); font-size: 12px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+      .world-character-lorebooks { display: grid; gap: 12px; }
+      .world-lore-choice { align-items: flex-start; padding: 14px; border: 1px solid var(--border); border-radius: 10px; }
+      .world-lore-choice span { min-width: 0; overflow-wrap: anywhere; }
+      .world-lore-choice small { display: block; margin-top: 6px; color: var(--text-secondary); font-size: 12px; line-height: 1.6; white-space: pre-wrap; }
     </style>
   </head>
   <body>
@@ -477,7 +481,7 @@
           <div id="lore-list-view">
           <div class="lore-toolbar">
             <div class="lore-tabs" role="tablist" aria-label="로어북 종류">
-              <button class="lore-tab" type="button" role="tab" id="lore-world-tab" aria-selected="true" aria-controls="lore-world-panel">세계관</button>
+              <button class="lore-tab" type="button" role="tab" id="lore-world-tab" aria-selected="true" aria-controls="lore-world-panel">배경</button>
               <button class="lore-tab" type="button" role="tab" id="lore-protagonist-tab" aria-selected="false" aria-controls="lore-protagonist-panel" tabindex="-1">주인공</button>
               <button class="lore-tab" type="button" role="tab" id="lore-character-tab" aria-selected="false" aria-controls="lore-character-panel" tabindex="-1">등장인물</button>
             </div>
@@ -494,7 +498,7 @@
             <button class="connection-back" id="lore-back" type="button" aria-label="로어북 목록으로 돌아가기" title="로어북 목록으로 돌아가기">◀</button>
             <form id="lore-entry-form" class="lore-entry-form" autocomplete="off">
               <div class="world-two-columns">
-                <div class="connection-field"><label for="lore-entry-type">구분</label><select class="connection-input" id="lore-entry-type"><option value="lore-world-tab">세계관</option><option value="lore-protagonist-tab">주인공</option><option value="lore-character-tab">등장인물</option></select></div>
+                <div class="connection-field"><label for="lore-entry-type">구분</label><select class="connection-input" id="lore-entry-type"><option value="lore-world-tab">배경</option><option value="lore-protagonist-tab">주인공</option><option value="lore-character-tab">등장인물</option></select></div>
                 <div class="connection-field"><label for="lore-entry-folder">폴더</label><select class="connection-input" id="lore-entry-folder"></select></div>
               </div>
               <div class="connection-field"><label for="lore-entry-name">로어북 이름</label><input class="connection-input" id="lore-entry-name" maxlength="120" required /></div>
@@ -508,12 +512,12 @@
           <div id="world-list-view"><div class="world-toolbar"><button class="add-world-button" id="add-world" type="button">+ 세계관 추가</button></div></div>
           <section id="world-editor" aria-label="세계관 추가" hidden>
             <button class="connection-back" id="world-back" type="button" aria-label="세계관 목록으로 돌아가기" title="세계관 목록으로 돌아가기"><span aria-hidden="true">◀</span></button>
-            <div class="world-steps" role="tablist" aria-label="세계관 설정 단계"><button type="button" class="world-step" role="tab" id="world-step-0" aria-controls="world-panel-0" aria-selected="true" tabindex="0"><span>1</span>세계</button><button type="button" class="world-step" role="tab" id="world-step-1" aria-controls="world-panel-1" aria-selected="false" tabindex="-1"><span>2</span>플레이어</button><button type="button" class="world-step" role="tab" id="world-step-2" aria-controls="world-panel-2" aria-selected="false" tabindex="-1"><span>3</span>등장인물</button><button type="button" class="world-step" role="tab" id="world-step-3" aria-controls="world-panel-3" aria-selected="false" tabindex="-1"><span>4</span>배경</button><button type="button" class="world-step" role="tab" id="world-step-4" aria-controls="world-panel-4" aria-selected="false" tabindex="-1"><span>5</span>테마</button><button type="button" class="world-step" role="tab" id="world-step-5" aria-controls="world-panel-5" aria-selected="false" tabindex="-1"><span>6</span>CG</button><button type="button" class="world-step" role="tab" id="world-step-6" aria-controls="world-panel-6" aria-selected="false" tabindex="-1"><span>7</span>고급</button></div>
+            <div class="world-steps" role="tablist" aria-label="세계관 설정 단계"><button type="button" class="world-step" role="tab" id="world-step-0" aria-controls="world-panel-0" aria-selected="true" tabindex="0"><span>1</span>세계</button><button type="button" class="world-step" role="tab" id="world-step-1" aria-controls="world-panel-1" aria-selected="false" tabindex="-1"><span>2</span>주인공</button><button type="button" class="world-step" role="tab" id="world-step-2" aria-controls="world-panel-2" aria-selected="false" tabindex="-1"><span>3</span>등장인물</button><button type="button" class="world-step" role="tab" id="world-step-3" aria-controls="world-panel-3" aria-selected="false" tabindex="-1"><span>4</span>배경</button><button type="button" class="world-step" role="tab" id="world-step-4" aria-controls="world-panel-4" aria-selected="false" tabindex="-1"><span>5</span>테마</button><button type="button" class="world-step" role="tab" id="world-step-5" aria-controls="world-panel-5" aria-selected="false" tabindex="-1"><span>6</span>CG</button><button type="button" class="world-step" role="tab" id="world-step-6" aria-controls="world-panel-6" aria-selected="false" tabindex="-1"><span>7</span>고급</button></div>
             <form id="world-form" autocomplete="off">
               <section class="world-panel" role="tabpanel" id="world-panel-0" aria-labelledby="world-step-0"><div class="world-panel-heading"><h2>세계</h2><span>1 / 7</span></div><div class="world-fields"><div class="connection-field"><label for="world-name">세계 이름</label><input class="connection-input" id="world-name" type="text" placeholder="예: 별이 잠든 도시" value="" /></div><div class="connection-field"><label for="world-description">구성 세계</label><textarea class="connection-input" id="world-description" rows="4" placeholder="게임의 장르, 분위기, 주요 세력과 세계의 특징을 자유롭게 적어주세요."></textarea></div><div class="connection-field"><label for="world-contact-name">캐릭터의 연락 수단 이름</label><input class="connection-input" id="world-contact-name" type="text" placeholder="예: 메시지, 통신 수정, 꿈의 편지" value="" /></div><div class="connection-field"><label for="world-text-model">텍스트 모델 선택</label><select class="connection-input" id="world-text-model"><option value="">저장된 텍스트 모델을 선택하세요</option></select><p class="connection-field-hint">AI 연결 화면에서 저장한 텍스트 모델을 사용해요.</p></div></div></section>
-              <section class="world-panel" role="tabpanel" id="world-panel-1" aria-labelledby="world-step-1" hidden><div class="world-panel-heading"><h2>플레이어</h2><span>2 / 7</span></div><div class="world-fields"><div class="connection-field"><label for="world-player-name">플레이어 이름</label><input class="connection-input" id="world-player-name" type="text" placeholder="예: 지휘관" value="" /></div><p class="connection-field-hint">프로필 카드에만 표시되는 이름이에요. 실제 게임 속 주인공 이름으로 사용하지 않아요.</p><div class="connection-field"><label for="world-protagonist">주인공 프로필 선택</label><select class="connection-input" id="world-protagonist" disabled><option value="">등록된 주인공 프로필이 없어요</option></select><p class="connection-field-hint">프로필 등록 기능을 추가하면 이곳에서 선택할 수 있어요.</p></div></div></section>
-              <section class="world-panel" role="tabpanel" id="world-panel-2" aria-labelledby="world-step-2" hidden><div class="world-panel-heading"><h2>등장인물</h2><span>3 / 7</span></div><div class="world-fields"><div class="world-note"><strong>등장인물은 선택사항이에요.</strong><p>선택한 캐릭터가 있으면 프로필을 참고해 게임에 맞는 등장인물로 생성해요. 선택하지 않으면 세계 설정과 지침을 참고해 AI가 등장인물을 만들어요.</p></div><fieldset class="world-profile-list"><legend>캐릭터 프로필 선택 · 여러 명 선택 가능</legend><p class="connection-field-hint">등록된 캐릭터 프로필이 없어요. 프로필 등록 기능을 추가하면 이곳에서 선택할 수 있어요.</p></fieldset></div></section>
-              <section class="world-panel" role="tabpanel" id="world-panel-3" aria-labelledby="world-step-3" hidden><div class="world-panel-heading"><h2>배경</h2><span>4 / 7</span></div><div class="world-fields"><div class="connection-field"><label for="world-background">배경 세계관 선택</label><select class="connection-input" id="world-background" disabled><option value="">등록된 배경 세계관이 없어요</option></select><p class="connection-field-hint">선택한 배경 세계관을 기반으로 게임의 세계를 만들어요. 배경 세계관 등록 기능을 추가하면 선택할 수 있어요.</p></div></div></section>
+              <section class="world-panel" role="tabpanel" id="world-panel-1" aria-labelledby="world-step-1" hidden><div class="world-panel-heading"><h2>주인공</h2><span>2 / 7</span></div><div class="world-fields"><div class="connection-field"><label for="world-player-name">플레이어 이름</label><input class="connection-input" id="world-player-name" type="text" placeholder="예: 지휘관" value="" /></div><p class="connection-field-hint">프로필 카드에만 표시되는 이름이에요. 실제 게임 속 주인공 이름으로 사용하지 않아요.</p><div class="connection-field"><label for="world-protagonist">주인공 로어북 선택</label><select class="connection-input" id="world-protagonist" disabled><option value="">저장된 주인공 로어북이 없어요</option></select><p class="connection-field-hint">로어북의 주인공 탭에 저장한 설정을 선택해요.</p></div></div></section>
+              <section class="world-panel" role="tabpanel" id="world-panel-2" aria-labelledby="world-step-2" hidden><div class="world-panel-heading"><h2>등장인물</h2><span>3 / 7</span></div><div class="world-fields"><div class="world-note"><strong>등장인물은 선택사항이에요.</strong><p>선택한 캐릭터가 있으면 프로필을 참고해 게임에 맞는 등장인물로 생성해요. 선택하지 않으면 세계 설정과 지침을 참고해 AI가 등장인물을 만들어요.</p></div><fieldset class="world-profile-list"><legend>등장인물 로어북 선택 · 여러 명 선택 가능</legend><div id="world-character-lorebooks" class="world-character-lorebooks"></div></fieldset></div></section>
+              <section class="world-panel" role="tabpanel" id="world-panel-3" aria-labelledby="world-step-3" hidden><div class="world-panel-heading"><h2>배경</h2><span>4 / 7</span></div><div class="world-fields"><div class="connection-field"><label for="world-background">배경 로어북 선택</label><select class="connection-input" id="world-background" disabled><option value="">저장된 배경 로어북이 없어요</option></select><p class="connection-field-hint">로어북의 배경 탭에 저장한 설정을 기반으로 게임의 세계를 만들어요.</p></div></div></section>
               <section class="world-panel" role="tabpanel" id="world-panel-4" aria-labelledby="world-step-4" hidden><div class="world-panel-heading"><h2>테마</h2><span>5 / 7</span></div><div class="world-fields"><fieldset class="world-profile-list"><legend>UI 스타일</legend><label class="world-theme"><input type="radio" name="world-theme" value="dark" checked /><span><strong>기본 테마</strong><small>어두운 배경과 연한 하늘색 버튼</small></span><span class="world-theme-swatches" aria-hidden="true"><i></i><i></i><i></i></span></label></fieldset><p class="connection-field-hint">현재는 기본 테마만 사용할 수 있어요.</p></div></section>
               <section class="world-panel" role="tabpanel" id="world-panel-5" aria-labelledby="world-step-5" hidden><div class="world-panel-heading"><h2>CG</h2><span>6 / 7</span></div><div class="world-fields"><div class="connection-field"><label for="world-image-model">이미지 생성 모델 선택</label><select class="connection-input" id="world-image-model"><option value="">저장된 이미지 모델을 선택하세요</option></select><p class="connection-field-hint">선택한 연결에 저장된 프롬프트와 생성 옵션을 사용해요.</p></div><fieldset class="world-profile-list"><legend>생성할 이미지</legend><div class="world-check-grid"><label class="world-check"><input type="checkbox" id="world-generate-portraits" checked />캐릭터 초상화</label><label class="world-check"><input type="checkbox" id="world-generate-locations" checked />장소 이미지</label><label class="world-check"><input type="checkbox" id="world-generate-enemies" checked />적 이미지</label><label class="world-check"><input type="checkbox" id="world-generate-battles" checked />전투 배경</label></div><p class="connection-field-hint">선택한 이미지만 생성해요. 해제한 종류는 생성하지 않아요.</p></fieldset><div class="connection-field"><label for="world-cg-frequency">장면 CG 생성 빈도</label><select class="connection-input" id="world-cg-frequency"><option value="0">생성하지 않음</option><option value="1">중요한 장면 1장면마다 최대 1개</option><option value="2">중요한 장면 2장면마다 최대 1개</option><option value="3" selected>중요한 장면 3장면마다 최대 1개</option><option value="5">중요한 장면 5장면마다 최대 1개</option><option value="10">중요한 장면 10장면마다 최대 1개</option></select><p class="connection-field-hint">CG로 그릴 장면은 스토리가 선택해요. 여기서는 생성 빈도만 정해요.</p></div><fieldset class="world-profile-list"><legend>가로 이미지 사이즈</legend><div class="world-two-columns"><div class="connection-field"><label for="world-landscape-width">가로 이미지 너비 (px)</label><input class="connection-input" id="world-landscape-width" type="number" min="64" step="64" value="1216" inputmode="numeric" /></div><div class="connection-field"><label for="world-landscape-height">가로 이미지 높이 (px)</label><input class="connection-input" id="world-landscape-height" type="number" min="64" step="64" value="832" inputmode="numeric" /></div></div><p class="connection-field-hint">장소 배경 · 전투 배경 · 소환 배너 · 장면 CG에 적용해요.</p></fieldset><fieldset class="world-profile-list"><legend>초상화 사이즈</legend><div class="world-two-columns"><div class="connection-field"><label for="world-portrait-width">초상화 너비 (px)</label><input class="connection-input" id="world-portrait-width" type="number" min="64" step="64" value="832" inputmode="numeric" /></div><div class="connection-field"><label for="world-portrait-height">초상화 높이 (px)</label><input class="connection-input" id="world-portrait-height" type="number" min="64" step="64" value="1216" inputmode="numeric" /></div></div><p class="connection-field-hint">캐릭터 카드 · 적 이미지에 적용해요.</p></fieldset></div></section>
               <section class="world-panel" role="tabpanel" id="world-panel-6" aria-labelledby="world-step-6" hidden><div class="world-panel-heading"><h2>고급</h2><span>7 / 7</span></div><div class="world-fields"><div class="connection-field"><label for="world-story-guidance">전체 스토리 지침</label><textarea class="connection-input" id="world-story-guidance" rows="4" placeholder="이 세계의 이야기 전체에 적용할 규칙을 적어주세요."></textarea></div><div class="connection-field"><label for="world-scene-guidance">장면 지침</label><textarea class="connection-input" id="world-scene-guidance" rows="4" placeholder="장면의 묘사 방식, 분위기, 전개에 대한 지침을 적어주세요."></textarea></div><div class="connection-field"><label for="world-cg-guidance">CG 지침</label><textarea class="connection-input" id="world-cg-guidance" rows="4" placeholder="장면 CG의 구도, 표현, 연출에 대한 지침을 적어주세요."></textarea></div><div class="connection-field"><label for="world-character-guidance">캐릭터 스토리 지침</label><textarea class="connection-input" id="world-character-guidance" rows="4" placeholder="캐릭터의 개인 이야기와 관계를 어떻게 전개할지 적어주세요."></textarea></div></div></section>
@@ -1399,6 +1403,7 @@
       }
       document.getElementById('add-world').addEventListener('click', () => {
         refreshWorldModels();
+        refreshWorldLorebooks();
         worldList.hidden = true;
         worldEditor.hidden = false;
         worldFooter.hidden = false;
@@ -1580,9 +1585,50 @@
         try { localStorage.setItem(loreEntryStorageKey, JSON.stringify(updated)); }
         catch { status.textContent = '저장하지 못했어요. 브라우저의 저장 공간을 확인해 주세요.'; return; }
         loreEntries = updated; selectedFolders[entry.type] = entry.folderId;
+        refreshWorldLorebooks();
         selectLoreTab(document.getElementById(entry.type)); closeLoreEditor();
       });
 
+
+      function refreshWorldLorebooks() {
+        for (const [id, type, label] of [['world-protagonist', 'lore-protagonist-tab', '주인공'], ['world-background', 'lore-world-tab', '배경']]) {
+          const select = document.getElementById(id);
+          const selected = select.value;
+          const entries = loreEntries.filter(entry => entry.type === type);
+          select.replaceChildren(new Option(entries.length ? label + ' 로어북을 선택하세요' : '저장된 ' + label + ' 로어북이 없어요', ''));
+          entries.forEach(entry => select.add(new Option(entry.name, entry.id)));
+          select.disabled = entries.length === 0;
+          if (entries.some(entry => entry.id === selected)) select.value = selected;
+        }
+        const container = document.getElementById('world-character-lorebooks');
+        const checked = new Set(Array.from(container.querySelectorAll('input:checked'), input => input.value));
+        container.replaceChildren();
+        const entries = loreEntries.filter(entry => entry.type === 'lore-character-tab');
+        if (!entries.length) {
+          const hint = document.createElement('p'); hint.className = 'connection-field-hint';
+          hint.textContent = '저장된 등장인물 로어북이 없어요. 선택 없이 진행하면 AI가 다른 설정과 지침을 참고해 등장인물을 만들어요.';
+          container.append(hint);
+        }
+        entries.forEach(entry => {
+          const label = document.createElement('label'); label.className = 'world-check world-lore-choice';
+          const input = document.createElement('input'); input.type = 'checkbox'; input.name = 'character-lorebooks'; input.value = entry.id; input.checked = checked.has(entry.id);
+          input.setAttribute('aria-label', entry.name);
+          const text = document.createElement('span'); text.append(document.createTextNode(entry.name));
+          if (entry.description) { const description = document.createElement('small'); description.textContent = entry.description; text.append(description); }
+          label.append(input, text); container.append(label);
+        });
+      }
+      // 실제 세계 생성 연결 시 이 선택 결과의 섹션 정보를 AI 요청에 사용합니다.
+      function readWorldLorebooks() {
+        const selected = (id, type) => loreEntries.find(entry => entry.id === document.getElementById(id).value && entry.type === type) || null;
+        const characters = new Set(Array.from(document.querySelectorAll('#world-character-lorebooks input:checked'), input => input.value));
+        return structuredClone({
+          protagonist: selected('world-protagonist', 'lore-protagonist-tab'),
+          background: selected('world-background', 'lore-world-tab'),
+          characters: loreEntries.filter(entry => entry.type === 'lore-character-tab' && characters.has(entry.id)),
+        });
+      }
+      refreshWorldLorebooks();
     </script>
   </body>
 </html>
