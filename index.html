@@ -451,7 +451,12 @@
       .game-experience progress::-webkit-progress-value { background: var(--action-background); border-radius: 999px; }
       .game-experience progress::-moz-progress-bar { background: var(--action-background); border-radius: 999px; }
       .game-stage { flex: 1; min-height: 0; }
-      .game-bottom-menu { display: flex; justify-content: center; gap: 12px; flex-shrink: 0; min-height: 72px; padding: 12px 28px; border-top: 1px solid var(--border); background: var(--surface-sidebar); }
+      #game-preview { position: relative; }
+      .game-bottom-menu { position: absolute; bottom: 0; left: 0; right: 0; z-index: 2; display: flex; justify-content: center; gap: 12px; min-height: 72px; padding: 12px 28px; border-top: 1px solid var(--border); background: var(--surface-sidebar); transform: translateY(0); visibility: visible; transition: transform 280ms ease, visibility 0s; }
+      #game-preview[data-view="battle"] .game-bottom-menu { transform: translateY(100%); visibility: hidden; pointer-events: none; transition: transform 280ms ease, visibility 0s 280ms; }
+      #game-preview[data-view="home"] .game-stage { padding-bottom: 72px; }
+      @media (max-width: 640px) { #game-preview[data-view="home"] .game-stage { padding-bottom: 84px; } }
+      @media (prefers-reduced-motion: reduce) { .game-bottom-menu, #game-preview[data-view="battle"] .game-bottom-menu { transition: none; } }
       .game-bottom-button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; width: 152px; min-width: 0; min-height: 46px; padding: 10px 16px; border: 1px solid var(--border); border-radius: 10px; background: transparent; color: var(--text-primary); font: inherit; font-size: 14px; cursor: pointer; }
       .game-bottom-button svg { width: 20px; height: 20px; flex-shrink: 0; color: var(--accent); }
       .game-bottom-button:hover { background: var(--surface-active); border-color: var(--accent); }
@@ -1793,7 +1798,9 @@
         const game = document.getElementById('game-preview');
         game.dataset.view = isBattle ? 'battle' : 'home';
         game.setAttribute('aria-label', isBattle ? '전투 화면' : '게임 메인 화면');
-        document.querySelector('.game-bottom-menu').hidden = isBattle;
+        const menu = document.querySelector('.game-bottom-menu');
+        menu.inert = isBattle;
+        menu.setAttribute('aria-hidden', String(isBattle));
         document.getElementById('game-home').hidden = !isBattle;
         document.getElementById('game-stage').setAttribute('aria-label', isBattle ? '전투 화면' : '메인 화면');
       }
