@@ -500,13 +500,13 @@
       .battle-content { display: flex; align-items: stretch; height: 100%; min-height: 0; padding: 32px 5%; }
       .story-entry-card { position: relative; display: block; width: 40%; min-width: 180px; height: 100%; min-height: 200px; padding: 0; border: 0; background: var(--border); color: var(--text-primary); font: inherit; text-align: left; cursor: pointer; clip-path: polygon(7% 0, 100% 0, 93% 100%, 0 100%); }
       .story-entry-card::before { content: ''; position: absolute; inset: 1px; background: linear-gradient(155deg, var(--surface-active), var(--surface-sidebar) 75%); clip-path: polygon(7% 0, 100% 0, 93% 100%, 0 100%); }
-      .story-card-content { position: absolute; top: 0; left: 0; right: 0; display: flex; flex-direction: column; gap: 16px; padding: 38px 14%; }
-      .story-card-heading { color: var(--accent); font-size: clamp(22px, 3vw, 38px); font-weight: 650; letter-spacing: .16em; line-height: 1.2; }
+      .story-card-content { position: absolute; top: 0; left: 0; right: 0; display: flex; flex-direction: column; gap: 10px; padding: 38px 14%; }
+      .story-card-heading { color: var(--accent); font-size: clamp(22px, 3vw, 38px); font-weight: 650; letter-spacing: .1em; line-height: 1.2; }
       .story-card-chapter { font-size: clamp(14px, 1.6vw, 20px); font-weight: 500; line-height: 1.6; overflow-wrap: anywhere; }
       .story-entry-card:hover { background: var(--accent); }
       .story-entry-card:focus-visible { outline: none; background: var(--focus-ring); }
       .story-entry-card:focus-visible::before { inset: 3px; }
-      @media (max-width: 640px) { .battle-content { padding: 24px 5%; } .story-entry-card { width: 40%; min-width: 150px; } .story-card-content { padding-top: 28px; gap: 12px; } }
+      @media (max-width: 640px) { .battle-content { padding: 24px 5%; } .story-entry-card { width: 40%; min-width: 150px; } .story-card-content { padding-top: 28px; gap: 8px; } }
     </style>
   </head>
   <body>
