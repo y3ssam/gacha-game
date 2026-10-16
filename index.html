@@ -685,6 +685,24 @@
       .character-awakening-effects > div { padding: 16px 0; border-bottom: 1px solid var(--border); }
       .character-awakening-effects dt { margin-bottom: 8px; font-size: 14px; font-weight: 600; }
       .character-awakening-effects dd { margin: 0; color: var(--text-secondary); font-size: 13px; line-height: 1.7; }
+      .character-outfits { display: grid; gap: 20px; padding: 2px 12px 12px 0; }
+      .character-outfits-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+      .character-outfits-heading h3 { margin: 0; font-size: 18px; }
+      .character-outfits-count { color: var(--text-secondary); font-size: 12px; }
+      .character-outfit-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr)); gap: 14px; }
+      .character-outfit { position: relative; min-width: 0; padding: 0; overflow: hidden; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-sidebar); color: var(--text-primary); font: inherit; text-align: left; cursor: pointer; }
+      .character-outfit[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+      .character-outfit:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
+      .character-outfit-art { display: grid; place-items: center; aspect-ratio: 2 / 3; color: var(--text-secondary); font-size: 12px; background: var(--surface-main); }
+      .character-outfit-art img { display: block; width: 100%; height: 100%; object-fit: cover; }
+      .character-outfit-name { display: block; padding: 12px; font-size: 13px; font-weight: 600; overflow-wrap: anywhere; }
+      .character-outfit-equipped { position: absolute; top: 10px; left: 10px; padding: 5px 8px; border-radius: 6px; background: var(--surface-active); color: var(--accent); font-size: 11px; font-weight: 600; }
+      .character-outfit-footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+      .character-outfit-status { margin: 0; color: var(--text-secondary); font-size: 13px; line-height: 1.7; }
+      .character-outfit-footer button:disabled { background: var(--surface-active); border-color: var(--border); color: var(--text-secondary); cursor: default; }
+      .character-equipped-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+      .character-portrait-card .character-card-stars { position: relative; z-index: 1; }
+      .character-card-info { z-index: 1; }
       @container (max-width: 650px) { .character-awakening-track { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
       .character-info-exp { display: grid; gap: 8px; }
       .character-info-exp-label { display: flex; justify-content: space-between; gap: 12px; color: var(--text-secondary); font-size: 12px; }
@@ -922,7 +940,14 @@
                     </dl>
                   </div>
                 </div>
-                <div class="character-detail-panel" id="character-panel-outfits" role="tabpanel" aria-labelledby="character-tab-outfits" tabindex="0" hidden></div>
+                <div class="character-detail-panel" id="character-panel-outfits" role="tabpanel" aria-labelledby="character-tab-outfits" tabindex="0" hidden>
+                  <div class="character-outfits">
+                    <div class="character-outfits-heading"><h3>보유 의상</h3><span class="character-outfits-count" id="character-outfits-count"></span></div>
+                    <p class="character-awakening-note">의상을 선택한 뒤 착용하면 캐릭터 일러스트가 해당 의상의 이미지로 바뀝니다.</p>
+                    <div class="character-outfit-list" id="character-outfit-list" role="group" aria-label="보유 의상 선택"></div>
+                    <div class="character-outfit-footer"><p class="character-outfit-status" id="character-outfit-status" aria-live="polite"></p><button class="character-growth-button" id="character-outfit-equip" type="button">착용</button></div>
+                  </div>
+                </div>
                 <div class="character-detail-panel" id="character-panel-affinity" role="tabpanel" aria-labelledby="character-tab-affinity" tabindex="0" hidden></div>
                 <div class="character-detail-panel" id="character-panel-profile" role="tabpanel" aria-labelledby="character-tab-profile" tabindex="0" hidden></div>
               </div>
@@ -2551,6 +2576,7 @@
       let selectedCharacterCard = null;
       // 실제 성장 데이터 연결 전, 캐릭터별로 보관하는 미리보기 세션의 스킬 레벨입니다.
       const previewCharacterSkillLevels = new WeakMap();
+      const previewCharacterOutfits = new WeakMap();
       function openCharacterDetail(card) {
         selectedCharacterCard = card;
         selectCharacterTab(document.getElementById('character-tab-info'));
@@ -2558,6 +2584,10 @@
         renderCharacterSkills(card);
         renderCharacterAwakening(card);
         document.getElementById('character-panel-awakening').scrollTop = 0;
+        const outfits = getCharacterOutfits(card);
+        outfits.selectedId = outfits.equippedId;
+        renderCharacterOutfits(card);
+        document.getElementById('character-panel-outfits').scrollTop = 0;
         document.getElementById('character-panel-skills').scrollTop = 0;
         const name = card.querySelector('.character-card-name').textContent;
         document.getElementById('character-detail-name').textContent = name;
@@ -2566,10 +2596,7 @@
         stars.replaceChildren(...Array.from(card.querySelectorAll('.character-card-stars svg'), star => star.cloneNode(true)));
         stars.style.color = getComputedStyle(card).getPropertyValue('--rarity-color');
         stars.setAttribute('aria-label', card.dataset.rarity + '성');
-        const illustration = document.getElementById('character-detail-illustration');
-        const image = card.querySelector('img');
-        illustration.replaceChildren(...(image ? [image.cloneNode(true)] : []));
-        illustration.setAttribute('aria-label', name + ' 일러스트' + (image ? '' : ' · 이미지 준비 전'));
+        syncCharacterOutfitImage(card);
         showGameView('character-detail');
         document.getElementById('character-detail-screen').scrollTop = 0;
         document.getElementById('character-detail-back').focus({ preventScroll: true });
@@ -2678,6 +2705,78 @@
         if (card === selectedCharacterCard) renderCharacterAwakening(card);
         return stage;
       }
+      function getCharacterOutfits(card) {
+        if (!previewCharacterOutfits.has(card)) {
+          // 실제 보유 의상과 생성 이미지가 연결되기 전까지의 세션 미리보기입니다.
+          previewCharacterOutfits.set(card, {
+            equippedId: 'default', selectedId: 'default',
+            items: [
+              { id: 'default', name: '기본 의상', imageUrl: card.querySelector('img')?.getAttribute('src') || null },
+              { id: 'preview', name: '미리보기 의상', imageUrl: null },
+            ],
+          });
+        }
+        return previewCharacterOutfits.get(card);
+      }
+      function renderCharacterOutfits(card) {
+        const state = getCharacterOutfits(card);
+        const list = document.getElementById('character-outfit-list');
+        list.replaceChildren();
+        document.getElementById('character-outfits-count').textContent = state.items.length + '개';
+        state.items.forEach(outfit => {
+          const button = document.createElement('button'); button.type = 'button'; button.className = 'character-outfit';
+          button.dataset.outfitId = outfit.id;
+          button.setAttribute('aria-pressed', String(outfit.id === state.selectedId));
+          button.setAttribute('aria-label', outfit.name + (outfit.id === state.equippedId ? ' · 착용 중' : ''));
+          const art = document.createElement('span'); art.className = 'character-outfit-art';
+          if (outfit.imageUrl) { const image = document.createElement('img'); image.src = outfit.imageUrl; image.alt = ''; art.append(image); }
+          else art.textContent = '이미지 준비 전';
+          const name = document.createElement('span'); name.className = 'character-outfit-name'; name.textContent = outfit.name;
+          button.append(art, name);
+          if (outfit.id === state.equippedId) { const badge = document.createElement('span'); badge.className = 'character-outfit-equipped'; badge.textContent = '착용 중'; button.append(badge); }
+          list.append(button);
+        });
+        const equipped = state.items.find(item => item.id === state.equippedId);
+        document.getElementById('character-outfit-status').textContent = '현재 착용: ' + equipped.name;
+        const button = document.getElementById('character-outfit-equip');
+        button.disabled = state.selectedId === state.equippedId;
+        button.textContent = button.disabled ? '착용 중' : '착용';
+      }
+      function syncCharacterOutfitImage(card) {
+        const state = getCharacterOutfits(card);
+        const outfit = state.items.find(item => item.id === state.equippedId);
+        card.querySelectorAll('img').forEach(image => image.remove());
+        if (outfit.imageUrl) {
+          const image = document.createElement('img'); image.src = outfit.imageUrl; image.alt = ''; image.className = 'character-equipped-image'; card.prepend(image);
+        }
+        if (card === selectedCharacterCard) {
+          const illustration = document.getElementById('character-detail-illustration');
+          illustration.replaceChildren();
+          if (outfit.imageUrl) { const image = document.createElement('img'); image.src = outfit.imageUrl; image.alt = ''; illustration.append(image); }
+          illustration.setAttribute('aria-label', card.querySelector('.character-card-name').textContent + ' · ' + outfit.name + ' 일러스트' + (outfit.imageUrl ? '' : ' · 이미지 준비 전'));
+        }
+      }
+      function equipCharacterOutfit(card, outfitId) {
+        if (!card) return false;
+        const state = getCharacterOutfits(card);
+        if (!state.items.some(item => item.id === outfitId)) return false;
+        state.equippedId = outfitId; state.selectedId = outfitId;
+        syncCharacterOutfitImage(card);
+        if (card === selectedCharacterCard) renderCharacterOutfits(card);
+        return true;
+      }
+      document.getElementById('character-outfit-list').addEventListener('click', event => {
+        const button = event.target.closest('.character-outfit');
+        if (!button || !selectedCharacterCard) return;
+        const state = getCharacterOutfits(selectedCharacterCard);
+        state.selectedId = button.dataset.outfitId;
+        renderCharacterOutfits(selectedCharacterCard);
+        document.querySelectorAll('.character-outfit').forEach(item => { if (item.dataset.outfitId === state.selectedId) item.focus({ preventScroll: true }); });
+      });
+      document.getElementById('character-outfit-equip').addEventListener('click', () => {
+        if (!selectedCharacterCard) return;
+        equipCharacterOutfit(selectedCharacterCard, getCharacterOutfits(selectedCharacterCard).selectedId);
+      });
       function selectCharacterTab(selected) {
         document.querySelectorAll('.character-detail-action').forEach(tab => {
           const active = tab === selected;
