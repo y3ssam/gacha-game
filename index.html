@@ -470,6 +470,12 @@
             </svg>
             <span>AI 연결</span>
           </a>
+          <a class="nav-item" id="game-nav" href="#game-preview" aria-label="게임으로 <">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M10 8H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-5M14 3h7v7M21 3 10 14" />
+            </svg>
+            <span>게임으로 &lt;</span>
+          </a>
         </nav>
       </aside>
       <main class="content" id="ai-connection" aria-labelledby="page-title">
@@ -477,6 +483,7 @@
           <h1 id="page-title">AI 연결</h1>
           <p id="page-description">스토리를 만드는 AI와 이미지를 그리는 AI를 연결하세요.</p>
         </header>
+        <div class="content-body" id="game-preview" aria-label="게임 화면 미리보기" hidden></div>
         <div class="content-body" id="lorebook" hidden>
           <div id="lore-list-view">
           <div class="lore-toolbar">
@@ -1107,28 +1114,32 @@
       const worldNav = document.getElementById('worlds-nav');
       const loreNav = document.getElementById('lorebook-nav');
       const aiNav = document.getElementById('ai-connection-nav');
+      const gameNav = document.getElementById('game-nav');
       function showSection(section) {
         if (savingConnection) return;
         returnToConnectionList();
         const isWorlds = section === 'worlds';
         const isLorebook = section === 'lorebook';
+        const isGame = section === 'game-preview';
+        document.getElementById('game-preview').hidden = !isGame;
         document.getElementById('worlds').hidden = !isWorlds;
         document.getElementById('lorebook').hidden = !isLorebook;
         document.getElementById('lore-editor-footer').hidden = !isLorebook || document.getElementById('lore-editor').hidden;
-        document.getElementById('ai-connection-body').hidden = isWorlds || isLorebook;
+        document.getElementById('ai-connection-body').hidden = isWorlds || isLorebook || isGame;
         document.getElementById('world-footer').hidden = !isWorlds || document.getElementById('world-editor').hidden;
         editorFooter.hidden = true;
-        document.getElementById('page-title').textContent = isWorlds ? '세계관' : isLorebook ? '로어북' : 'AI 연결';
+        document.getElementById('page-title').textContent = isGame ? '게임 화면' : isWorlds ? '세계관' : isLorebook ? '로어북' : 'AI 연결';
         document.getElementById('page-description').textContent = isWorlds
           ? '나만의 세계관을 만들고, 이어서 플레이하세요.'
           : isLorebook ? '세계와 캐릭터의 설정을 모아두는 공간이에요.'
+          : isGame ? '앞으로 만들 게임 화면을 확인하는 임시 공간이에요.'
           : '스토리를 만드는 AI와 이미지를 그리는 AI를 연결하세요.';
-        for (const [link, selected] of [[worldNav, isWorlds], [loreNav, isLorebook], [aiNav, !isWorlds && !isLorebook]]) {
+        for (const [link, selected] of [[worldNav, isWorlds], [loreNav, isLorebook], [aiNav, !isWorlds && !isLorebook && !isGame], [gameNav, isGame]]) {
           if (selected) link.setAttribute('aria-current', 'page');
           else link.removeAttribute('aria-current');
         }
       }
-      for (const [link, section] of [[worldNav, 'worlds'], [loreNav, 'lorebook'], [aiNav, 'ai-connection']]) {
+      for (const [link, section] of [[worldNav, 'worlds'], [loreNav, 'lorebook'], [aiNav, 'ai-connection'], [gameNav, 'game-preview']]) {
         link.addEventListener('click', event => {
           event.preventDefault();
           if (savingConnection) return;
@@ -1137,7 +1148,7 @@
         });
       }
       function sectionFromHash() {
-        return ['#worlds', '#lorebook'].includes(location.hash) ? location.hash.slice(1) : 'ai-connection';
+        return ['#worlds', '#lorebook', '#game-preview'].includes(location.hash) ? location.hash.slice(1) : 'ai-connection';
       }
       window.addEventListener('hashchange', () => showSection(sectionFromHash()));
       showSection(sectionFromHash());
