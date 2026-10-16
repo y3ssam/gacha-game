@@ -1122,10 +1122,8 @@
               <div class="equipment-picker-heading"><button class="connection-back" id="character-equipment-back" type="button" aria-label="장비 탭으로 돌아가기">◀</button><h2 id="character-equipment-list-title">보유 장비</h2></div>
               <div class="equipment-picker-layout">
                 <div class="equipment-picker-list-pane"><div class="character-equipment-list" id="character-equipment-list" role="group" aria-label="장착할 장비 선택"></div></div>
-                <aside class="equipment-comparison" aria-label="장비 비교">
-                  <h3>현재 장비</h3><div class="equipment-comparison-card" id="equipment-compare-current" aria-label="현재 장비 없음"></div>
-                  <h3>선택한 장비</h3><div class="equipment-comparison-card" id="equipment-compare-selected"></div>
-                  <p class="equipment-comparison-diff" id="equipment-compare-diff"></p>
+                <aside class="equipment-comparison" aria-label="장비 정보">
+                  <div class="equipment-comparison-card" id="equipment-selected-details" aria-label="장비 정보"></div>
                   <button class="character-growth-button" id="equipment-enhance-selected" type="button" disabled>강화</button>
                   <button class="character-growth-button" id="equipment-confirm" type="button" disabled>장착</button>
                 </aside>
@@ -3336,7 +3334,7 @@
           row.append(createEquipmentIcon(item.type), name); list.append(row);
         });
         if (!items.length) { const empty = document.createElement('p'); empty.className = 'character-awakening-note'; empty.textContent = '보유한 ' + type.name + ' 장비가 없습니다.'; list.append(empty); }
-        renderEquipmentComparison(card);
+        renderSelectedEquipment(card);
       }
       function equipCharacterEquipment(card, itemId) {
         if (!card) return false;
@@ -3360,7 +3358,7 @@
         if (!item) return;
         state.selectedItemId = item.id;
         document.querySelectorAll('.character-equipment-choice').forEach(choice => choice.setAttribute('aria-pressed', String(choice === button)));
-        renderEquipmentComparison(selectedCharacterCard);
+        renderSelectedEquipment(selectedCharacterCard);
       });
       document.getElementById('equipment-confirm').addEventListener('click', () => {
         if (!selectedCharacterCard) return;
@@ -3385,24 +3383,14 @@
         const type = getCharacterEquipment(selectedCharacterCard).selectedType;
         document.querySelectorAll('[data-equipment-type]').forEach(slot => { if (slot.dataset.equipmentType === type) slot.focus({ preventScroll: true }); });
       }
-      function renderEquipmentComparison(card) {
+      function renderSelectedEquipment(card) {
         const state = getCharacterEquipment(card);
         const current = state.items.find(item => item.id === state.equipped[state.selectedType]);
         const selected = state.items.find(item => item.id === state.selectedItemId && item.type === state.selectedType);
-        const render = (id, item) => {
-          const box = document.getElementById(id); box.replaceChildren();
-          box.setAttribute('aria-label', item ? item.name : id === 'equipment-compare-current' ? '현재 장비 없음' : '선택한 장비 없음');
-          if (!item) return;
-          box.append(createEquipmentSheet(item));
-        };
-        render('equipment-compare-current', current); render('equipment-compare-selected', selected);
-        const diff = document.getElementById('equipment-compare-diff');
-        if (selected) {
-          const before = getCharacterEquipmentTotalStats(card);
-          const after = getCharacterEquipmentTotalStats(card, { ...state, equipped: { ...state.equipped, [state.selectedType]: selected.id } });
-          const changes = Object.keys(characterEquipmentStatLabels).filter(key => before[key] !== after[key]).map(key => characterEquipmentStatLabels[key] + ' ' + before[key] + ' → ' + after[key] + ' (' + (after[key] > before[key] ? '+' : '') + (after[key] - before[key]) + (['critRate', 'critDamage', 'effectHit', 'effectResist'].includes(key) ? '%p' : '') + ')');
-          diff.textContent = changes.length ? '장착 후 변화 · 세트 효과 포함\n' + changes.join('\n') : '현재 장비와 스탯 차이가 없습니다.';
-        } else diff.textContent = '목록에서 장비를 선택하면 장착 후 스탯을 비교할 수 있습니다.';
+        const box = document.getElementById('equipment-selected-details'); box.replaceChildren();
+        box.setAttribute('aria-label', selected ? selected.name + ' 정보' : '장비 정보');
+        if (selected) box.append(createEquipmentSheet(selected));
+        else { const hint = document.createElement('p'); hint.textContent = '장비를 선택하세요.'; box.append(hint); }
         const confirm = document.getElementById('equipment-confirm');
         document.getElementById('equipment-enhance-selected').disabled = !selected || selected.enhancement >= equipmentEnhancementRules.maxLevel;
         confirm.disabled = !selected || selected.id === current?.id;
