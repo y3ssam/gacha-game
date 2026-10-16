@@ -730,11 +730,14 @@
       .character-profile-field dd { margin: 0; color: var(--text-primary); font-size: 14px; line-height: 1.8; white-space: pre-wrap; overflow-wrap: anywhere; }
       .character-profile-background { display: grid; gap: 14px; padding-top: 6px; }
       #character-profile-background { display: grid; gap: 14px; }
-      .character-equipment { display: grid; gap: 20px; padding: 2px 12px 12px 0; }
+      #character-panel-equipment { overflow: hidden; scrollbar-gutter: auto; }
+      .character-detail-screen:has(#character-tab-equipment[aria-selected="true"]) { overflow: hidden; gap: 16px; }
+      .character-detail-screen:has(#character-tab-equipment[aria-selected="true"]) .character-detail-body { min-height: 0; }
+      .character-equipment { height: 100%; min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: 12px; padding: 0 8px 0 0; }
       .character-equipment h3 { margin: 0; font-size: 18px; font-weight: 600; }
-      .character-equipment-overview { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: stretch; min-height: 340px; gap: 20px; }
+      .character-equipment-overview { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: stretch; min-height: 0; gap: 16px; }
       .character-equipment-slots { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 10px; }
-      .character-equipment-slot { position: relative; min-height: 94px; min-width: 0; padding: 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-sidebar); color: var(--text-primary); font: inherit; text-align: left; cursor: pointer; }
+      .character-equipment-slot { position: relative; min-height: 0; min-width: 0; padding: 12px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-sidebar); color: var(--text-primary); font: inherit; text-align: left; cursor: pointer; }
       .character-equipment-slot strong { position: absolute; top: 12px; left: 14px; color: var(--accent); font-size: 13px; }
       .character-equipment-slot span { position: absolute; inset: 0; display: grid; place-items: center; padding: 26px 10px; color: var(--text-secondary); font-size: 12px; text-align: center; overflow-wrap: anywhere; }
       .character-equipment-slot:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
@@ -759,9 +762,11 @@
       .character-equipment-stat-grid dd { margin: 0; font-size: 13px; font-variant-numeric: tabular-nums; }
       .character-equipment-set[data-active="true"] { color: var(--accent); }
       #character-equipment-sets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
-      .character-equipment-set-slot { min-width: 0; min-height: 96px; padding: 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-sidebar); }
-      .character-equipment-set-slot strong { display: block; margin-bottom: 8px; color: var(--accent); font-size: 14px; overflow-wrap: anywhere; }
-      .character-equipment-set-slot .character-equipment-set { font-size: 12px; line-height: 1.7; overflow-wrap: anywhere; }
+      .character-equipment-set-slot { min-width: 0; min-height: 68px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-sidebar); }
+      .character-equipment-set-slot strong { display: block; margin-bottom: 4px; color: var(--accent); font-size: 13px; overflow-wrap: anywhere; }
+      .character-equipment-set-slot .character-equipment-set { font-size: 11px; line-height: 1.6; overflow-wrap: anywhere; }
+      .character-equipment > .character-equipment-box { padding: 0; gap: 8px; border: 0; }
+      .character-equipment > .character-equipment-box h4 { font-size: 14px; }
       .equipment-picker-screen { height: 100%; min-height: 0; display: flex; flex-direction: column; padding: 24px 28px; gap: 20px; }
       .equipment-picker-heading { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
       .equipment-picker-heading h2 { margin: 0; font-size: 22px; }
@@ -782,21 +787,52 @@
       .character-equipment-icon svg { width: 52px; height: 52px; max-width: 100%; max-height: 100%; }
       .character-equipment-choice[aria-pressed="true"] { border-color: var(--accent); background: var(--surface-active); }
       .character-equipment-choice:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -3px; }
-      .equipment-hover { position: fixed; z-index: 110; width: 260px; max-width: calc(100vw - 24px); max-height: calc(100dvh - 24px); overflow-y: auto; padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-sidebar); color: var(--text-primary); box-shadow: var(--frame-shadow); pointer-events: none; font-size: 13px; line-height: 1.8; white-space: pre-line; }
+      .equipment-hover { position: fixed; z-index: 110; width: 310px; max-width: calc(100vw - 24px); max-height: calc(100dvh - 24px); overflow-y: auto; padding: 18px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-sidebar); color: var(--text-primary); box-shadow: var(--frame-shadow); pointer-events: none; font-size: 13px; line-height: 1.8; }
       .equipment-context-menu { z-index: 120; }
-      .equipment-enhancement-body { min-height: 0; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; display: grid; align-content: start; gap: 20px; }
-      .equipment-enhancement-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
-      .equipment-enhancement-options h3 { margin: 0 0 12px; font-size: 16px; }
-      .equipment-enhancement-cost { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+      .equipment-enhancement-body { flex: 1; min-height: 0; display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 20px; }
+      .equipment-enhancement-layout { display: grid; grid-template-columns: minmax(0, 45fr) minmax(0, 55fr); min-height: 0; gap: 32px; }
+      .equipment-enhancement-art { position: relative; display: grid; place-items: center; min-height: 0; overflow: hidden; border-radius: 16px; background: radial-gradient(ellipse at center, var(--surface-active), var(--surface-main) 70%); }
+      .equipment-enhancement-art::before, .equipment-enhancement-art::after { content: ''; position: absolute; width: min(65%, 280px); aspect-ratio: 1; border: 1px solid var(--border); transform: rotate(30deg); }
+      .equipment-enhancement-art::after { width: min(49%, 210px); transform: rotate(60deg); }
+      .equipment-enhancement-emblem { display: grid; justify-items: center; gap: 16px; z-index: 1; }
+      .equipment-enhancement-emblem .character-equipment-icon { padding: 24px; border: 1px solid var(--accent); border-radius: 16px; background: var(--surface-sidebar); box-shadow: 0 12px 32px #0003; }
+      .equipment-enhancement-emblem svg { width: 88px; height: 88px; }
+      .equipment-enhancement-emblem strong { color: var(--accent); font-size: 26px; }
+      .equipment-enhancement-details { min-height: 0; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; padding-right: 12px; }
+      .equipment-enhancement-footer { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-top: 16px; border-top: 1px solid var(--border); }
+      .equipment-enhancement-cost { display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
+      .equipment-enhancement-cost .character-growth-button { min-width: 136px; min-height: 44px; }
       .equipment-enhancement-message { margin: 0; color: var(--text-secondary); font-size: 14px; line-height: 1.8; white-space: pre-line; }
       .equipment-enhancement-message[data-state="error"] { color: #ff9fb2; }
       #equipment-enhancement-confirm:disabled { background: var(--surface-active); border-color: var(--border); color: var(--text-secondary); cursor: default; }
-      .character-equipment-overview > .character-equipment-box { grid-template-rows: auto minmax(0, 1fr); }
-      .character-equipment-overview .character-equipment-box h4 { font-size: 17px; }
-      .character-equipment-overview .character-equipment-stat-grid { grid-template-columns: minmax(0, 1fr); grid-template-rows: repeat(8, minmax(24px, 1fr)); gap: 8px; align-items: center; }
+      .character-equipment-overview > .character-equipment-box { grid-template-rows: auto minmax(0, 1fr); min-height: 0; padding: 12px; gap: 8px; }
+      .character-equipment-overview .character-equipment-box h4 { font-size: 16px; }
+      .character-equipment-overview .character-equipment-stat-grid { min-height: 0; grid-template-columns: minmax(0, 1fr); grid-template-rows: repeat(8, minmax(0, 1fr)); gap: 3px; align-items: center; }
       .character-equipment-overview .character-equipment-stat-grid dt { font-size: 14px; }
       .character-equipment-overview .character-equipment-stat-grid dd { font-size: 16px; font-weight: 600; }
       .character-equipment-stat-bonus { margin-left: 5px; color: var(--accent); font-size: 14px; white-space: nowrap; }
+      .equipment-sheet { display: grid; gap: 14px; }
+      .equipment-sheet-name { margin: 0; font-size: 16px; font-weight: 600; line-height: 1.5; overflow-wrap: anywhere; }
+      .equipment-sheet-main { display: grid; grid-template-columns: 72px minmax(0, 1fr); align-items: center; gap: 16px; }
+      .equipment-sheet-icon { position: relative; display: grid; place-items: center; width: 72px; aspect-ratio: 1; padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-active); }
+      .equipment-sheet-icon .character-equipment-icon svg { width: 40px; height: 40px; }
+      .equipment-sheet-icon > span:last-child { position: absolute; top: 2px; left: 7px; color: var(--accent); font-size: 12px; font-weight: 600; }
+      .equipment-sheet-primary-label { display: block; color: var(--text-secondary); font-size: 12px; }
+      .equipment-sheet-primary-value { display: block; color: var(--accent); font-size: 32px; font-weight: 650; line-height: 1.25; font-variant-numeric: tabular-nums; }
+      .equipment-sheet-primary-max { color: var(--text-secondary); font-size: 11px; }
+      .equipment-sheet-substats { display: grid; gap: 9px; margin: 0; padding: 14px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+      .equipment-sheet-substats > div { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+      .equipment-sheet-substats dt { color: var(--text-secondary); font-size: 13px; }
+      .equipment-sheet-substats dd { margin: 0; font-size: 14px; font-variant-numeric: tabular-nums; }
+      .equipment-sheet-level { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; }
+      .equipment-sheet-level strong { color: var(--accent); }
+      .equipment-sheet-set { display: grid; gap: 6px; }
+      .equipment-sheet-set strong { color: var(--accent); font-size: 13px; }
+      .equipment-sheet-set span { color: var(--text-secondary); font-size: 12px; line-height: 1.6; }
+      .equipment-sheet-next { color: var(--accent); font-size: 13px; line-height: 1.7; }
+      .equipment-enhancement-details .equipment-sheet-primary-value { font-size: 42px; }
+      .equipment-enhancement-details .equipment-sheet-substats { gap: 14px; }
+      @media (max-width: 760px) { .equipment-enhancement-layout { gap: 16px; grid-template-columns: minmax(0, 35fr) minmax(0, 65fr); } .equipment-enhancement-footer { gap: 12px; flex-wrap: wrap; } .equipment-enhancement-cost { margin-left: auto; } .equipment-enhancement-details .equipment-sheet-primary-value { font-size: 30px; } }
       @media (max-width: 640px) { .equipment-picker-screen { padding: 20px 16px; } .equipment-picker-layout { gap: 12px; } .character-equipment-overview { gap: 12px; } }
       @container (max-width: 650px) { .character-equipment-slots { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
       .character-profile-background p { margin: 0; color: var(--text-primary); font-size: 14px; line-height: 1.9; white-space: pre-wrap; overflow-wrap: anywhere; }
@@ -1098,10 +1134,11 @@
             <section class="equipment-picker-screen" id="equipment-enhancement-screen" aria-label="장비 강화 화면" hidden>
               <div class="equipment-picker-heading"><button class="connection-back" id="equipment-enhancement-back" type="button" aria-label="강화 화면에서 돌아가기">◀</button><h2 id="equipment-enhancement-title">장비 강화</h2></div>
               <div class="equipment-enhancement-body">
-                <div class="equipment-enhancement-options"><section><h3>현재 옵션</h3><div class="equipment-comparison-card" id="equipment-enhancement-current"></div></section><section><h3>다음 강화</h3><div class="equipment-comparison-card" id="equipment-enhancement-next"></div></section></div>
-                <p class="equipment-enhancement-message">매 강화마다 주 옵션이 증가합니다. +3·6·9·12·15에서는 서브 옵션이 4개 미만이면 1개 추가되고, 4개라면 기존 서브 옵션 중 1개가 강화됩니다.</p>
-                <div class="equipment-enhancement-cost"><p class="equipment-enhancement-message" id="equipment-enhancement-cost"></p><button class="character-growth-button" id="equipment-enhancement-confirm" type="button">강화</button></div>
-                <p class="equipment-enhancement-message" id="equipment-enhancement-status" aria-live="polite"></p>
+                <div class="equipment-enhancement-layout">
+                  <div class="equipment-enhancement-art" aria-hidden="true"><div class="equipment-enhancement-emblem" id="equipment-enhancement-emblem"></div></div>
+                  <div class="equipment-enhancement-details" id="equipment-enhancement-details"></div>
+                </div>
+                <div class="equipment-enhancement-footer"><p class="equipment-enhancement-message" id="equipment-enhancement-status" aria-live="polite"></p><div class="equipment-enhancement-cost"><p class="equipment-enhancement-message" id="equipment-enhancement-cost"></p><button class="character-growth-button" id="equipment-enhancement-confirm" type="button">강화</button></div></div>
               </div>
             </section>
             <div class="equipment-hover" id="equipment-hover" role="tooltip" hidden></div>
@@ -3076,6 +3113,49 @@
       function describeEquipmentOptions(item) {
         return '주 옵션: ' + describeEquipmentStats({ [item.mainOption.key]: item.mainOption.value }) + '\n서브 옵션 (' + item.subOptions.length + '/4)\n' + item.subOptions.map(option => describeEquipmentStats({ [option.key]: option.value })).join('\n');
       }
+      function equipmentStatValue(key, value) {
+        return value.toLocaleString('ko-KR') + (['critRate', 'critDamage', 'effectHit', 'effectResist'].includes(key) ? '%' : '');
+      }
+      function createEquipmentSheet(item, enhancement = false) {
+        const sheet = document.createElement('div'); sheet.className = 'equipment-sheet';
+        const name = document.createElement('h3'); name.className = 'equipment-sheet-name'; name.textContent = item.name; sheet.append(name);
+        const maxed = item.enhancement >= equipmentEnhancementRules.maxLevel;
+        if (enhancement) {
+          const level = document.createElement('div'); level.className = 'equipment-sheet-level';
+          const label = document.createElement('span'); label.textContent = '강화 단계';
+          const value = document.createElement('strong'); value.textContent = '+' + item.enhancement + (maxed ? ' · MAX' : '  →  +' + (item.enhancement + 1)); level.append(label, value); sheet.append(level);
+        }
+        const main = document.createElement('div'); main.className = 'equipment-sheet-main';
+        const icon = document.createElement('div'); icon.className = 'equipment-sheet-icon';
+        const stage = document.createElement('span'); stage.textContent = '+' + item.enhancement;
+        icon.append(createEquipmentIcon(item.type), stage);
+        const primary = document.createElement('div');
+        const label = document.createElement('span'); label.className = 'equipment-sheet-primary-label'; label.textContent = '주 옵션 · ' + characterEquipmentStatLabels[item.mainOption.key];
+        const value = document.createElement('strong'); value.className = 'equipment-sheet-primary-value';
+        value.textContent = equipmentStatValue(item.mainOption.key, item.mainOption.value) + (enhancement && !maxed ? ' → ' + equipmentStatValue(item.mainOption.key, item.mainOption.value + equipmentEnhancementRules.gains[item.mainOption.key]) : '');
+        const max = document.createElement('span'); max.className = 'equipment-sheet-primary-max';
+        max.textContent = 'MAX ' + equipmentStatValue(item.mainOption.key, item.mainOption.value + Math.max(0, equipmentEnhancementRules.maxLevel - item.enhancement) * equipmentEnhancementRules.gains[item.mainOption.key]);
+        primary.append(label, value, max); main.append(icon, primary); sheet.append(main);
+        const substats = document.createElement('dl'); substats.className = 'equipment-sheet-substats'; substats.setAttribute('aria-label', '서브 옵션');
+        item.subOptions.forEach(option => {
+          const row = document.createElement('div'); const label = document.createElement('dt'); label.textContent = characterEquipmentStatLabels[option.key];
+          const value = document.createElement('dd'); value.textContent = equipmentStatValue(option.key, option.value); row.append(label, value); substats.append(row);
+        });
+        sheet.append(substats);
+        if (enhancement && !maxed) {
+          const hint = document.createElement('div'); hint.className = 'equipment-sheet-next';
+          const nextLevel = item.enhancement + 1;
+          hint.textContent = nextLevel % equipmentEnhancementRules.milestone === 0
+            ? item.subOptions.length < 4 ? '이번 강화: 서브 옵션 1개 추가' : '이번 강화: 서브 옵션 1개 무작위 증가'
+            : '다음 서브 옵션 변화: +' + (Math.ceil(nextLevel / 3) * 3);
+          sheet.append(hint);
+        }
+        const set = characterEquipmentSets[item.setId];
+        const setBox = document.createElement('div'); setBox.className = 'equipment-sheet-set';
+        const setName = document.createElement('strong'); setName.textContent = set.name + ' 세트'; setBox.append(setName);
+        set.bonuses.forEach(bonus => { const effect = document.createElement('span'); effect.textContent = bonus.pieces + '세트 · ' + describeEquipmentStats(bonus.stats); setBox.append(effect); });
+        sheet.append(setBox); return sheet;
+      }
       function calculateEquipmentEnhancement(item, gold, rules = equipmentEnhancementRules, random = Math.random) {
         if (item.enhancement >= rules.maxLevel) return { ok: false, message: '최대 강화 단계입니다.' };
         const nextLevel = item.enhancement + 1;
@@ -3150,14 +3230,9 @@
         const nextLevel = item.enhancement + 1;
         const cost = maxed ? 0 : equipmentEnhancementRules.goldCost(nextLevel);
         document.getElementById('equipment-enhancement-title').textContent = equipmentDisplayName(item) + ' · 강화';
-        const current = document.getElementById('equipment-enhancement-current'); current.replaceChildren();
-        const currentText = document.createElement('p'); currentText.textContent = describeEquipmentOptions(item); current.append(currentText);
-        const next = document.getElementById('equipment-enhancement-next'); next.replaceChildren();
-        const nextText = document.createElement('p');
-        nextText.textContent = maxed ? '최대 강화 +15에 도달했습니다.'
-          : '+' + item.enhancement + ' → +' + nextLevel + '\n주 옵션: ' + describeEquipmentStats({ [item.mainOption.key]: item.mainOption.value }) + ' → ' + (item.mainOption.value + equipmentEnhancementRules.gains[item.mainOption.key]).toLocaleString('ko-KR') + (['critRate', 'critDamage', 'effectHit', 'effectResist'].includes(item.mainOption.key) ? '%' : '')
-            + (nextLevel % equipmentEnhancementRules.milestone === 0 ? '\n' + (item.subOptions.length < equipmentEnhancementRules.maxSubOptions ? '새 서브 옵션 1개 추가' : '기존 서브 옵션 중 1개 무작위 강화') : '\n서브 옵션 유지');
-        next.append(nextText);
+        document.getElementById('equipment-enhancement-details').replaceChildren(createEquipmentSheet(item, true));
+        const emblem = document.getElementById('equipment-enhancement-emblem'); emblem.replaceChildren();
+        const level = document.createElement('strong'); level.textContent = '+' + item.enhancement; emblem.append(createEquipmentIcon(item.type), level);
         document.getElementById('equipment-enhancement-cost').textContent = '보유 골드 ' + previewGameWallet.gold.toLocaleString('ko-KR') + (maxed ? '' : '\n강화 비용 ' + cost.toLocaleString('ko-KR') + ' 골드');
         const button = document.getElementById('equipment-enhancement-confirm');
         button.disabled = maxed || previewGameWallet.gold < cost;
@@ -3318,10 +3393,7 @@
           const box = document.getElementById(id); box.replaceChildren();
           box.setAttribute('aria-label', item ? item.name : id === 'equipment-compare-current' ? '현재 장비 없음' : '선택한 장비 없음');
           if (!item) return;
-          const name = document.createElement('strong'); name.textContent = equipmentDisplayName(item);
-          const stats = document.createElement('p'); stats.textContent = describeEquipmentOptions(item);
-          const set = document.createElement('p'); set.textContent = characterEquipmentSets[item.setId].name + ' 세트\n' + characterEquipmentSets[item.setId].bonuses.map(bonus => bonus.pieces + '세트: ' + describeEquipmentStats(bonus.stats)).join('\n');
-          box.append(name, stats, set);
+          box.append(createEquipmentSheet(item));
         };
         render('equipment-compare-current', current); render('equipment-compare-selected', selected);
         const diff = document.getElementById('equipment-compare-diff');
@@ -3352,8 +3424,7 @@
         const state = getCharacterEquipment(selectedCharacterCard);
         const item = state.items.find(item => item.id === state.equipped[slot.dataset.equipmentType]);
         if (!item) return;
-        const set = characterEquipmentSets[item.setId]; const box = document.getElementById('equipment-hover');
-        box.textContent = equipmentDisplayName(item) + '\n' + describeEquipmentOptions(item) + '\n' + set.name + ' 세트\n' + set.bonuses.map(bonus => bonus.pieces + '세트: ' + describeEquipmentStats(bonus.stats)).join('\n');
+        const box = document.getElementById('equipment-hover'); box.replaceChildren(createEquipmentSheet(item));
         const rect = slot.getBoundingClientRect(); placeEquipmentOverlay(box, rect.right + 10, rect.top);
         slot.setAttribute('aria-describedby', 'equipment-hover');
       }
