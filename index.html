@@ -644,12 +644,14 @@
       .character-detail-stars { display: flex; gap: 2px; }
       .character-detail-stars svg { width: 16px; height: 16px; }
       .character-detail-level { color: var(--text-secondary); font-size: 13px; white-space: nowrap; }
-      .character-detail-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; margin-left: auto; }
-      .character-detail-action { min-width: 64px; min-height: 40px; padding: 9px 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-sidebar); color: var(--text-primary); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
-      .character-detail-action:hover { background: var(--surface-hover); color: var(--accent); }
+      .character-detail-actions { display: flex; justify-content: flex-end; gap: 8px; margin-left: auto; max-width: 100%; overflow-x: auto; scrollbar-width: thin; }
+      .character-detail-action { flex-shrink: 0; min-width: 64px; min-height: 40px; padding: 9px 14px; border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: transparent; color: var(--text-secondary); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
+      .character-detail-action:hover { color: var(--text-primary); }
+      .character-detail-action[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); }
       .character-detail-action:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
-      @media (max-width: 900px) { .character-detail-actions { flex-basis: 100%; } }
-      .character-detail-body { flex: 1; min-height: 240px; container-type: size; }
+      @media (max-width: 900px) { .character-detail-actions { flex-basis: 100%; justify-content: flex-start; } }
+      .character-detail-body { position: relative; flex: 1; min-height: 240px; container-type: size; }
+      .character-detail-panel { position: absolute; inset: 0 0 0 calc(min(45cqw, 66.6667cqh) + 24px); overflow-y: auto; scrollbar-gutter: stable; }
       .character-detail-illustration { width: min(45cqw, 66.6667cqh); aspect-ratio: 2 / 3; border: 1px solid var(--border); border-radius: 16px; background: var(--surface-sidebar); overflow: hidden; }
       .character-detail-illustration img { display: block; width: 100%; height: 100%; object-fit: contain; }
       @media (max-width: 760px) { .character-detail-screen { padding: 20px 16px; } .character-detail-heading { gap: 12px; } .character-detail-heading h2 { font-size: 24px; } }
@@ -798,17 +800,23 @@
                 <button class="connection-back" id="character-detail-back" type="button" aria-label="캐릭터 목록으로 돌아가기" title="캐릭터 목록으로 돌아가기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 6-6 6 6 6" /></svg></button>
                 <h2 id="character-detail-name"></h2>
                 <div class="character-detail-meta"><span class="character-detail-level" id="character-detail-level"></span><span class="character-detail-stars" id="character-detail-stars"></span></div>
-                <div class="character-detail-actions" role="group" aria-label="캐릭터 메뉴">
-                  <button class="character-detail-action" type="button">정보</button>
-                  <button class="character-detail-action" type="button">스킬</button>
-                  <button class="character-detail-action" type="button">각성</button>
-                  <button class="character-detail-action" type="button">의상</button>
-                  <button class="character-detail-action" type="button">호감도</button>
-                  <button class="character-detail-action" type="button">프로필</button>
+                <div class="character-detail-actions" role="tablist" aria-label="캐릭터 메뉴">
+                  <button class="character-detail-action" id="character-tab-info" role="tab" aria-selected="true" aria-controls="character-panel-info" type="button">정보</button>
+                  <button class="character-detail-action" id="character-tab-skills" role="tab" aria-selected="false" aria-controls="character-panel-skills" tabindex="-1" type="button">스킬</button>
+                  <button class="character-detail-action" id="character-tab-awakening" role="tab" aria-selected="false" aria-controls="character-panel-awakening" tabindex="-1" type="button">각성</button>
+                  <button class="character-detail-action" id="character-tab-outfits" role="tab" aria-selected="false" aria-controls="character-panel-outfits" tabindex="-1" type="button">의상</button>
+                  <button class="character-detail-action" id="character-tab-affinity" role="tab" aria-selected="false" aria-controls="character-panel-affinity" tabindex="-1" type="button">호감도</button>
+                  <button class="character-detail-action" id="character-tab-profile" role="tab" aria-selected="false" aria-controls="character-panel-profile" tabindex="-1" type="button">프로필</button>
                 </div>
               </div>
               <div class="character-detail-body">
                 <div class="character-detail-illustration" id="character-detail-illustration" role="img" aria-label="캐릭터 일러스트 영역"></div>
+                <div class="character-detail-panel" id="character-panel-info" role="tabpanel" aria-labelledby="character-tab-info" tabindex="0"></div>
+                <div class="character-detail-panel" id="character-panel-skills" role="tabpanel" aria-labelledby="character-tab-skills" tabindex="0" hidden></div>
+                <div class="character-detail-panel" id="character-panel-awakening" role="tabpanel" aria-labelledby="character-tab-awakening" tabindex="0" hidden></div>
+                <div class="character-detail-panel" id="character-panel-outfits" role="tabpanel" aria-labelledby="character-tab-outfits" tabindex="0" hidden></div>
+                <div class="character-detail-panel" id="character-panel-affinity" role="tabpanel" aria-labelledby="character-tab-affinity" tabindex="0" hidden></div>
+                <div class="character-detail-panel" id="character-panel-profile" role="tabpanel" aria-labelledby="character-tab-profile" tabindex="0" hidden></div>
               </div>
             </section>
             <section class="story-preview-screen" id="combat-preview-screen" aria-label="전투 미리보기" hidden>
@@ -2435,6 +2443,7 @@
       let selectedCharacterCard = null;
       function openCharacterDetail(card) {
         selectedCharacterCard = card;
+        selectCharacterTab(document.getElementById('character-tab-info'));
         const name = card.querySelector('.character-card-name').textContent;
         document.getElementById('character-detail-name').textContent = name;
         document.getElementById('character-detail-level').textContent = card.querySelector('.character-card-level').textContent;
@@ -2464,6 +2473,29 @@
       document.getElementById('character-detail-back').addEventListener('click', () => {
         showGameView('characters');
         selectedCharacterCard?.focus({ preventScroll: true });
+      });
+      function selectCharacterTab(selected) {
+        document.querySelectorAll('.character-detail-action').forEach(tab => {
+          const active = tab === selected;
+          tab.setAttribute('aria-selected', String(active));
+          tab.tabIndex = active ? 0 : -1;
+          document.getElementById(tab.getAttribute('aria-controls')).hidden = !active;
+        });
+      }
+      document.querySelectorAll('.character-detail-action').forEach(tab => {
+        tab.addEventListener('click', () => selectCharacterTab(tab));
+        tab.addEventListener('keydown', event => {
+          const tabs = Array.from(document.querySelectorAll('.character-detail-action'));
+          let index = tabs.indexOf(tab);
+          if (event.key === 'ArrowRight') index = (index + 1) % tabs.length;
+          else if (event.key === 'ArrowLeft') index = (index - 1 + tabs.length) % tabs.length;
+          else if (event.key === 'Home') index = 0;
+          else if (event.key === 'End') index = tabs.length - 1;
+          else return;
+          event.preventDefault();
+          selectCharacterTab(tabs[index]);
+          tabs[index].focus({ preventScroll: true });
+        });
       });
     </script>
   </body>
