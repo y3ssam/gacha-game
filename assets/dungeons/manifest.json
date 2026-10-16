@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "aspectRatio": "2:3",
+  "width": 1024,
+  "height": 1536,
+  "images": [
+    {
+      "id": "growth",
+      "name": "성장",
+      "file": "growth.png"
+    },
+    {
+      "id": "gold",
+      "name": "골드",
+      "file": "gold.png"
+    },
+    {
+      "id": "equipment",
+      "name": "장비",
+      "file": "equipment.png"
+    },
+    {
+      "id": "skill",
+      "name": "스킬 강화",
+      "file": "skill.png"
+    },
+    {
+      "id": "breakthrough",
+      "name": "돌파",
+      "file": "breakthrough.png"
+    }
+  ]
+}
