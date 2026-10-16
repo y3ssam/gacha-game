@@ -497,6 +497,16 @@
         #game-preview .game-experience { grid-column: 1 / 3; }
         .game-home-button { grid-column: 3; grid-row: 1 / 3; margin-left: 0; }
       }
+      .battle-content { display: flex; align-items: stretch; height: 100%; min-height: 0; padding: 32px 5%; }
+      .story-entry-card { position: relative; display: block; width: 40%; min-width: 180px; height: 100%; min-height: 200px; padding: 0; border: 0; background: var(--border); color: var(--text-primary); font: inherit; text-align: left; cursor: pointer; clip-path: polygon(7% 0, 100% 0, 93% 100%, 0 100%); }
+      .story-entry-card::before { content: ''; position: absolute; inset: 1px; background: linear-gradient(155deg, var(--surface-active), var(--surface-sidebar) 75%); clip-path: polygon(7% 0, 100% 0, 93% 100%, 0 100%); }
+      .story-card-content { position: absolute; top: 0; left: 0; right: 0; display: flex; flex-direction: column; gap: 16px; padding: 38px 14%; }
+      .story-card-heading { color: var(--accent); font-size: clamp(22px, 3vw, 38px); font-weight: 650; letter-spacing: .16em; line-height: 1.2; }
+      .story-card-chapter { font-size: clamp(14px, 1.6vw, 20px); font-weight: 500; line-height: 1.6; overflow-wrap: anywhere; }
+      .story-entry-card:hover { background: var(--accent); }
+      .story-entry-card:focus-visible { outline: none; background: var(--focus-ring); }
+      .story-entry-card:focus-visible::before { inset: 3px; }
+      @media (max-width: 640px) { .battle-content { padding: 24px 5%; } .story-entry-card { width: 40%; min-width: 150px; } .story-card-content { padding-top: 28px; gap: 12px; } }
     </style>
   </head>
   <body>
@@ -572,7 +582,16 @@
             </button>
             </div>
           </div>
-          <div class="game-stage" id="game-stage"></div>
+          <div class="game-stage" id="game-stage">
+            <section class="battle-content" id="battle-content" aria-label="전투 콘텐츠" hidden>
+              <button class="story-entry-card" id="story-entry-card" type="button" aria-label="시나리오 · 챕터 이름 미정">
+                <span class="story-card-content">
+                  <span class="story-card-heading">STORY</span>
+                  <span class="story-card-chapter" id="story-current-chapter">챕터 이름 미정</span>
+                </span>
+              </button>
+            </section>
+          </div>
           <nav class="game-bottom-menu" aria-label="게임 메뉴">
             <button class="game-bottom-button" id="game-characters" type="button">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4" /><path d="M4 21v-2a8 8 0 0 1 16 0v2" /></svg>
@@ -1807,6 +1826,7 @@
         homeButton.disabled = !isBattle;
         homeButton.setAttribute('aria-hidden', String(!isBattle));
         document.getElementById('game-stage').setAttribute('aria-label', isBattle ? '전투 화면' : '메인 화면');
+        document.getElementById('battle-content').hidden = !isBattle;
       }
       document.getElementById('game-battle').addEventListener('click', () => {
         showGameView('battle');
