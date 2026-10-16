@@ -1191,7 +1191,7 @@
                 <fieldset class="skill-upgrade-materials" id="skill-upgrade-materials"><legend>강화 재료 · 1개 사용</legend><div id="skill-upgrade-material-options"></div></fieldset>
                 <p class="skill-upgrade-result" id="skill-upgrade-result" aria-live="polite"></p>
               </div>
-              <div class="skill-upgrade-dialog-footer"><button class="world-secondary" id="skill-upgrade-cancel" type="button">취소</button><button class="character-growth-button" id="skill-upgrade-confirm" type="button">강화</button></div>
+              <div class="skill-upgrade-dialog-footer"><button class="character-growth-button" id="skill-upgrade-cancel" type="button">취소</button><button class="character-growth-button" id="skill-upgrade-confirm" type="button">강화</button></div>
             </dialog>
             <section class="equipment-picker-screen" id="equipment-picker-screen" aria-label="장비 선택 화면" hidden>
               <div class="equipment-picker-heading"><button class="connection-back" id="character-equipment-back" type="button" aria-label="장비 탭으로 돌아가기">◀</button><h2 id="character-equipment-list-title">보유 장비</h2></div>
@@ -3086,7 +3086,7 @@
         document.getElementById('skill-upgrade-dialog').showModal();
         document.getElementById('skill-upgrade-close').focus({ preventScroll: true });
       }
-      function renderCharacterSkillUpgradeDialog(message = '', error = false) {
+      function renderCharacterSkillUpgradeDialog(message = '') {
         if (!skillUpgradeTarget) return;
         const { card, element, materialKey } = skillUpgradeTarget;
         const levels = getCharacterSkillLevels(card); const names = getCharacterSkillNames(card);
@@ -3109,11 +3109,10 @@
           const name = document.createElement('span'); name.textContent = key === 'common' ? '공용 스킬 강화 재료' : key + ' 속성 스킬 강화 재료';
           const count = document.createElement('span'); count.textContent = '보유 ' + previewSkillMaterials[key] + '개'; label.append(input, name, count); options.append(label);
         });
-        const shortage = !eligible.length ? '모든 스킬이 최대 레벨입니다.' : previewGameWallet.gold < skillUpgradeRules.goldCost ? '골드가 부족합니다.'
-          : previewSkillMaterials[materialKey] < skillUpgradeRules.materialCount ? '선택한 강화 재료가 부족합니다.' : '';
-        const confirm = document.getElementById('skill-upgrade-confirm'); confirm.disabled = !!shortage; confirm.textContent = !eligible.length ? '최대 레벨' : '강화';
-        const result = document.getElementById('skill-upgrade-result'); result.dataset.state = error || (!message && shortage && eligible.length) ? 'error' : 'normal';
-        result.textContent = message || shortage;
+        const unavailable = !eligible.length || previewGameWallet.gold < skillUpgradeRules.goldCost || previewSkillMaterials[materialKey] < skillUpgradeRules.materialCount;
+        const confirm = document.getElementById('skill-upgrade-confirm'); confirm.disabled = unavailable; confirm.textContent = !eligible.length ? '최대 레벨' : '강화';
+        const result = document.getElementById('skill-upgrade-result'); result.dataset.state = 'normal';
+        result.textContent = message; result.hidden = !message;
       }
       document.querySelectorAll('.character-skill').forEach(skill => {
         skill.querySelector('button').addEventListener('click', () => openCharacterSkillUpgrade(selectedCharacterCard));
@@ -3128,7 +3127,7 @@
         const { card, element, materialKey } = skillUpgradeTarget;
         const levels = getCharacterSkillLevels(card);
         const result = calculateRandomSkillUpgrade(levels, { gold: previewGameWallet.gold, materials: previewSkillMaterials }, materialKey, element);
-        if (!result.ok) { renderCharacterSkillUpgradeDialog(result.message, true); return; }
+        if (!result.ok) { renderCharacterSkillUpgradeDialog(); return; }
         previewCharacterSkillLevels.set(card, result.levels); previewGameWallet.gold = result.gold; Object.assign(previewSkillMaterials, result.materials);
         const gold = document.getElementById('game-gold'); gold.textContent = result.gold.toLocaleString('ko-KR'); gold.parentElement.setAttribute('aria-label', '골드 ' + result.gold.toLocaleString('ko-KR'));
         renderCharacterSkills(card);
