@@ -698,7 +698,6 @@
       .skill-upgrade-dialog-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 24px; border-bottom: 1px solid var(--border); }
       .skill-upgrade-dialog-heading h2 { margin: 0; font-size: 20px; }
       .skill-upgrade-dialog-body { min-height: 0; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; display: grid; gap: 20px; padding: 20px 24px; }
-      .skill-upgrade-dialog-note { margin: 0; color: var(--text-secondary); font-size: 13px; line-height: 1.8; white-space: pre-line; }
       .skill-upgrade-targets { display: grid; gap: 8px; }
       .skill-upgrade-target { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 12px; padding: 11px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; }
       .skill-upgrade-target > strong { font-weight: 600; }
@@ -1186,7 +1185,6 @@
             <dialog class="skill-upgrade-dialog" id="skill-upgrade-dialog" aria-labelledby="skill-upgrade-title">
               <div class="skill-upgrade-dialog-heading"><h2 id="skill-upgrade-title">스킬 강화</h2><button class="connection-back" id="skill-upgrade-close" type="button" aria-label="스킬 강화 창 닫기">×</button></div>
               <div class="skill-upgrade-dialog-body">
-                <p class="skill-upgrade-dialog-note" id="skill-upgrade-note"></p>
                 <div class="skill-upgrade-targets" id="skill-upgrade-targets" aria-label="강화 대상 스킬"></div>
                 <div class="skill-upgrade-cost"><span id="skill-upgrade-gold-cost"></span><span id="skill-upgrade-gold-owned"></span></div>
                 <fieldset class="skill-upgrade-materials" id="skill-upgrade-materials"><legend>강화 재료 · 1개 사용</legend><div id="skill-upgrade-material-options"></div></fieldset>
@@ -3098,7 +3096,6 @@
         const levels = getCharacterSkillLevels(card); const names = getCharacterSkillNames(card);
         const types = { basic: '기본 스킬', active: '액티브', ultimate: '궁극기', passive: '패시브' };
         const eligible = Object.keys(types).filter(key => levels[key] < skillUpgradeRules.maxLevel);
-        document.getElementById('skill-upgrade-note').textContent = card.querySelector('.character-card-name').textContent + ' · ' + element + ' 속성';
         const targets = document.getElementById('skill-upgrade-targets'); targets.replaceChildren();
         Object.entries(types).forEach(([key, type]) => {
           const row = document.createElement('div'); row.className = 'skill-upgrade-target'; row.dataset.eligible = String(levels[key] < skillUpgradeRules.maxLevel);
