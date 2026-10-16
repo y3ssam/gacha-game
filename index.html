@@ -498,7 +498,7 @@
         .game-home-button { grid-column: 3; grid-row: 1 / 3; margin-left: 0; }
       }
       .battle-content { display: flex; align-items: stretch; height: 100%; min-height: 0; padding: 32px 5%; }
-      .story-entry-card { position: relative; display: block; width: 40%; min-width: 180px; height: 100%; min-height: 200px; padding: 0; border: 0; background: var(--border); color: var(--text-primary); font: inherit; text-align: left; cursor: pointer; clip-path: polygon(7% 0, 100% 0, 93% 100%, 0 100%); }
+      .story-entry-card { position: relative; display: block; width: 36%; min-width: 180px; height: 100%; min-height: 200px; padding: 0; border: 0; background: var(--border); color: var(--text-primary); font: inherit; text-align: left; cursor: pointer; clip-path: polygon(7% 0, 100% 0, 93% 100%, 0 100%); }
       #game-preview[data-view="battle"] .story-entry-card { animation: story-card-enter 500ms cubic-bezier(.22, 1, .36, 1) both; }
       @keyframes story-card-enter { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
       @media (prefers-reduced-motion: reduce) { #game-preview[data-view="battle"] .story-entry-card { animation: none; } }
@@ -512,7 +512,7 @@
       .story-entry-card:hover { background: var(--accent); }
       .story-entry-card:focus-visible { outline: none; background: var(--focus-ring); }
       .story-entry-card:focus-visible::before { inset: 3px; }
-      @media (max-width: 640px) { .battle-content { padding: 24px 5%; } .story-entry-card { width: 40%; min-width: 150px; } .story-card-content { padding-top: 28px; gap: 2.5px; } }
+      @media (max-width: 640px) { .battle-content { padding: 24px 5%; } .story-entry-card { width: 36%; min-width: 150px; } .story-card-content { padding-top: 28px; gap: 2.5px; } }
     </style>
   </head>
   <body>
