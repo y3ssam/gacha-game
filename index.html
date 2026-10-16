@@ -84,6 +84,7 @@
       }
       svg { display: block; width: 24px; height: 24px; }
       .brand svg { width: 32px; height: 32px; }
+      .sidebar nav { display: grid; gap: 8px; }
       .nav-item {
         display: flex;
         flex-direction: column;
@@ -348,7 +349,15 @@
           </svg>
         </div>
         <nav aria-label="설정 메뉴">
-          <a class="nav-item" href="#ai-connection" aria-current="page">
+          <a class="nav-item" id="worlds-nav" href="#worlds">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" />
+              <ellipse cx="12" cy="12" rx="4" ry="9" />
+              <path d="M3 12h18M5 6.5h14M5 17.5h14" />
+            </svg>
+            <span>세계관</span>
+          </a>
+          <a class="nav-item" id="ai-connection-nav" href="#ai-connection" aria-current="page">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <rect x="5" y="5" width="14" height="14" rx="4" />
               <path d="M9 1v4m6-4v4M9 19v4m6-4v4M1 9h4m-4 6h4m14-6h4m-4 6h4" />
@@ -361,9 +370,10 @@
       <main class="content" id="ai-connection" aria-labelledby="page-title">
         <header class="content-header">
           <h1 id="page-title">AI 연결</h1>
-          <p>스토리를 만드는 AI와 이미지를 그리는 AI를 연결하세요.</p>
+          <p id="page-description">스토리를 만드는 AI와 이미지를 그리는 AI를 연결하세요.</p>
         </header>
-        <div class="content-body">
+        <div class="content-body" id="worlds" hidden></div>
+        <div class="content-body" id="ai-connection-body">
           <div id="connection-list-view">
           <div class="ai-toolbar">
           <div class="ai-tabs" role="tablist" aria-label="AI 종류">
@@ -907,7 +917,34 @@
         document.querySelector('.add-ai-button').focus();
       }
       document.getElementById('connection-back').addEventListener('click', returnToConnectionList);
-      document.querySelector('.nav-item').addEventListener('click', returnToConnectionList);
+      const worldNav = document.getElementById('worlds-nav');
+      const aiNav = document.getElementById('ai-connection-nav');
+      function showSection(section) {
+        if (savingConnection) return;
+        returnToConnectionList();
+        const isWorlds = section === 'worlds';
+        document.getElementById('worlds').hidden = !isWorlds;
+        document.getElementById('ai-connection-body').hidden = isWorlds;
+        editorFooter.hidden = true;
+        document.getElementById('page-title').textContent = isWorlds ? '세계관' : 'AI 연결';
+        document.getElementById('page-description').textContent = isWorlds
+          ? '나만의 세계관을 만들고, 이어서 플레이하세요.'
+          : '스토리를 만드는 AI와 이미지를 그리는 AI를 연결하세요.';
+        for (const [link, selected] of [[worldNav, isWorlds], [aiNav, !isWorlds]]) {
+          if (selected) link.setAttribute('aria-current', 'page');
+          else link.removeAttribute('aria-current');
+        }
+      }
+      for (const [link, section] of [[worldNav, 'worlds'], [aiNav, 'ai-connection']]) {
+        link.addEventListener('click', event => {
+          event.preventDefault();
+          if (savingConnection) return;
+          showSection(section);
+          history.replaceState(null, '', '#' + section);
+        });
+      }
+      window.addEventListener('hashchange', () => showSection(location.hash === '#worlds' ? 'worlds' : 'ai-connection'));
+      showSection(location.hash === '#worlds' ? 'worlds' : 'ai-connection');
       const tabs = Array.from(document.querySelectorAll('.ai-tab'));
       function selectTab(selectedTab) {
         tabs.forEach((tab) => {
