@@ -634,7 +634,11 @@
       .character-portrait-card[data-rarity="5"] { --rarity-color: #f3d16b; }
       .character-card-stars { display: flex; justify-content: flex-start; gap: 2px; padding: 12px 12px 0; color: var(--rarity-color); }
       .character-card-stars svg { width: 14px; height: 14px; }
-      .character-portrait-card { position: relative; }
+      .character-portrait-card { position: relative; scale: 1; transition: scale 220ms ease-out; }
+      @media (hover: hover) and (pointer: fine) {
+        .character-portrait-card:hover { scale: 1.03; z-index: 1; }
+      }
+      @media (prefers-reduced-motion: reduce) { .character-portrait-card { transition: none; } }
       .character-card-info { position: absolute; left: 14px; right: 14px; bottom: 14px; display: flex; align-items: baseline; gap: 10px; color: var(--text-primary); }
       .character-card-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; font-weight: 600; }
       .character-card-level { flex-shrink: 0; font-size: 12px; font-variant-numeric: tabular-nums; }
