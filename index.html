@@ -628,6 +628,8 @@
       .character-search-field { display: grid; gap: 7px; min-width: 0; }
       .character-search-field > label { color: var(--text-primary); font-size: 16px; font-weight: 600; }
       .character-search-field > label, .character-filter > label { padding-left: 4px; }
+      .character-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 180px)); gap: 20px; margin-top: 24px; }
+      .character-portrait-card { width: 100%; aspect-ratio: 2 / 3; margin: 0; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-sidebar); overflow: hidden; }
     </style>
   </head>
   <body>
@@ -718,6 +720,9 @@
                   <div class="character-filter"><label for="character-element">속성</label><select class="connection-input" id="character-element"><option value="all">전체</option><option value="fire">불</option><option value="water">물</option><option value="wind">바람</option><option value="earth">땅</option><option value="electric">전기</option><option value="ice">얼음</option><option value="grass">풀</option><option value="light">빛</option><option value="dark">어둠</option></select></div>
                   <div class="character-filter"><label for="character-sort">정렬</label><select class="connection-input" id="character-sort"><option value="rarity">희귀도순</option><option value="power">전투력순</option><option value="level">레벨순</option><option value="new">신규순</option></select></div>
                 </div>
+              </div>
+              <div class="character-card-grid" aria-label="캐릭터 카드 목록">
+                <div class="character-portrait-card" role="img" aria-label="캐릭터 이미지가 들어갈 빈 카드"></div>
               </div>
             </section>
             <section class="story-preview-screen" id="combat-preview-screen" aria-label="전투 미리보기" hidden>
