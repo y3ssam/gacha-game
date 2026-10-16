@@ -686,7 +686,6 @@
       .character-skill-heading, .character-skill-description { flex-shrink: 0; }
       .character-skill-description { margin: 20px 0; color: var(--text-primary); font-size: 15px; line-height: 1.9; word-break: keep-all; overflow-wrap: anywhere; }
       .character-skill-upgrades { position: relative; flex: 0 1 160px; height: 160px; max-height: 160px; min-height: 96px; display: flex; flex-direction: column; gap: 6px; margin: auto 0 0; padding: 8px 10px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-sidebar); overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; scrollbar-width: thin; list-style: none; }
-      .character-skill-upgrades::after { content: ''; flex: 0 0 var(--skill-upgrade-tail, 0px); }
       .character-skill-upgrade { flex-shrink: 0; display: grid; grid-template-columns: 44px minmax(0, 1fr); align-items: baseline; gap: 12px; padding: 8px 12px; border-radius: 5px; background: var(--surface-sidebar); color: var(--text-secondary); font-size: 13px; line-height: 1.6; }
       .character-skill-upgrade[data-applied="true"] { background: var(--surface-active); color: var(--accent); }
       .character-skill-upgrade-level { font-size: 12px; font-weight: 600; white-space: nowrap; }
@@ -2996,10 +2995,8 @@
         const level = Math.max(2, Math.min(10, Number(list.dataset.currentLevel) || 2));
         const target = rows.find(row => Number(row.dataset.level) === level);
         if (!target || !rows.length) return;
-        // 마지막 레벨도 박스 위쪽에서 시작할 수 있도록 아래쪽 여유를 확보합니다.
-        const padding = parseFloat(getComputedStyle(list).paddingTop) || 0;
-        list.style.setProperty('--skill-upgrade-tail', Math.max(0, list.clientHeight - padding * 2 - target.offsetHeight) + 'px');
-        list.scrollTop = target.offsetTop - rows[0].offsetTop;
+        const maxScroll = Math.max(0, list.scrollHeight - list.clientHeight);
+        list.scrollTop = Math.min(maxScroll, Math.max(0, target.offsetTop - rows[0].offsetTop));
       }
       function renderCharacterSkills(card) {
         const levels = getCharacterSkillLevels(card);
