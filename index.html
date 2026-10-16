@@ -565,8 +565,8 @@
       #game-preview .scenario-list .scenario-card[data-state="locked"] { cursor: pointer; }
       .story-preview-screen { position: relative; height: 100%; background: var(--surface-main); }
       .story-preview-top { position: absolute; top: 0; left: 0; right: 0; height: 140px; padding: 24px 28px; background: linear-gradient(to bottom, rgb(0 0 0 / 80%), rgb(0 0 0 / 35%) 55%, transparent); pointer-events: none; }
-      .story-preview-top { display: flex; align-items: flex-start; gap: 16px; }
-      .story-preview-titles { min-width: 0; padding-top: 1px; }
+      .story-preview-heading-row { display: flex; align-items: center; gap: 16px; }
+      .story-preview-titles { min-width: 0; }
       .story-preview-titles h2 { margin: 0; color: #eef1f7; font-size: 18px; font-weight: 600; line-height: 1.4; overflow-wrap: anywhere; }
       .story-preview-titles p { margin: 5px 0 0; color: #aab2bf; font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }
       .story-preview-back { display: grid; place-items: center; flex-shrink: 0; width: 40px; height: 40px; padding: 0; border: 1px solid #ffffff30; border-radius: 10px; background: #00000030; color: #eef1f7; cursor: pointer; pointer-events: auto; }
@@ -652,12 +652,14 @@
           <div class="game-stage" id="game-stage">
             <section class="story-preview-screen" id="story-preview-screen" aria-label="시나리오 미리보기" hidden>
               <div class="story-preview-top">
+                <div class="story-preview-heading-row">
                 <button class="story-preview-back" id="story-preview-back" type="button" aria-label="시나리오 목록으로 돌아가기" title="시나리오 목록으로 돌아가기">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 6-6 6 6 6" /></svg>
                 </button>
                 <div class="story-preview-titles">
                   <h2 id="story-preview-title"></h2>
                   <p id="story-preview-chapter"></p>
+                </div>
                 </div>
               </div>
             </section>
