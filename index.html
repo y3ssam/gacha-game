@@ -453,7 +453,7 @@
       .game-stage { flex: 1; min-height: 0; }
       #game-preview { position: relative; }
       .game-bottom-menu { position: absolute; bottom: 0; left: 0; right: 0; z-index: 2; display: flex; justify-content: center; gap: 12px; min-height: 72px; padding: 12px 28px; border-top: 1px solid var(--border); background: var(--surface-sidebar); transform: translateY(0); visibility: visible; transition: transform 280ms ease, visibility 0s; }
-      #game-preview:is([data-view="battle"], [data-view="chapters"], [data-view="scenarios"]) .game-bottom-menu { transform: translateY(100%); visibility: hidden; pointer-events: none; transition: transform 280ms ease, visibility 0s 280ms; }
+      #game-preview:is([data-view="battle"], [data-view="chapters"], [data-view="scenarios"], [data-view="characters"]) .game-bottom-menu { transform: translateY(100%); visibility: hidden; pointer-events: none; transition: transform 280ms ease, visibility 0s 280ms; }
       #game-preview[data-view="home"] .game-stage { padding-bottom: 72px; }
       @media (max-width: 640px) { #game-preview[data-view="home"] .game-stage { padding-bottom: 84px; } }
       @media (prefers-reduced-motion: reduce) { .game-bottom-menu, #game-preview[data-view="battle"] .game-bottom-menu { transition: none; } }
@@ -615,6 +615,16 @@
       #game-preview[data-view="combat-preview"] .game-bottom-menu { transform: translateY(100%); visibility: hidden; pointer-events: none; transition: none; }
       .combat-speed-button { display: inline-grid; place-items: center; width: 40px; min-width: 40px; height: 40px; padding: 0; font-variant-numeric: tabular-nums; }
       #combat-preview-screen:is([data-speed="2"], [data-speed="3"]) .combat-speed-button { color: var(--accent); border-color: var(--accent); background: var(--surface-active); }
+      .characters-screen { height: 100%; min-height: 0; padding: 24px 28px; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; }
+      .characters-toolbar { display: grid; grid-template-columns: minmax(180px, 1fr) auto; align-items: end; gap: 20px; }
+      .character-search { position: relative; min-width: 0; }
+      .character-search svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--text-secondary); pointer-events: none; }
+      .character-search input { height: 42px; padding-left: 42px; text-align: left; }
+      .character-filters { display: flex; gap: 12px; }
+      .character-filter { display: grid; gap: 7px; min-width: 105px; }
+      .character-filter label { color: var(--text-secondary); font-size: 11px; }
+      .character-filter select.connection-input { height: 42px; padding-inline: 12px; text-align-last: left; font-size: 13px; }
+      @media (max-width: 760px) { .characters-toolbar { grid-template-columns: minmax(0, 1fr); gap: 16px; } .character-filters { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); } .character-filter { min-width: 0; } .characters-screen { padding: 20px 16px; } }
     </style>
   </head>
   <body>
@@ -691,6 +701,19 @@
             </div>
           </div>
           <div class="game-stage" id="game-stage">
+            <section class="characters-screen" id="characters-screen" aria-label="캐릭터 목록" hidden>
+              <div class="characters-toolbar">
+                <div class="character-search">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m16 16 5 5" /></svg>
+                  <input class="connection-input" id="character-search" type="search" aria-label="캐릭터 검색" placeholder="캐릭터 이름 검색" autocomplete="off" />
+                </div>
+                <div class="character-filters" aria-label="캐릭터 필터와 정렬">
+                  <div class="character-filter"><label for="character-role">역할</label><select class="connection-input" id="character-role"><option value="all">전체</option><option value="warrior">전사</option><option value="knight">기사</option><option value="swordsman">검사</option><option value="rogue">도적</option><option value="shooter">사수</option><option value="hunter">사냥꾼</option><option value="mage">마법사</option><option value="healer">힐러</option></select></div>
+                  <div class="character-filter"><label for="character-element">속성</label><select class="connection-input" id="character-element"><option value="all">전체</option><option value="fire">불</option><option value="water">물</option><option value="wind">바람</option><option value="earth">땅</option><option value="electric">전기</option><option value="ice">얼음</option><option value="grass">풀</option><option value="light">빛</option><option value="dark">어둠</option></select></div>
+                  <div class="character-filter"><label for="character-sort">정렬</label><select class="connection-input" id="character-sort"><option value="rarity">희귀도순</option><option value="power">전투력순</option><option value="level">레벨순</option><option value="new">신규순</option></select></div>
+                </div>
+              </div>
+            </section>
             <section class="story-preview-screen" id="combat-preview-screen" aria-label="전투 미리보기" hidden>
               <div class="story-preview-top">
                 <div class="story-preview-heading-row">
@@ -1981,6 +2004,7 @@
       setInterval(updateGameEnergy, 1000);
       document.addEventListener('visibilitychange', () => { if (!document.hidden) updateGameEnergy(); });
       function showGameView(view) {
+        const isCharacters = view === 'characters';
         const isCombatPreview = view === 'combat-preview';
         const isStoryPreview = view === 'story-preview';
         const isBattle = view === 'battle';
@@ -1993,14 +2017,14 @@
             card.style.setProperty('--card-enter-delay', index * 120 + 'ms');
           });
         }
-        const isSubscreen = isBattle || isScenarios || isChapters || isStoryPreview || isCombatPreview;
+        const isSubscreen = isBattle || isScenarios || isChapters || isStoryPreview || isCombatPreview || isCharacters;
         const game = document.getElementById('game-preview');
         if (game.dataset.view === 'story-preview' && !isStoryPreview) {
           stopDialogueTyping();
           setDialogueAuto(false);
         }
-        game.dataset.view = isCombatPreview ? 'combat-preview' : isStoryPreview ? 'story-preview' : isChapters ? 'chapters' : isScenarios ? 'scenarios' : isBattle ? 'battle' : 'home';
-        game.setAttribute('aria-label', isCombatPreview ? '전투 미리보기' : isStoryPreview ? '시나리오 미리보기' : isChapters ? '챕터 목록 화면' : isScenarios ? '시나리오 목록 화면' : isBattle ? '전투 화면' : '게임 메인 화면');
+        game.dataset.view = isCharacters ? 'characters' : isCombatPreview ? 'combat-preview' : isStoryPreview ? 'story-preview' : isChapters ? 'chapters' : isScenarios ? 'scenarios' : isBattle ? 'battle' : 'home';
+        game.setAttribute('aria-label', isCharacters ? '캐릭터 화면' : isCombatPreview ? '전투 미리보기' : isStoryPreview ? '시나리오 미리보기' : isChapters ? '챕터 목록 화면' : isScenarios ? '시나리오 목록 화면' : isBattle ? '전투 화면' : '게임 메인 화면');
         const menu = document.querySelector('.game-bottom-menu');
         menu.inert = isSubscreen;
         menu.setAttribute('aria-hidden', String(isSubscreen));
@@ -2008,7 +2032,8 @@
         homeButton.hidden = false;
         homeButton.disabled = !isSubscreen;
         homeButton.setAttribute('aria-hidden', String(!isSubscreen));
-        document.getElementById('game-stage').setAttribute('aria-label', isCombatPreview ? '전투 미리보기' : isStoryPreview ? '시나리오 미리보기' : isChapters ? '챕터 목록 화면' : isScenarios ? '시나리오 목록 화면' : isBattle ? '전투 화면' : '메인 화면');
+        document.getElementById('game-stage').setAttribute('aria-label', isCharacters ? '캐릭터 화면' : isCombatPreview ? '전투 미리보기' : isStoryPreview ? '시나리오 미리보기' : isChapters ? '챕터 목록 화면' : isScenarios ? '시나리오 목록 화면' : isBattle ? '전투 화면' : '메인 화면');
+        document.getElementById('characters-screen').hidden = !isCharacters;
         document.getElementById('combat-preview-screen').hidden = !isCombatPreview;
         document.getElementById('story-preview-screen').hidden = !isStoryPreview;
         document.getElementById('battle-content').hidden = !isBattle;
@@ -2020,8 +2045,9 @@
         document.getElementById('game-home').focus({ preventScroll: true });
       });
       document.getElementById('game-home').addEventListener('click', () => {
+        const fromCharacters = document.getElementById('game-preview').dataset.view === 'characters';
         showGameView('home');
-        document.getElementById('game-battle').focus({ preventScroll: true });
+        document.getElementById(fromCharacters ? 'game-characters' : 'game-battle').focus({ preventScroll: true });
       });
       document.getElementById('story-entry-card').addEventListener('click', () => {
         showGameView('chapters');
@@ -2293,6 +2319,10 @@
         screen.dataset.speed = String(speed);
         event.currentTarget.textContent = 'x' + speed;
         event.currentTarget.setAttribute('aria-label', '전투 배속 x' + speed);
+      });
+      document.getElementById('game-characters').addEventListener('click', () => {
+        showGameView('characters');
+        document.getElementById('game-home').focus({ preventScroll: true });
       });
     </script>
   </body>
