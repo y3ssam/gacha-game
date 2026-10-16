@@ -692,6 +692,32 @@
       .character-skill-footer { flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
       .character-skill-level { color: var(--accent); font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; }
       .character-skill .character-growth-button:disabled { border-color: var(--border); background: var(--surface-active); color: var(--text-secondary); cursor: default; }
+      .skill-upgrade-dialog { width: min(560px, calc(100vw - 40px)); max-height: min(680px, calc(100dvh - 64px)); padding: 0; border: 1px solid var(--border); border-radius: 16px; background: var(--surface-main); color: var(--text-primary); }
+      .skill-upgrade-dialog[open] { display: flex; flex-direction: column; }
+      .skill-upgrade-dialog::backdrop { background: rgb(0 0 0 / 40%); backdrop-filter: none; }
+      .skill-upgrade-dialog-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 24px; border-bottom: 1px solid var(--border); }
+      .skill-upgrade-dialog-heading h2 { margin: 0; font-size: 20px; }
+      .skill-upgrade-dialog-body { min-height: 0; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; display: grid; gap: 20px; padding: 20px 24px; }
+      .skill-upgrade-dialog-note { margin: 0; color: var(--text-secondary); font-size: 13px; line-height: 1.8; white-space: pre-line; }
+      .skill-upgrade-targets { display: grid; gap: 8px; }
+      .skill-upgrade-target { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 12px; padding: 11px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; }
+      .skill-upgrade-target > strong { font-weight: 600; }
+      .skill-upgrade-target > span { color: var(--accent); font-size: 12px; }
+      .skill-upgrade-target[data-eligible="false"] { color: var(--text-secondary); }
+      .skill-upgrade-target[data-eligible="false"] > span { color: var(--text-secondary); }
+      .skill-upgrade-cost { display: flex; justify-content: space-between; gap: 16px; padding: 14px; border-radius: 10px; background: var(--surface-sidebar); font-size: 14px; }
+      .skill-upgrade-materials { display: grid; gap: 12px; margin: 0; padding: 0; border: 0; min-width: 0; }
+      .skill-upgrade-materials legend { margin-bottom: 12px; font-size: 14px; font-weight: 600; }
+      #skill-upgrade-material-options { display: grid; gap: 10px; }
+      .skill-upgrade-material { display: flex; align-items: center; gap: 12px; padding: 14px; border: 1px solid var(--border); border-radius: 10px; cursor: pointer; font-size: 13px; }
+      .skill-upgrade-material:has(input:checked) { border-color: var(--accent); background: var(--surface-active); }
+      .skill-upgrade-material input { accent-color: var(--accent); }
+      .skill-upgrade-material span:last-child { margin-left: auto; color: var(--text-secondary); }
+      .skill-upgrade-result { margin: 0; color: var(--accent); font-size: 14px; line-height: 1.8; white-space: pre-line; }
+      .skill-upgrade-result[data-state="error"] { color: #ff9fb2; }
+      .skill-upgrade-dialog-footer { flex-shrink: 0; display: flex; justify-content: flex-end; gap: 12px; padding: 16px 24px; border-top: 1px solid var(--border); }
+      .skill-upgrade-dialog-footer button { min-width: 100px; }
+      #skill-upgrade-confirm:disabled { background: var(--surface-active); border-color: var(--border); color: var(--text-secondary); cursor: default; }
       .character-awakening { display: grid; gap: 20px; padding: 2px 12px 12px 0; }
       .character-awakening-heading { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
       .character-awakening-heading h3 { margin: 0; font-size: 18px; font-weight: 600; }
@@ -1085,25 +1111,25 @@
                       <div class="character-skill-heading"><div class="character-skill-title"><h3>검의 궤적</h3><span class="character-skill-type">기본 스킬</span></div><span class="character-skill-cooldown">쿨타임 없음</span></div>
                       <p class="character-skill-description">적 하나를 공격하는 기본 스킬입니다.</p>
                       <ol class="character-skill-upgrades" start="2" aria-label="기본 스킬 레벨별 강화 효과"></ol>
-                      <div class="character-skill-footer"><span class="character-skill-level" aria-live="polite">Lv. 1 / 10</span><button class="character-growth-button" type="button" aria-label="기본 스킬 레벨업">레벨업</button></div>
+                      <div class="character-skill-footer"><span class="character-skill-level" aria-live="polite">Lv. 1 / 10</span><button class="character-growth-button" type="button" aria-label="무작위 스킬 강화">스킬 강화</button></div>
                     </article>
                     <article class="character-skill" id="skill-detail-active" data-skill="active" role="tabpanel" aria-labelledby="skill-select-active" tabindex="0" hidden>
                       <div class="character-skill-heading"><div class="character-skill-title"><h3>돌파의 일격</h3><span class="character-skill-type">액티브</span></div><span class="character-skill-cooldown" id="character-active-cooldown"></span></div>
                       <p class="character-skill-description">캐릭터 고유의 능력을 사용합니다.</p>
                       <ol class="character-skill-upgrades" start="2" aria-label="액티브 스킬 레벨별 강화 효과"></ol>
-                      <div class="character-skill-footer"><span class="character-skill-level" aria-live="polite">Lv. 1 / 10</span><button class="character-growth-button" type="button" aria-label="액티브 스킬 레벨업">레벨업</button></div>
+                      <div class="character-skill-footer"><span class="character-skill-level" aria-live="polite">Lv. 1 / 10</span><button class="character-growth-button" type="button" aria-label="무작위 스킬 강화">스킬 강화</button></div>
                     </article>
                     <article class="character-skill" id="skill-detail-ultimate" data-skill="ultimate" role="tabpanel" aria-labelledby="skill-select-ultimate" tabindex="0" hidden>
                       <div class="character-skill-heading"><div class="character-skill-title"><h3>새벽을 가르는 빛</h3><span class="character-skill-type">궁극기</span></div><span class="character-skill-cooldown">전투 에너지 100%</span></div>
                       <p class="character-skill-description">캐릭터의 강력한 고유 능력을 사용하는 스킬입니다. 해당 캐릭터의 전투 에너지 게이지가 100%일 때 사용할 수 있습니다.</p>
                       <ol class="character-skill-upgrades" start="2" aria-label="궁극기 레벨별 강화 효과"></ol>
-                      <div class="character-skill-footer"><span class="character-skill-level" aria-live="polite">Lv. 1 / 10</span><button class="character-growth-button" type="button" aria-label="궁극기 레벨업">레벨업</button></div>
+                      <div class="character-skill-footer"><span class="character-skill-level" aria-live="polite">Lv. 1 / 10</span><button class="character-growth-button" type="button" aria-label="무작위 스킬 강화">스킬 강화</button></div>
                     </article>
                     <article class="character-skill" id="skill-detail-passive" data-skill="passive" role="tabpanel" aria-labelledby="skill-select-passive" tabindex="0" hidden>
                       <div class="character-skill-heading"><div class="character-skill-title"><h3>불굴의 의지</h3><span class="character-skill-type">패시브</span></div><span class="character-skill-cooldown">자동 효과</span></div>
                       <p class="character-skill-description">전투 중 조건을 만족하면 자동으로 효과가 적용됩니다.</p>
                       <ol class="character-skill-upgrades" start="2" aria-label="패시브 레벨별 강화 효과"></ol>
-                      <div class="character-skill-footer"><span class="character-skill-level" aria-live="polite">Lv. 1 / 10</span><button class="character-growth-button" type="button" aria-label="패시브 레벨업">레벨업</button></div>
+                      <div class="character-skill-footer"><span class="character-skill-level" aria-live="polite">Lv. 1 / 10</span><button class="character-growth-button" type="button" aria-label="무작위 스킬 강화">스킬 강화</button></div>
                     </article>
                     </div>
                   </div>
@@ -1156,6 +1182,17 @@
                 </div>
               </div>
             </section>
+            <dialog class="skill-upgrade-dialog" id="skill-upgrade-dialog" aria-labelledby="skill-upgrade-title">
+              <div class="skill-upgrade-dialog-heading"><h2 id="skill-upgrade-title">스킬 강화</h2><button class="connection-back" id="skill-upgrade-close" type="button" aria-label="스킬 강화 창 닫기">×</button></div>
+              <div class="skill-upgrade-dialog-body">
+                <p class="skill-upgrade-dialog-note" id="skill-upgrade-note"></p>
+                <div class="skill-upgrade-targets" id="skill-upgrade-targets" aria-label="강화 대상 스킬"></div>
+                <div class="skill-upgrade-cost"><span id="skill-upgrade-gold-cost"></span><span id="skill-upgrade-gold-owned"></span></div>
+                <fieldset class="skill-upgrade-materials" id="skill-upgrade-materials"><legend>강화 재료 · 1개 사용</legend><div id="skill-upgrade-material-options"></div></fieldset>
+                <p class="skill-upgrade-result" id="skill-upgrade-result" aria-live="polite"></p>
+              </div>
+              <div class="skill-upgrade-dialog-footer"><button class="world-secondary" id="skill-upgrade-cancel" type="button">취소</button><button class="character-growth-button" id="skill-upgrade-confirm" type="button">강화</button></div>
+            </dialog>
             <section class="equipment-picker-screen" id="equipment-picker-screen" aria-label="장비 선택 화면" hidden>
               <div class="equipment-picker-heading"><button class="connection-back" id="character-equipment-back" type="button" aria-label="장비 탭으로 돌아가기">◀</button><h2 id="character-equipment-list-title">보유 장비</h2></div>
               <div class="equipment-picker-layout">
@@ -2820,6 +2857,9 @@
       const previewCharacterProfiles = new WeakMap();
       const previewCharacterEquipment = new WeakMap();
       const previewGameWallet = { gold: 0 };
+      const previewSkillMaterials = { common: 0, '불': 0, '물': 0, '바람': 0, '땅': 0, '전기': 0, '얼음': 0, '풀': 0, '빛': 0, '어둠': 0 };
+      const skillUpgradeRules = { maxLevel: 10, goldCost: 300000, materialCount: 1 };
+      let skillUpgradeTarget = null;
       let equipmentEnhancementTarget = null;
       function openCharacterDetail(card) {
         selectedCharacterCard = card;
@@ -3017,20 +3057,87 @@
           renderCharacterSkillUpgrades(card, skill, level);
           skill.querySelector('.character-skill-level').textContent = 'Lv. ' + level + ' / 10';
           const button = skill.querySelector('button');
-          button.disabled = level >= 10;
-          button.textContent = level >= 10 ? '최대 레벨' : '레벨업';
-          button.setAttribute('aria-label', skill.querySelector('h3').textContent + (level >= 10 ? ' 최대 레벨' : ' 레벨업'));
+          const allMaxed = Object.values(levels).every(level => level >= skillUpgradeRules.maxLevel);
+          button.disabled = allMaxed;
+          button.textContent = allMaxed ? '최대 레벨' : '스킬 강화';
+          button.setAttribute('aria-label', allMaxed ? '모든 스킬 최대 레벨' : '무작위 스킬 강화');
         });
       }
-      function upgradeCharacterSkill(card, key) {
-        if (!card || !['basic', 'active', 'ultimate', 'passive'].includes(key)) return;
-        const levels = getCharacterSkillLevels(card);
-        if (levels[key] >= 10) return;
-        levels[key]++;
-        renderCharacterSkills(card);
+      function getCharacterSkillMaterialElement(card) {
+        const element = card.dataset.element || getCharacterBaseStats(card).element;
+        return Object.hasOwn(previewSkillMaterials, element) && element !== 'common' ? element : getCharacterBaseStats(card).element;
+      }
+      function calculateRandomSkillUpgrade(levels, resources, materialKey, element, random = Math.random, rules = skillUpgradeRules) {
+        const eligible = ['basic', 'active', 'ultimate', 'passive'].filter(key => levels[key] < rules.maxLevel);
+        if (!eligible.length) return { ok: false, message: '모든 스킬이 최대 레벨입니다.' };
+        if (materialKey !== 'common' && materialKey !== element) return { ok: false, message: '해당 속성 재료 또는 공용 재료를 선택해 주세요.' };
+        if (resources.gold < rules.goldCost) return { ok: false, message: '골드가 부족합니다.' };
+        if ((resources.materials[materialKey] || 0) < rules.materialCount) return { ok: false, message: '강화 재료가 부족합니다.' };
+        const index = Math.max(0, Math.min(eligible.length - 1, Math.floor(random() * eligible.length)));
+        const key = eligible[index];
+        return { ok: true, key, levels: { ...levels, [key]: levels[key] + 1 }, gold: resources.gold - rules.goldCost,
+          materials: { ...resources.materials, [materialKey]: resources.materials[materialKey] - rules.materialCount } };
+      }
+      function openCharacterSkillUpgrade(card) {
+        if (!card) return;
+        const element = getCharacterSkillMaterialElement(card);
+        skillUpgradeTarget = { card, element, materialKey: previewSkillMaterials[element] > 0 ? element : previewSkillMaterials.common > 0 ? 'common' : element };
+        renderCharacterSkillUpgradeDialog();
+        document.getElementById('skill-upgrade-dialog').showModal();
+        document.getElementById('skill-upgrade-close').focus({ preventScroll: true });
+      }
+      function renderCharacterSkillUpgradeDialog(message = '', error = false) {
+        if (!skillUpgradeTarget) return;
+        const { card, element, materialKey } = skillUpgradeTarget;
+        const levels = getCharacterSkillLevels(card); const names = getCharacterSkillNames(card);
+        const types = { basic: '기본 스킬', active: '액티브', ultimate: '궁극기', passive: '패시브' };
+        const eligible = Object.keys(types).filter(key => levels[key] < skillUpgradeRules.maxLevel);
+        document.getElementById('skill-upgrade-note').textContent = card.querySelector('.character-card-name').textContent + ' · ' + element + ' 속성\n강화 가능한 스킬 중 하나가 무작위로 1레벨 오릅니다. 최대 레벨인 스킬은 제외됩니다.';
+        const targets = document.getElementById('skill-upgrade-targets'); targets.replaceChildren();
+        Object.entries(types).forEach(([key, type]) => {
+          const row = document.createElement('div'); row.className = 'skill-upgrade-target'; row.dataset.eligible = String(levels[key] < skillUpgradeRules.maxLevel);
+          const name = document.createElement('strong'); name.textContent = names[key] + ' · ' + type;
+          const level = document.createElement('span'); level.textContent = 'Lv.' + levels[key];
+          const status = document.createElement('span'); status.textContent = levels[key] >= skillUpgradeRules.maxLevel ? 'MAX · 제외' : '강화 대상'; row.append(name, level, status); targets.append(row);
+        });
+        document.getElementById('skill-upgrade-gold-cost').textContent = '골드 ' + skillUpgradeRules.goldCost.toLocaleString('ko-KR');
+        document.getElementById('skill-upgrade-gold-owned').textContent = '보유 ' + previewGameWallet.gold.toLocaleString('ko-KR');
+        const options = document.getElementById('skill-upgrade-material-options'); options.replaceChildren();
+        [element, 'common'].forEach(key => {
+          const label = document.createElement('label'); label.className = 'skill-upgrade-material';
+          const input = document.createElement('input'); input.type = 'radio'; input.name = 'skill-upgrade-material'; input.value = key; input.checked = materialKey === key;
+          const name = document.createElement('span'); name.textContent = key === 'common' ? '공용 스킬 강화 재료' : key + ' 속성 스킬 강화 재료';
+          const count = document.createElement('span'); count.textContent = '보유 ' + previewSkillMaterials[key] + '개'; label.append(input, name, count); options.append(label);
+        });
+        const shortage = !eligible.length ? '모든 스킬이 최대 레벨입니다.' : previewGameWallet.gold < skillUpgradeRules.goldCost ? '골드가 부족합니다.'
+          : previewSkillMaterials[materialKey] < skillUpgradeRules.materialCount ? '선택한 강화 재료가 부족합니다.' : '';
+        const confirm = document.getElementById('skill-upgrade-confirm'); confirm.disabled = !!shortage; confirm.textContent = !eligible.length ? '최대 레벨' : '강화';
+        const result = document.getElementById('skill-upgrade-result'); result.dataset.state = error || (!message && shortage && eligible.length) ? 'error' : 'normal';
+        result.textContent = message || shortage;
       }
       document.querySelectorAll('.character-skill').forEach(skill => {
-        skill.querySelector('button').addEventListener('click', () => upgradeCharacterSkill(selectedCharacterCard, skill.dataset.skill));
+        skill.querySelector('button').addEventListener('click', () => openCharacterSkillUpgrade(selectedCharacterCard));
+      });
+      document.getElementById('skill-upgrade-material-options').addEventListener('change', event => {
+        if (!skillUpgradeTarget || event.target.name !== 'skill-upgrade-material') return;
+        skillUpgradeTarget.materialKey = event.target.value; renderCharacterSkillUpgradeDialog();
+        document.querySelectorAll('input[name="skill-upgrade-material"]').forEach(input => { if (input.checked) input.focus({ preventScroll: true }); });
+      });
+      document.getElementById('skill-upgrade-confirm').addEventListener('click', () => {
+        if (!skillUpgradeTarget) return;
+        const { card, element, materialKey } = skillUpgradeTarget;
+        const levels = getCharacterSkillLevels(card);
+        const result = calculateRandomSkillUpgrade(levels, { gold: previewGameWallet.gold, materials: previewSkillMaterials }, materialKey, element);
+        if (!result.ok) { renderCharacterSkillUpgradeDialog(result.message, true); return; }
+        previewCharacterSkillLevels.set(card, result.levels); previewGameWallet.gold = result.gold; Object.assign(previewSkillMaterials, result.materials);
+        const gold = document.getElementById('game-gold'); gold.textContent = result.gold.toLocaleString('ko-KR'); gold.parentElement.setAttribute('aria-label', '골드 ' + result.gold.toLocaleString('ko-KR'));
+        renderCharacterSkills(card);
+        renderCharacterSkillUpgradeDialog(getCharacterSkillNames(card)[result.key] + ' · Lv.' + levels[result.key] + ' → Lv.' + result.levels[result.key] + '\n강화 완료');
+      });
+      ['skill-upgrade-close', 'skill-upgrade-cancel'].forEach(id => document.getElementById(id).addEventListener('click', () => document.getElementById('skill-upgrade-dialog').close()));
+      document.getElementById('skill-upgrade-dialog').addEventListener('close', () => {
+        skillUpgradeTarget = null;
+        document.querySelector('.character-skill-selector[aria-selected="true"]')?.focus({ preventScroll: true });
       });
       function getCharacterAwakeningStage(card) {
         return Math.min(10, Math.max(0, Math.floor(Number(card.dataset.awakeningStage) || 0)));
