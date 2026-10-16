@@ -583,6 +583,20 @@
       .story-dialogue-next { position: absolute; right: 24px; bottom: 15px; color: var(--accent); font-size: 18px; line-height: 1; pointer-events: none; animation: dialogue-next-blink 1.1s ease-in-out infinite; }
       @keyframes dialogue-next-blink { 0%, 100% { opacity: 1; } 50% { opacity: .2; } }
       @media (prefers-reduced-motion: reduce) { .story-dialogue-next { animation: none; } }
+      .story-preview-actions { display: flex; gap: 10px; margin-left: auto; flex-shrink: 0; pointer-events: auto; }
+      .story-control-button { min-height: 38px; padding: 8px 14px; border: 1px solid #ffffff30; border-radius: 9px; background: #00000030; color: #eef1f7; font: inherit; font-size: 13px; cursor: pointer; }
+      .story-control-button:hover { background: #ffffff18; }
+      .story-control-button[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); background: var(--surface-active); }
+      .story-control-button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
+      .story-log-dialog { width: min(720px, calc(100vw - 40px)); max-height: min(640px, calc(100dvh - 64px)); padding: 24px; overflow-y: auto; border: 1px solid var(--border); border-radius: 14px; background: var(--surface-main); color: var(--text-primary); scrollbar-width: thin; }
+      .story-log-dialog::backdrop { background: #0008; backdrop-filter: none; }
+      .story-log-heading { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 24px; }
+      .story-log-heading h2 { font-size: 18px; margin: 0; }
+      .story-log-list { display: grid; gap: 24px; }
+      .story-log-entry { border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+      .story-log-entry strong { color: var(--accent); font-size: 14px; }
+      .story-log-entry p { margin: 8px 0 0; font-size: 15px; line-height: 1.8; white-space: pre-wrap; overflow-wrap: anywhere; }
+      @media (max-width: 640px) { .story-preview-top { padding: 16px; } .story-preview-heading-row { flex-wrap: wrap; gap: 12px; } .story-preview-titles { flex: 1; } .story-preview-actions { flex-basis: 100%; justify-content: flex-end; } .story-control-button { padding: 7px 12px; font-size: 12px; } }
     </style>
   </head>
   <body>
@@ -669,6 +683,10 @@
                   <h2 id="story-preview-title"></h2>
                   <p id="story-preview-chapter"></p>
                 </div>
+                <div class="story-preview-actions">
+                  <button class="story-control-button" id="story-auto" type="button" aria-pressed="false">자동진행</button>
+                  <button class="story-control-button" id="story-log" type="button">기록</button>
+                </div>
                 </div>
               </div>
               <div class="story-dialogue-box" id="story-dialogue-box" role="button" tabindex="0" aria-label="시나리오 텍스트 · 클릭하여 문장 완성 또는 다음 문장">
@@ -676,6 +694,10 @@
                 <p class="story-dialogue-text" id="story-dialogue-text">낯선 바람이 조용히 스쳐 지나간다. 눈앞에 펼쳐진 풍경 너머로, 아직 알지 못하는 이야기가 기다리고 있었다.</p>
                 <span class="story-dialogue-next" id="story-dialogue-next" aria-hidden="true" hidden>▼</span>
               </div>
+              <dialog class="story-log-dialog" id="story-log-dialog" aria-labelledby="story-log-heading">
+                <div class="story-log-heading"><h2 id="story-log-heading">기록</h2><button class="story-control-button" id="story-log-close" type="button">닫기</button></div>
+                <div class="story-log-list" id="story-log-list"></div>
+              </dialog>
             </section>
             <section class="battle-content" id="battle-content" aria-label="전투 콘텐츠" hidden>
               <button class="story-entry-card" id="story-entry-card" type="button" aria-label="스토리 챕터 목록">
@@ -1941,7 +1963,10 @@
         }
         const isSubscreen = isBattle || isScenarios || isChapters || isStoryPreview;
         const game = document.getElementById('game-preview');
-        if (game.dataset.view === 'story-preview' && !isStoryPreview) stopDialogueTyping();
+        if (game.dataset.view === 'story-preview' && !isStoryPreview) {
+          stopDialogueTyping();
+          setDialogueAuto(false);
+        }
         game.dataset.view = isStoryPreview ? 'story-preview' : isChapters ? 'chapters' : isScenarios ? 'scenarios' : isBattle ? 'battle' : 'home';
         game.setAttribute('aria-label', isStoryPreview ? '시나리오 미리보기' : isChapters ? '챕터 목록 화면' : isScenarios ? '시나리오 목록 화면' : isBattle ? '전투 화면' : '게임 메인 화면');
         const menu = document.querySelector('.game-bottom-menu');
@@ -2070,7 +2095,27 @@
       let dialogueCharacterIndex = 0;
       let dialogueTypingTimer = null;
       let dialogueIsTyping = false;
+      let dialogueAutoEnabled = false;
+      let dialogueAutoTimer = null;
+      let dialogueHistory = [];
+      const storyLogDialog = document.getElementById('story-log-dialog');
+      function scheduleDialogueAuto() {
+        clearTimeout(dialogueAutoTimer);
+        dialogueAutoTimer = null;
+        if (!dialogueAutoEnabled || dialogueIsTyping || storyLogDialog.open || document.hidden || document.getElementById('game-preview').dataset.view !== 'story-preview') return;
+        dialogueAutoTimer = setTimeout(() => {
+          dialogueAutoTimer = null;
+          if (dialogueAutoEnabled && !dialogueIsTyping && !storyLogDialog.open) advanceDialogue();
+        }, 2000);
+      }
+      function setDialogueAuto(enabled) {
+        dialogueAutoEnabled = enabled;
+        document.getElementById('story-auto').setAttribute('aria-pressed', String(enabled));
+        scheduleDialogueAuto();
+      }
       function stopDialogueTyping() {
+        clearTimeout(dialogueAutoTimer);
+        dialogueAutoTimer = null;
         clearInterval(dialogueTypingTimer);
         dialogueTypingTimer = null;
         dialogueIsTyping = false;
@@ -2079,6 +2124,8 @@
         stopDialogueTyping();
         document.getElementById('story-dialogue-text').textContent = dialogueCharacters.join('');
         document.getElementById('story-dialogue-next').hidden = false;
+        dialogueHistory[dialogueLineIndex] = { speaker: document.getElementById('story-dialogue-speaker').textContent, text: dialogueCharacters.join('') };
+        scheduleDialogueAuto();
       }
       function typeDialogueLine() {
         stopDialogueTyping();
@@ -2100,10 +2147,14 @@
         }, 40);
       }
       function startDialoguePreview() {
+        setDialogueAuto(false);
+        dialogueHistory = [];
         dialogueLineIndex = 0;
         typeDialogueLine();
       }
       function advanceDialogue() {
+        clearTimeout(dialogueAutoTimer);
+        dialogueAutoTimer = null;
         if (dialogueIsTyping) { finishDialogueLine(); return; }
         if (dialogueLineIndex < dialoguePreviewLines.length - 1) {
           dialogueLineIndex++;
@@ -2119,6 +2170,33 @@
           event.preventDefault();
           if (!event.repeat) advanceDialogue();
         }
+      });
+      document.getElementById('story-auto').addEventListener('click', () => setDialogueAuto(!dialogueAutoEnabled));
+      document.getElementById('story-log').addEventListener('click', () => {
+        clearTimeout(dialogueAutoTimer);
+        dialogueAutoTimer = null;
+        const entries = dialogueHistory.filter(Boolean).map(entry => ({ ...entry }));
+        if (dialogueIsTyping) {
+          const text = document.getElementById('story-dialogue-text').textContent;
+          if (text) entries.push({ speaker: document.getElementById('story-dialogue-speaker').textContent, text });
+        }
+        const list = document.getElementById('story-log-list');
+        list.replaceChildren();
+        if (!entries.length) { const empty = document.createElement('p'); empty.textContent = '아직 표시된 내용이 없어요.'; list.append(empty); }
+        entries.forEach(entry => {
+          const item = document.createElement('div'); item.className = 'story-log-entry';
+          const speaker = document.createElement('strong'); speaker.textContent = entry.speaker;
+          const text = document.createElement('p'); text.textContent = entry.text;
+          item.append(speaker, text); list.append(item);
+        });
+        storyLogDialog.showModal();
+        document.getElementById('story-log-close').focus();
+      });
+      document.getElementById('story-log-close').addEventListener('click', () => storyLogDialog.close());
+      storyLogDialog.addEventListener('close', scheduleDialogueAuto);
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) { clearTimeout(dialogueAutoTimer); dialogueAutoTimer = null; }
+        else scheduleDialogueAuto();
       });
     </script>
   </body>
