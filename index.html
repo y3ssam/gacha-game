@@ -627,8 +627,8 @@
                 <button class="scenario-card" data-state="completed" type="button"><span class="scenario-number">01</span><span class="scenario-info"><span class="scenario-name">낯선 세계의 시작</span><span class="scenario-description">눈앞에 펼쳐진 풍경을 살피며 첫 발걸음을 내딛습니다.</span></span><span class="scenario-status">✓ 클리어</span></button>
                 <button class="scenario-card" data-state="completed" type="button"><span class="scenario-number">02</span><span class="scenario-info"><span class="scenario-name">첫 번째 만남</span><span class="scenario-description">길 위에서 만난 인물과 함께 새로운 단서를 찾습니다.</span></span><span class="scenario-status">✓ 클리어</span></button>
                 <button class="scenario-card" data-state="new" type="button"><span class="scenario-number">03</span><span class="scenario-info"><span class="scenario-name">갈림길의 약속</span><span class="scenario-description">서로 다른 길 앞에서 앞으로의 여정을 결정합니다.</span></span><span class="scenario-status">NEW · 새로 열림</span></button>
-                <button class="scenario-card" data-state="locked" type="button" disabled><span class="scenario-number">04</span><span class="scenario-info"><span class="scenario-name">경계 너머의 흔적</span><span class="scenario-description">이전 시나리오를 완료하면 열립니다.</span></span><span class="scenario-status">잠김</span></button>
-                <button class="scenario-card" data-state="locked" type="button" disabled><span class="scenario-number">05</span><span class="scenario-info"><span class="scenario-name">이야기의 다음 장</span><span class="scenario-description">이전 시나리오를 완료하면 열립니다.</span></span><span class="scenario-status">잠김</span></button>
+                <button class="scenario-card" data-state="locked" type="button" disabled><span class="scenario-number">04</span><span class="scenario-info" aria-hidden="true"></span><span class="scenario-status">잠김</span></button>
+                <button class="scenario-card" data-state="locked" type="button" disabled hidden><span class="scenario-number">05</span><span class="scenario-info" aria-hidden="true"></span><span class="scenario-status">잠김</span></button>
               </div>
             </section>
           </div>
@@ -1856,6 +1856,7 @@
       function showGameView(view) {
         const isBattle = view === 'battle';
         const isScenarios = view === 'scenarios';
+        if (isScenarios) updateScenarioVisibility();
         const isSubscreen = isBattle || isScenarios;
         const game = document.getElementById('game-preview');
         game.dataset.view = isScenarios ? 'scenarios' : isBattle ? 'battle' : 'home';
@@ -1889,6 +1890,16 @@
         showGameView('battle');
         document.getElementById('story-entry-card').focus({ preventScroll: true });
       });
+      function updateScenarioVisibility() {
+        const cards = Array.from(document.querySelectorAll('.scenario-list .scenario-card'));
+        const newestIndex = cards.findIndex(card => card.dataset.state === 'new');
+        const nextLockedIndex = newestIndex >= 0 ? newestIndex + 1 : cards.findIndex(card => card.dataset.state === 'locked');
+        cards.forEach((card, index) => {
+          const locked = card.dataset.state === 'locked';
+          card.hidden = locked && index !== nextLockedIndex;
+          if (locked) card.querySelector('.scenario-info').replaceChildren();
+        });
+      }
     </script>
   </body>
 </html>
