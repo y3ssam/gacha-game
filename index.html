@@ -638,14 +638,18 @@
       .party-remove { position: absolute; top: 8px; right: 8px; width: 24px; height: 24px; border: 1px solid var(--border); border-radius: 6px; background: #10151de6; color: var(--text-primary); cursor: pointer; font-size: 17px; }
       .party-roster { min-height: 0; display: flex; flex-direction: column; gap: 9px; }
       .party-roster h3 { margin: 0 0 0 3px; height: 20px; flex: none; line-height: 20px; font-size: 16px; }
-      .party-roster-list { flex: 1; min-height: 0; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-content: start; gap: 10px; padding: 0 0 3px; }
-      .party-member { position: relative; min-width: 0; padding: 12px; border: 1px solid var(--border); border-left: 3px solid var(--rarity-color); border-radius: 8px; background: var(--surface-hover); text-align: left; font: inherit; cursor: pointer; color: var(--text-primary); }
+      .party-roster-list { flex: 1; min-height: 0; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-content: start; gap: 12px; padding: 0 0 3px; }
+      .party-member { position: relative; min-width: 0; width: 100%; aspect-ratio: 2 / 3; padding: 0; overflow: hidden; border: 1px solid var(--border); border-top: 4px solid var(--rarity-color); border-radius: 10px; background: var(--surface-sidebar); text-align: left; font: inherit; cursor: pointer; color: var(--text-primary); }
       .party-member:hover { border-color: var(--accent); }
+      .party-member > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+      .party-member .character-card-stars { position: absolute; top: 10px; left: 10px; padding: 0; color: var(--rarity-color); }
+      .party-member-caption { position: absolute; left: 0; right: 0; bottom: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 5px; padding: 28px 10px 10px; background: linear-gradient(transparent, #090d14ee); }
       .party-member strong { display: block; font-size: 13px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-      .party-member small { display: block; margin-top: 7px; color: var(--text-secondary); font-size: 11px; }
-      .party-member em { display: block; margin-top: 10px; color: var(--accent); font-size: 10px; font-style: normal; }
+      .party-member-level { font-size: 11px; color: var(--text-secondary); white-space: nowrap; }
+      .party-member small { grid-column: 1 / -1; color: var(--text-secondary); font-size: 10px; }
+      .party-member em { position: absolute; top: 33px; left: 10px; padding: 4px 6px; border-radius: 4px; background: var(--surface-active); color: var(--accent); font-size: 10px; font-style: normal; }
       #game-preview[data-view="party"] .party-layout { animation: character-toolbar-enter 450ms ease-out both; }
-      @media (max-width: 760px) { .party-screen { padding: 18px 16px; gap: 12px; } .party-layout-frame { --party-column-gap: 14px; --party-slot-gap: 8px; } .party-roster-list { grid-template-columns: minmax(0, 1fr); } .party-slot-caption { padding-inline: 6px; } .party-slot-caption strong { font-size: 12px; } }
+      @media (max-width: 760px) { .party-screen { padding: 18px 16px; gap: 12px; } .party-layout-frame { --party-column-gap: 14px; --party-slot-gap: 8px; } .party-roster-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; } .party-slot-caption { padding-inline: 6px; } .party-slot-caption strong { font-size: 12px; } .party-member-caption { padding-inline: 6px; } }
       @media (prefers-reduced-motion: reduce) { #game-preview[data-view="party"] .party-layout { animation: none; } #game-preview[data-view="party"] .game-bottom-menu { transition: none; } }
       .characters-screen { height: 100%; min-height: 0; padding: 24px 28px; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; }
       .characters-toolbar { display: grid; grid-template-columns: minmax(180px, 1fr) auto; align-items: end; gap: 20px; }
@@ -2954,9 +2958,16 @@
           const info = getCharacterBaseStats(card);
           const meta = document.createElement('small'); meta.textContent = info.role + ' · ' + info.element;
           const status = document.createElement('em'); const assigned = previewParty.indexOf(card);
-          status.textContent = assigned < 0 ? '★'.repeat(Number(card.dataset.rarity)) + ' · ' + card.querySelector('.character-card-level').textContent : (assigned < 3 ? '전열 ' : '후열 ') + (assigned % 3 + 1) + ' · 편성 중';
-          button.append(title, meta, status);
-          button.setAttribute('aria-label', title.textContent + ' · ' + status.textContent + ' · ' + (selectedPartySlot < 3 ? '전열 ' : '후열 ') + (selectedPartySlot % 3 + 1) + '에 배치');
+          status.textContent = assigned < 0 ? '' : (assigned < 3 ? '전열 ' : '후열 ') + (assigned % 3 + 1) + ' · 편성 중';
+          const image = card.querySelector('img');
+          if (image) { const art = document.createElement('img'); art.src = image.getAttribute('src'); art.alt = ''; button.append(art); }
+          const stars = card.querySelector('.character-card-stars')?.cloneNode(true);
+          if (stars) button.append(stars);
+          const caption = document.createElement('span'); caption.className = 'party-member-caption';
+          const level = document.createElement('span'); level.className = 'party-member-level'; level.textContent = card.querySelector('.character-card-level').textContent;
+          caption.append(title, level, meta); button.append(caption);
+          if (assigned >= 0) button.append(status);
+          button.setAttribute('aria-label', title.textContent + ' · ' + card.dataset.rarity + '성 · ' + level.textContent + ' · ' + meta.textContent + (assigned >= 0 ? ' · ' + status.textContent : '') + ' · ' + (selectedPartySlot < 3 ? '전열 ' : '후열 ') + (selectedPartySlot % 3 + 1) + '에 배치');
           button.addEventListener('click', () => {
             const next = placePartyMember(previewParty, selectedPartySlot, card);
             previewParty.splice(0, 6, ...next);
