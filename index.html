@@ -182,7 +182,9 @@
         gap: 12px;
         width: 100%;
       }
-      .ai-tab, .add-ai-button {
+      .world-toolbar { display: flex; justify-content: flex-end; }
+      .add-world-button { width: 152px; max-width: 100%; }
+      .ai-tab, .add-ai-button, .add-world-button {
         min-width: 0;
         min-height: 46px;
         padding: 10px 16px;
@@ -196,13 +198,13 @@
         line-height: 1.5;
         cursor: pointer;
       }
-      .add-ai-button {
-        grid-column: 4;
+      .add-ai-button { grid-column: 4; }
+      .add-ai-button, .add-world-button {
         background: var(--action-background);
         border-color: var(--action-background);
         color: var(--action-text);
       }
-      .add-ai-button:hover {
+      .add-ai-button:hover, .add-world-button:hover {
         background: var(--action-hover);
         border-color: var(--action-hover);
       }
@@ -212,7 +214,7 @@
         border-color: var(--accent);
         color: var(--accent);
       }
-      .ai-tab:focus-visible, .add-ai-button:focus-visible {
+      .ai-tab:focus-visible, .add-ai-button:focus-visible, .add-world-button:focus-visible {
         outline: 2px solid var(--focus-ring);
         outline-offset: 4px;
       }
@@ -335,7 +337,7 @@
         .content-header p { font-size: 13px; }
         .ai-tabs { gap: 8px; }
         .ai-toolbar { gap: 8px; }
-        .ai-tab, .add-ai-button { padding-inline: 8px; font-size: 12px; }
+        .ai-tab, .add-ai-button, .add-world-button { padding-inline: 8px; font-size: 12px; }
       }
     </style>
   </head>
@@ -372,7 +374,11 @@
           <h1 id="page-title">AI 연결</h1>
           <p id="page-description">스토리를 만드는 AI와 이미지를 그리는 AI를 연결하세요.</p>
         </header>
-        <div class="content-body" id="worlds" hidden></div>
+        <div class="content-body" id="worlds" hidden>
+          <div class="world-toolbar">
+            <button class="add-world-button" type="button">+ 세계관 추가</button>
+          </div>
+        </div>
         <div class="content-body" id="ai-connection-body">
           <div id="connection-list-view">
           <div class="ai-toolbar">
