@@ -453,7 +453,7 @@
       .game-stage { flex: 1; min-height: 0; }
       #game-preview { position: relative; }
       .game-bottom-menu { position: absolute; bottom: 0; left: 0; right: 0; z-index: 2; display: flex; justify-content: center; gap: 12px; min-height: 72px; padding: 12px 28px; border-top: 1px solid var(--border); background: var(--surface-sidebar); transform: translateY(0); visibility: visible; transition: transform 280ms ease, visibility 0s; }
-      #game-preview:is([data-view="battle"], [data-view="scenarios"]) .game-bottom-menu { transform: translateY(100%); visibility: hidden; pointer-events: none; transition: transform 280ms ease, visibility 0s 280ms; }
+      #game-preview:is([data-view="battle"], [data-view="chapters"], [data-view="scenarios"]) .game-bottom-menu { transform: translateY(100%); visibility: hidden; pointer-events: none; transition: transform 280ms ease, visibility 0s 280ms; }
       #game-preview[data-view="home"] .game-stage { padding-bottom: 72px; }
       @media (max-width: 640px) { #game-preview[data-view="home"] .game-stage { padding-bottom: 84px; } }
       @media (prefers-reduced-motion: reduce) { .game-bottom-menu, #game-preview[data-view="battle"] .game-bottom-menu { transition: none; } }
@@ -534,6 +534,14 @@
       .scenario-card:enabled:hover { border-color: var(--scenario-accent); }
       .scenario-card:focus-visible { outline: 2px solid var(--scenario-accent); outline-offset: 3px; }
       @media (max-width: 640px) { .scenario-screen { padding-block: 20px; } .scenario-card { grid-template-columns: 36px minmax(0, 1fr); gap: 12px; padding: 16px 14px; } .scenario-number { font-size: 22px; } .scenario-status { grid-column: 2; } .scenario-heading h2 { font-size: 17px; } }
+      .chapter-list { display: grid; gap: 16px; max-width: 1000px; margin-inline: auto; }
+      .chapter-card { min-height: 150px; padding-block: 24px; }
+      .chapter-progress { display: grid; gap: 8px; margin-top: 16px; width: min(100%, 360px); }
+      .chapter-progress-label { color: var(--scenario-accent); font-size: 12px; font-variant-numeric: tabular-nums; }
+      .chapter-progress progress { display: block; width: 100%; height: 5px; border: 0; border-radius: 999px; overflow: hidden; background: var(--border); accent-color: var(--scenario-accent); }
+      .chapter-progress progress::-webkit-progress-bar { background: var(--border); border-radius: 999px; }
+      .chapter-progress progress::-webkit-progress-value { background: var(--scenario-accent); border-radius: 999px; }
+      .chapter-progress progress::-moz-progress-bar { background: var(--scenario-accent); border-radius: 999px; }
     </style>
   </head>
   <body>
@@ -611,16 +619,23 @@
           </div>
           <div class="game-stage" id="game-stage">
             <section class="battle-content" id="battle-content" aria-label="전투 콘텐츠" hidden>
-              <button class="story-entry-card" id="story-entry-card" type="button" aria-label="시나리오 · 챕터 이름 미정">
+              <button class="story-entry-card" id="story-entry-card" type="button" aria-label="스토리 챕터 목록">
                 <span class="story-card-content">
                   <span class="story-card-heading">STORY</span>
                   <span class="story-card-chapter" id="story-current-chapter">챕터 이름 미정</span>
                 </span>
               </button>
             </section>
+            <section class="scenario-screen" id="chapter-screen" aria-labelledby="chapter-list-title" hidden>
+              <div class="scenario-heading">
+                <button class="connection-back" id="chapter-back" type="button" aria-label="스토리 카드로 돌아가기" title="스토리 카드로 돌아가기">◀</button>
+                <div><h2 id="chapter-list-title">챕터 목록</h2><p>각 챕터는 10개 시나리오로 구성돼요. · 미리보기</p></div>
+              </div>
+              <div class="chapter-list" id="chapter-list" aria-label="챕터 목록"></div>
+            </section>
             <section class="scenario-screen" id="scenario-screen" aria-labelledby="scenario-chapter-title" hidden>
               <div class="scenario-heading">
-                <button class="connection-back" id="scenario-back" type="button" aria-label="챕터 카드로 돌아가기" title="챕터 카드로 돌아가기">◀</button>
+                <button class="connection-back" id="scenario-back" type="button" aria-label="챕터 목록으로 돌아가기" title="챕터 목록으로 돌아가기">◀</button>
                 <div><h2 id="scenario-chapter-title" tabindex="-1">챕터 이름 미정</h2><p>시나리오 목록 · 미리보기</p></div>
               </div>
               <div class="scenario-list" aria-label="시나리오 목록">
@@ -1856,11 +1871,12 @@
       function showGameView(view) {
         const isBattle = view === 'battle';
         const isScenarios = view === 'scenarios';
+        const isChapters = view === 'chapters';
         if (isScenarios) updateScenarioVisibility();
-        const isSubscreen = isBattle || isScenarios;
+        const isSubscreen = isBattle || isScenarios || isChapters;
         const game = document.getElementById('game-preview');
-        game.dataset.view = isScenarios ? 'scenarios' : isBattle ? 'battle' : 'home';
-        game.setAttribute('aria-label', isScenarios ? '시나리오 목록 화면' : isBattle ? '전투 화면' : '게임 메인 화면');
+        game.dataset.view = isChapters ? 'chapters' : isScenarios ? 'scenarios' : isBattle ? 'battle' : 'home';
+        game.setAttribute('aria-label', isChapters ? '챕터 목록 화면' : isScenarios ? '시나리오 목록 화면' : isBattle ? '전투 화면' : '게임 메인 화면');
         const menu = document.querySelector('.game-bottom-menu');
         menu.inert = isSubscreen;
         menu.setAttribute('aria-hidden', String(isSubscreen));
@@ -1868,9 +1884,10 @@
         homeButton.hidden = false;
         homeButton.disabled = !isSubscreen;
         homeButton.setAttribute('aria-hidden', String(!isSubscreen));
-        document.getElementById('game-stage').setAttribute('aria-label', isScenarios ? '시나리오 목록 화면' : isBattle ? '전투 화면' : '메인 화면');
+        document.getElementById('game-stage').setAttribute('aria-label', isChapters ? '챕터 목록 화면' : isScenarios ? '시나리오 목록 화면' : isBattle ? '전투 화면' : '메인 화면');
         document.getElementById('battle-content').hidden = !isBattle;
         document.getElementById('scenario-screen').hidden = !isScenarios;
+        document.getElementById('chapter-screen').hidden = !isChapters;
       }
       document.getElementById('game-battle').addEventListener('click', () => {
         showGameView('battle');
@@ -1881,12 +1898,15 @@
         document.getElementById('game-battle').focus({ preventScroll: true });
       });
       document.getElementById('story-entry-card').addEventListener('click', () => {
-        document.getElementById('scenario-chapter-title').textContent = document.getElementById('story-current-chapter').textContent;
-        showGameView('scenarios');
-        document.getElementById('scenario-screen').scrollTop = 0;
-        document.getElementById('scenario-back').focus({ preventScroll: true });
+        showGameView('chapters');
+        document.getElementById('chapter-screen').scrollTop = 0;
+        document.getElementById('chapter-back').focus({ preventScroll: true });
       });
       document.getElementById('scenario-back').addEventListener('click', () => {
+        showGameView('chapters');
+        document.getElementById('chapter-card-' + selectedPreviewChapter)?.focus({ preventScroll: true });
+      });
+      document.getElementById('chapter-back').addEventListener('click', () => {
         showGameView('battle');
         document.getElementById('story-entry-card').focus({ preventScroll: true });
       });
@@ -1904,6 +1924,55 @@
             info.replaceChildren(name, description);
           }
         });
+      }
+      // 실제 생성·진행 데이터가 연결되기 전까지 상태 확인용 챕터를 표시합니다.
+      const previewChapters = [
+        { id: '1', name: '여정의 시작', description: '낯선 세계에서 만남을 거듭하며 첫 여정의 발자취를 따라갑니다.', completed: 10, state: 'completed' },
+        { id: '2', name: '갈림길의 약속', description: '새로운 동료와 함께 세계에 남겨진 단서를 따라갑니다.', completed: 2, state: 'new' },
+        { id: '3', name: '미발견 챕터', description: '아직 발견되지 않은 챕터입니다.', completed: 0, state: 'locked' },
+      ];
+      const previewScenarioTemplates = Array.from(document.querySelectorAll('.scenario-list .scenario-card'), card => card.cloneNode(true));
+      let selectedPreviewChapter = null;
+      function openPreviewChapter(chapter) {
+        if (chapter.state === 'locked') return;
+        selectedPreviewChapter = chapter.id;
+        const list = document.querySelector('.scenario-list');
+        list.replaceChildren();
+        for (let index = 0; index < 10; index++) {
+          const card = previewScenarioTemplates[Math.min(index, previewScenarioTemplates.length - 1)].cloneNode(true);
+          const state = index < chapter.completed ? 'completed' : index === chapter.completed ? 'new' : 'locked';
+          card.dataset.state = state;
+          card.disabled = state === 'locked'; card.hidden = false;
+          card.querySelector('.scenario-number').textContent = String(index + 1).padStart(2, '0');
+          const info = card.querySelector('.scenario-info');
+          if (state !== 'locked' && (index >= 3 || info.querySelector('.scenario-name')?.textContent === '미발견 시나리오')) {
+            const name = document.createElement('span'); name.className = 'scenario-name'; name.textContent = '시나리오 ' + (index + 1);
+            const description = document.createElement('span'); description.className = 'scenario-description'; description.textContent = '이 챕터의 이야기가 이어집니다.';
+            info.replaceChildren(name, description);
+          }
+          card.querySelector('.scenario-status').textContent = state === 'completed' ? '✓ 클리어' : state === 'new' ? 'NEW · 새로 열림' : '잠김';
+          list.append(card);
+        }
+        document.getElementById('scenario-chapter-title').textContent = '챕터 ' + chapter.id + ' · ' + chapter.name;
+        showGameView('scenarios');
+        document.getElementById('scenario-screen').scrollTop = 0;
+        document.getElementById('scenario-back').focus({ preventScroll: true });
+      }
+      for (const chapter of previewChapters) {
+        const card = document.createElement('button'); card.type = 'button'; card.className = 'scenario-card chapter-card';
+        card.id = 'chapter-card-' + chapter.id; card.dataset.state = chapter.state; card.disabled = chapter.state === 'locked';
+        const number = document.createElement('span'); number.className = 'scenario-number'; number.textContent = String(chapter.id).padStart(2, '0');
+        const info = document.createElement('span'); info.className = 'scenario-info';
+        const name = document.createElement('span'); name.className = 'scenario-name'; name.textContent = chapter.name;
+        const description = document.createElement('span'); description.className = 'scenario-description'; description.textContent = chapter.description;
+        const progress = document.createElement('span'); progress.className = 'chapter-progress';
+        const count = document.createElement('span'); count.className = 'chapter-progress-label'; count.textContent = '진행도 ' + chapter.completed + '/10';
+        const bar = document.createElement('progress'); bar.max = 10; bar.value = chapter.completed;
+        bar.setAttribute('aria-label', '챕터 ' + chapter.id + ' 진행도'); bar.setAttribute('aria-valuetext', chapter.completed + '/10');
+        progress.append(count, bar); info.append(name, description, progress);
+        const status = document.createElement('span'); status.className = 'scenario-status'; status.textContent = chapter.state === 'completed' ? '✓ 클리어' : chapter.state === 'new' ? 'NEW · 새로 열림' : '잠김';
+        card.append(number, info, status); card.addEventListener('click', () => openPreviewChapter(chapter));
+        document.getElementById('chapter-list').append(card);
       }
     </script>
   </body>
