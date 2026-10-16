@@ -502,11 +502,13 @@
       #game-preview[data-view="battle"] .story-entry-card { animation: story-card-enter 650ms cubic-bezier(.22, 1, .36, 1) 100ms both, character-card-fade 650ms ease-in-out 100ms both; }
       @keyframes story-card-enter { from { transform: translateY(18px); } to { transform: translateY(0); } }
       @media (prefers-reduced-motion: reduce) { #game-preview[data-view="battle"] .story-entry-card { animation: none; } }
-      .story-entry-card::before { content: ''; position: absolute; inset: 1px; background: linear-gradient(155deg, var(--surface-active), var(--surface-sidebar) 75%); clip-path: polygon(7% 0, 100% 0, 93% 100%, 0 100%); }
+      #story-entry-card { --battle-entry-image: url('assets/dungeons/story-entry.png'); }
+      #materials-entry-card { --battle-entry-image: url('assets/dungeons/materials-entry.png'); }
+      .story-entry-card::before { content: ''; position: absolute; inset: 1px; background-color: var(--surface-sidebar); background-image: linear-gradient(180deg, #080c14a8, #080c1450 35%, #080c1400 70%, #080c1430), var(--battle-entry-image); background-size: cover; background-position: center; clip-path: polygon(7% 0, 100% 0, 93% 100%, 0 100%); }
       .story-entry-card::after { content: ''; position: absolute; top: 12px; left: calc(7% + 8px); right: 12px; height: 2px; background: var(--border); pointer-events: none; transition: background-color 180ms ease, box-shadow 180ms ease; }
       .story-entry-card:hover::after, .story-entry-card:focus-visible::after { background: var(--accent); }
       @media (prefers-reduced-motion: reduce) { .story-entry-card::after { transition: none; } }
-      .story-card-content { position: absolute; top: 0; left: 0; right: 0; display: flex; flex-direction: column; gap: 2.5px; padding: 38px 14%; }
+      .story-card-content { position: absolute; top: 0; left: 0; right: 0; display: flex; flex-direction: column; gap: 2.5px; padding: 38px 14%; text-shadow: 0 2px 6px #000b; }
       .story-card-heading { color: var(--accent); font-size: clamp(22px, 3vw, 38px); font-weight: 650; letter-spacing: .06em; line-height: 1.2; }
       .story-card-chapter { font-size: clamp(14px, 1.6vw, 20px); font-weight: 500; line-height: 1.6; overflow-wrap: anywhere; }
       .materials-entry-card { container-type: inline-size; flex-shrink: 0; margin-left: calc(max(36%, var(--battle-card-min-width, 180px)) * -.07); }

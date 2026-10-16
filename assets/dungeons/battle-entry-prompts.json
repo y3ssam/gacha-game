@@ -1,0 +1,17 @@
+{
+  "mode": "built-in image_gen",
+  "width": 1024,
+  "height": 1536,
+  "images": [
+    {
+      "id": "story-entry",
+      "name": "STORY",
+      "prompt": "Use case: stylized-concept. Asset type: background illustration for the tall STORY entry card in a Korean fantasy RPG. Generate ONE standalone full-bleed opaque portrait image, exactly 1024x1536, 2:3 aspect ratio. A sense of setting out on a long journey: an inviting old stone and earthen road starts broad at the bottom center, curves gently through a magnificent quiet mountain valley and ancient forest, then continues into luminous mist between distant layered peaks. The path and landscape, not buildings or characters, are the subject. Center the road in the middle 65% of the width because both sides will be clipped slightly into a parallelogram. Establish a clear near-to-far visual journey and a destination suggested by the distant light. The upper 25% is naturally subdued dark evergreen canopy and cool mountain shadow, with low detail suitable for UI title overlay added later; keep the bright horizon below this title area. Premium hand-painted anime fantasy RPG environment art, intricate natural textures, elegant clear silhouettes, cinematic atmospheric depth, cool blue-green shadows and gentle warm sunrise highlights. Match a polished fantasy game illustration set, not a photograph or photorealistic 3D render. No people, no characters, no lettering, no words, no logos, no symbols or UI, no border, no watermark."
+    },
+    {
+      "id": "materials-entry",
+      "name": "MATERIALS",
+      "prompt": "Use case: stylized-concept. Asset type: background illustration for the tall MATERIALS entry card in a Korean fantasy RPG. Generate ONE standalone full-bleed opaque portrait image, exactly 1024x1536, 2:3 aspect ratio. A monumental entrance to an ancient hall of trials, viewed from outside at the foot of a short broad stairway. A huge exquisitely carved stone arch and slightly opened double doors reveal a softly luminous interior with columns disappearing into depth; the clear subject is entering the hall, not an altar deep inside it. Strong centered architectural perspective, noble weathered dark stone and restrained golden metal ornament, a few small moss details. The entrance and inviting light sit in the central middle-to-lower region. Keep the focal doorway within the middle 65% of the width because the card sides will be clipped slightly into a parallelogram. The upper 25% is naturally darker quiet stone lintel and shadow with little visual clutter so a UI title and description can be placed over it later. Premium hand-painted anime fantasy RPG environment art, intricate stonework, elegant clear silhouettes, cinematic atmospheric depth, cool slate-blue exterior shadows and soft warm ivory-gold light from within. Match a polished fantasy game illustration set, not a photograph or photorealistic 3D render. No people, no characters, no readable inscriptions, no words or letters, no logos, no UI, no border, no watermark."
+    }
+  ]
+}
