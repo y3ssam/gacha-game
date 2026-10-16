@@ -652,6 +652,27 @@
       @media (max-width: 900px) { .character-detail-actions { flex-basis: 100%; justify-content: flex-start; } }
       .character-detail-body { position: relative; flex: 1; min-height: 240px; container-type: size; }
       .character-detail-panel { position: absolute; inset: 0 0 0 calc(min(45cqw, 66.6667cqh) + 24px); overflow-y: auto; scrollbar-gutter: stable; }
+      .character-info { display: grid; gap: 20px; padding: 2px 12px 12px 0; }
+      .character-info-summary { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+      .character-info-power { display: flex; align-items: baseline; gap: 12px; }
+      .character-info-label { color: var(--text-secondary); font-size: 13px; }
+      .character-info-power strong { color: var(--accent); font-size: 30px; font-weight: 650; font-variant-numeric: tabular-nums; }
+      .character-info-level { margin: 0; font-size: 14px; }
+      .character-info-level strong { margin-left: 8px; font-size: 18px; }
+      .character-info-exp { display: grid; gap: 8px; }
+      .character-info-exp-label { display: flex; justify-content: space-between; gap: 12px; color: var(--text-secondary); font-size: 12px; }
+      .character-info-exp progress { display: block; width: 100%; height: 6px; border: 0; border-radius: 999px; overflow: hidden; background: var(--border); accent-color: var(--accent); }
+      .character-info-exp progress::-webkit-progress-bar { background: var(--border); }
+      .character-info-exp progress::-webkit-progress-value { background: var(--accent); border-radius: 999px; }
+      .character-info-exp progress::-moz-progress-bar { background: var(--accent); border-radius: 999px; }
+      .character-info-traits { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin: 0; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+      .character-info-traits > div { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+      .character-info dt { color: var(--text-secondary); font-size: 13px; }
+      .character-info dd { margin: 0; font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; }
+      .character-info-stats-heading { margin: 0; font-size: 16px; font-weight: 600; }
+      .character-info-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 28px; row-gap: 0; margin: -8px 0 0; }
+      .character-info-stats > div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 13px 0; border-bottom: 1px solid var(--border); }
+      @container (max-width: 650px) { .character-info-traits, .character-info-stats { grid-template-columns: minmax(0, 1fr); } }
       .character-detail-illustration { width: min(45cqw, 66.6667cqh); aspect-ratio: 2 / 3; border: 1px solid var(--border); border-radius: 16px; background: var(--surface-sidebar); overflow: hidden; }
       .character-detail-illustration img { display: block; width: 100%; height: 100%; object-fit: contain; }
       @media (max-width: 760px) { .character-detail-screen { padding: 20px 16px; } .character-detail-heading { gap: 12px; } .character-detail-heading h2 { font-size: 24px; } }
@@ -811,7 +832,33 @@
               </div>
               <div class="character-detail-body">
                 <div class="character-detail-illustration" id="character-detail-illustration" role="img" aria-label="캐릭터 일러스트 영역"></div>
-                <div class="character-detail-panel" id="character-panel-info" role="tabpanel" aria-labelledby="character-tab-info" tabindex="0"></div>
+                <div class="character-detail-panel" id="character-panel-info" role="tabpanel" aria-labelledby="character-tab-info" tabindex="0">
+                  <div class="character-info">
+                    <div class="character-info-summary">
+                      <div class="character-info-power"><span class="character-info-label">전투력</span><strong id="character-info-power"></strong></div>
+                      <p class="character-info-level"><span class="character-info-label">레벨</span><strong id="character-info-level"></strong></p>
+                    </div>
+                    <div class="character-info-exp">
+                      <div class="character-info-exp-label"><span>경험치</span><span id="character-info-exp-count"></span></div>
+                      <progress id="character-info-exp-bar" max="100" value="0" aria-label="캐릭터 경험치"></progress>
+                    </div>
+                    <dl class="character-info-traits">
+                      <div><dt>속성</dt><dd id="character-info-element"></dd></div>
+                      <div><dt>클래스</dt><dd id="character-info-class"></dd></div>
+                    </dl>
+                    <h3 class="character-info-stats-heading">스탯</h3>
+                    <dl class="character-info-stats">
+                      <div><dt>체력</dt><dd id="character-stat-hp"></dd></div>
+                      <div><dt>공격력</dt><dd id="character-stat-attack"></dd></div>
+                      <div><dt>방어력</dt><dd id="character-stat-defense"></dd></div>
+                      <div><dt>속도</dt><dd id="character-stat-speed"></dd></div>
+                      <div><dt>치명타 확률</dt><dd id="character-stat-crit-rate"></dd></div>
+                      <div><dt>치명타 피해</dt><dd id="character-stat-crit-damage"></dd></div>
+                      <div><dt>효과 적중</dt><dd id="character-stat-effect-hit"></dd></div>
+                      <div><dt>효과 저항</dt><dd id="character-stat-effect-resist"></dd></div>
+                    </dl>
+                  </div>
+                </div>
                 <div class="character-detail-panel" id="character-panel-skills" role="tabpanel" aria-labelledby="character-tab-skills" tabindex="0" hidden></div>
                 <div class="character-detail-panel" id="character-panel-awakening" role="tabpanel" aria-labelledby="character-tab-awakening" tabindex="0" hidden></div>
                 <div class="character-detail-panel" id="character-panel-outfits" role="tabpanel" aria-labelledby="character-tab-outfits" tabindex="0" hidden></div>
@@ -2444,6 +2491,7 @@
       function openCharacterDetail(card) {
         selectedCharacterCard = card;
         selectCharacterTab(document.getElementById('character-tab-info'));
+        renderCharacterInfo(card);
         const name = card.querySelector('.character-card-name').textContent;
         document.getElementById('character-detail-name').textContent = name;
         document.getElementById('character-detail-level').textContent = card.querySelector('.character-card-level').textContent;
@@ -2474,6 +2522,35 @@
         showGameView('characters');
         selectedCharacterCard?.focus({ preventScroll: true });
       });
+      function renderCharacterInfo(card) {
+        // 실제 캐릭터 생성 데이터가 연결되기 전까지 사용하는 화면 확인용 수치입니다.
+        const previews = {
+          '3': { power: 1250, element: '불', role: '전사', hp: 2400, attack: 180, defense: 120, speed: 100 },
+          '4': { power: 1680, element: '물', role: '마법사', hp: 2100, attack: 260, defense: 105, speed: 108 },
+          '5': { power: 2150, element: '빛', role: '기사', hp: 3200, attack: 210, defense: 220, speed: 95 },
+        };
+        const info = previews[card.dataset.rarity] || previews['3'];
+        const values = {
+          'character-info-power': info.power.toLocaleString('ko-KR'),
+          'character-info-level': card.querySelector('.character-card-level').textContent,
+          'character-info-exp-count': '0 / 100',
+          'character-info-element': info.element,
+          'character-info-class': info.role,
+          'character-stat-hp': info.hp.toLocaleString('ko-KR'),
+          'character-stat-attack': info.attack.toLocaleString('ko-KR'),
+          'character-stat-defense': info.defense.toLocaleString('ko-KR'),
+          'character-stat-speed': String(info.speed),
+          'character-stat-crit-rate': '5%',
+          'character-stat-crit-damage': '150%',
+          'character-stat-effect-hit': '0%',
+          'character-stat-effect-resist': '0%',
+        };
+        Object.entries(values).forEach(([id, value]) => { document.getElementById(id).textContent = value; });
+        const exp = document.getElementById('character-info-exp-bar');
+        exp.value = 0; exp.max = 100;
+        exp.setAttribute('aria-valuetext', '0 / 100');
+        document.getElementById('character-panel-info').scrollTop = 0;
+      }
       function selectCharacterTab(selected) {
         document.querySelectorAll('.character-detail-action').forEach(tab => {
           const active = tab === selected;
