@@ -453,7 +453,7 @@
       .game-stage { flex: 1; min-height: 0; }
       #game-preview { position: relative; }
       .game-bottom-menu { position: absolute; bottom: 0; left: 0; right: 0; z-index: 2; display: flex; justify-content: center; gap: 12px; min-height: 72px; padding: 12px 28px; border-top: 1px solid var(--border); background: var(--surface-sidebar); transform: translateY(0); visibility: visible; transition: transform 280ms ease, visibility 0s; }
-      #game-preview:is([data-view="battle"], [data-view="chapters"], [data-view="scenarios"], [data-view="characters"]) .game-bottom-menu { transform: translateY(100%); visibility: hidden; pointer-events: none; transition: transform 280ms ease, visibility 0s 280ms; }
+      #game-preview:is([data-view="battle"], [data-view="chapters"], [data-view="scenarios"], [data-view="characters"], [data-view="character-detail"]) .game-bottom-menu { transform: translateY(100%); visibility: hidden; pointer-events: none; transition: transform 280ms ease, visibility 0s 280ms; }
       #game-preview[data-view="home"] .game-stage { padding-bottom: 72px; }
       @media (max-width: 640px) { #game-preview[data-view="home"] .game-stage { padding-bottom: 84px; } }
       @media (prefers-reduced-motion: reduce) { .game-bottom-menu, #game-preview[data-view="battle"] .game-bottom-menu { transition: none; } }
@@ -635,6 +635,18 @@
       .character-card-stars { display: flex; justify-content: flex-start; gap: 2px; padding: 12px 12px 0; color: var(--rarity-color); }
       .character-card-stars svg { width: 14px; height: 14px; }
       .character-portrait-card { position: relative; scale: 1; transition: scale 220ms ease-out; }
+      .character-portrait-card { cursor: pointer; }
+      .character-portrait-card:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 4px; }
+      .character-detail-screen { height: 100%; min-height: 0; display: flex; flex-direction: column; gap: 24px; padding: 24px 28px; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; }
+      .character-detail-heading { display: flex; align-items: center; gap: 18px; flex-shrink: 0; flex-wrap: wrap; }
+      .character-detail-heading h2 { margin: 0; font-size: 28px; font-weight: 650; overflow-wrap: anywhere; }
+      .character-detail-meta { display: flex; align-items: center; gap: 16px; }
+      .character-detail-stars { display: flex; gap: 2px; }
+      .character-detail-stars svg { width: 18px; height: 18px; }
+      .character-detail-level { color: var(--text-secondary); font-size: 15px; white-space: nowrap; }
+      .character-detail-illustration { flex: 1; min-height: 280px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface-sidebar); overflow: hidden; }
+      .character-detail-illustration img { display: block; width: 100%; height: 100%; object-fit: contain; }
+      @media (max-width: 760px) { .character-detail-screen { padding: 20px 16px; } .character-detail-heading { gap: 12px; } .character-detail-heading h2 { font-size: 24px; } }
       @media (hover: hover) and (pointer: fine) {
         .character-portrait-card:hover { scale: 1.03; z-index: 1; }
       }
@@ -774,6 +786,14 @@
                   <div class="character-card-info"><span class="character-card-name">캐릭터 3</span><span class="character-card-level">Lv. 1</span></div>
                 </div>
               </div>
+            </section>
+            <section class="character-detail-screen" id="character-detail-screen" aria-label="캐릭터 상세" hidden>
+              <div class="character-detail-heading">
+                <button class="connection-back" id="character-detail-back" type="button" aria-label="캐릭터 목록으로 돌아가기" title="캐릭터 목록으로 돌아가기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 6-6 6 6 6" /></svg></button>
+                <h2 id="character-detail-name"></h2>
+                <div class="character-detail-meta"><span class="character-detail-stars" id="character-detail-stars"></span><span class="character-detail-level" id="character-detail-level"></span></div>
+              </div>
+              <div class="character-detail-illustration" id="character-detail-illustration" role="img" aria-label="캐릭터 일러스트 영역"></div>
             </section>
             <section class="story-preview-screen" id="combat-preview-screen" aria-label="전투 미리보기" hidden>
               <div class="story-preview-top">
@@ -2065,6 +2085,7 @@
       setInterval(updateGameEnergy, 1000);
       document.addEventListener('visibilitychange', () => { if (!document.hidden) updateGameEnergy(); });
       function showGameView(view) {
+        const isCharacterDetail = view === 'character-detail';
         const isCharacters = view === 'characters';
         if (isCharacters) {
           Array.from(document.querySelectorAll('.character-portrait-card')).forEach((card, index) => {
@@ -2083,13 +2104,13 @@
             card.style.setProperty('--card-enter-delay', 100 + index * 100 + 'ms');
           });
         }
-        const isSubscreen = isBattle || isScenarios || isChapters || isStoryPreview || isCombatPreview || isCharacters;
+        const isSubscreen = isBattle || isScenarios || isChapters || isStoryPreview || isCombatPreview || isCharacters || isCharacterDetail;
         const game = document.getElementById('game-preview');
         if (game.dataset.view === 'story-preview' && !isStoryPreview) {
           stopDialogueTyping();
           setDialogueAuto(false);
         }
-        game.dataset.view = isCharacters ? 'characters' : isCombatPreview ? 'combat-preview' : isStoryPreview ? 'story-preview' : isChapters ? 'chapters' : isScenarios ? 'scenarios' : isBattle ? 'battle' : 'home';
+        game.dataset.view = isCharacterDetail ? 'character-detail' : isCharacters ? 'characters' : isCombatPreview ? 'combat-preview' : isStoryPreview ? 'story-preview' : isChapters ? 'chapters' : isScenarios ? 'scenarios' : isBattle ? 'battle' : 'home';
         game.setAttribute('aria-label', isCharacters ? '캐릭터 화면' : isCombatPreview ? '전투 미리보기' : isStoryPreview ? '시나리오 미리보기' : isChapters ? '챕터 목록 화면' : isScenarios ? '시나리오 목록 화면' : isBattle ? '전투 화면' : '게임 메인 화면');
         const menu = document.querySelector('.game-bottom-menu');
         menu.inert = isSubscreen;
@@ -2100,6 +2121,11 @@
         homeButton.setAttribute('aria-hidden', String(!isSubscreen));
         document.getElementById('game-stage').setAttribute('aria-label', isCharacters ? '캐릭터 화면' : isCombatPreview ? '전투 미리보기' : isStoryPreview ? '시나리오 미리보기' : isChapters ? '챕터 목록 화면' : isScenarios ? '시나리오 목록 화면' : isBattle ? '전투 화면' : '메인 화면');
         document.getElementById('characters-screen').hidden = !isCharacters;
+        document.getElementById('character-detail-screen').hidden = !isCharacterDetail;
+        if (isCharacterDetail) {
+          game.setAttribute('aria-label', '캐릭터 상세 화면');
+          document.getElementById('game-stage').setAttribute('aria-label', '캐릭터 상세 화면');
+        }
         document.getElementById('combat-preview-screen').hidden = !isCombatPreview;
         document.getElementById('story-preview-screen').hidden = !isStoryPreview;
         document.getElementById('battle-content').hidden = !isBattle;
@@ -2111,7 +2137,7 @@
         document.getElementById('game-home').focus({ preventScroll: true });
       });
       document.getElementById('game-home').addEventListener('click', () => {
-        const fromCharacters = document.getElementById('game-preview').dataset.view === 'characters';
+        const fromCharacters = ['characters', 'character-detail'].includes(document.getElementById('game-preview').dataset.view);
         showGameView('home');
         document.getElementById(fromCharacters ? 'game-characters' : 'game-battle').focus({ preventScroll: true });
       });
@@ -2389,6 +2415,39 @@
       document.getElementById('game-characters').addEventListener('click', () => {
         showGameView('characters');
         document.getElementById('game-home').focus({ preventScroll: true });
+      });
+      let selectedCharacterCard = null;
+      function openCharacterDetail(card) {
+        selectedCharacterCard = card;
+        const name = card.querySelector('.character-card-name').textContent;
+        document.getElementById('character-detail-name').textContent = name;
+        document.getElementById('character-detail-level').textContent = card.querySelector('.character-card-level').textContent;
+        const stars = document.getElementById('character-detail-stars');
+        stars.replaceChildren(...Array.from(card.querySelectorAll('.character-card-stars svg'), star => star.cloneNode(true)));
+        stars.style.color = getComputedStyle(card).getPropertyValue('--rarity-color');
+        stars.setAttribute('aria-label', card.dataset.rarity + '성');
+        const illustration = document.getElementById('character-detail-illustration');
+        const image = card.querySelector('img');
+        illustration.replaceChildren(...(image ? [image.cloneNode(true)] : []));
+        illustration.setAttribute('aria-label', name + ' 일러스트' + (image ? '' : ' · 이미지 준비 전'));
+        showGameView('character-detail');
+        document.getElementById('character-detail-screen').scrollTop = 0;
+        document.getElementById('character-detail-back').focus({ preventScroll: true });
+      }
+      document.querySelectorAll('.character-portrait-card').forEach(card => {
+        card.setAttribute('role', 'button');
+        card.tabIndex = 0;
+        card.addEventListener('click', () => openCharacterDetail(card));
+        card.addEventListener('keydown', event => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            if (!event.repeat) openCharacterDetail(card);
+          }
+        });
+      });
+      document.getElementById('character-detail-back').addEventListener('click', () => {
+        showGameView('characters');
+        selectedCharacterCard?.focus({ preventScroll: true });
       });
     </script>
   </body>
