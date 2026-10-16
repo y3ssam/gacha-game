@@ -703,6 +703,25 @@
       .character-equipped-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
       .character-portrait-card .character-card-stars { position: relative; z-index: 1; }
       .character-card-info { z-index: 1; }
+      .character-affinity { display: grid; gap: 20px; padding: 2px 12px 12px 0; }
+      .character-affinity-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+      .character-affinity-heading h3 { margin: 0; font-size: 18px; }
+      .character-affinity-value { color: var(--accent); font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+      .character-affinity-progress { display: block; width: 100%; height: 8px; overflow: hidden; border: 0; border-radius: 999px; background: var(--border); accent-color: var(--accent); }
+      .character-affinity-progress::-webkit-progress-bar { background: var(--border); }
+      .character-affinity-progress::-webkit-progress-value { background: var(--accent); border-radius: 999px; }
+      .character-affinity-progress::-moz-progress-bar { background: var(--accent); border-radius: 999px; }
+      .character-affinity-story-heading { margin: 8px 0 0; font-size: 16px; font-weight: 600; }
+      .character-affinity-stories { display: grid; gap: 12px; }
+      .character-affinity-story { padding: 18px 20px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-sidebar); }
+      .character-affinity-story-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+      .character-affinity-story h4 { margin: 0; font-size: 15px; font-weight: 600; }
+      .character-affinity-story-status { display: flex; align-items: center; gap: 6px; color: var(--text-secondary); font-size: 12px; }
+      .character-affinity-story-status svg { width: 14px; height: 14px; }
+      .character-affinity-story p { margin: 10px 0 0; color: var(--text-secondary); font-size: 13px; line-height: 1.7; }
+      .character-affinity-story[data-unlocked="false"] h4 { color: var(--text-secondary); }
+      .character-affinity-story[data-unlocked="true"] { border-color: var(--accent); }
+      .character-affinity-story[data-unlocked="true"] .character-affinity-story-status { color: var(--accent); }
       @container (max-width: 650px) { .character-awakening-track { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
       .character-info-exp { display: grid; gap: 8px; }
       .character-info-exp-label { display: flex; justify-content: space-between; gap: 12px; color: var(--text-secondary); font-size: 12px; }
@@ -948,7 +967,19 @@
                     <div class="character-outfit-footer"><p class="character-outfit-status" id="character-outfit-status" aria-live="polite"></p><button class="character-growth-button" id="character-outfit-equip" type="button">착용</button></div>
                   </div>
                 </div>
-                <div class="character-detail-panel" id="character-panel-affinity" role="tabpanel" aria-labelledby="character-tab-affinity" tabindex="0" hidden></div>
+                <div class="character-detail-panel" id="character-panel-affinity" role="tabpanel" aria-labelledby="character-tab-affinity" tabindex="0" hidden>
+                  <div class="character-affinity">
+                    <div class="character-affinity-heading"><h3>호감도</h3><span class="character-affinity-value" id="character-affinity-value">1 / 10</span></div>
+                    <progress class="character-affinity-progress" id="character-affinity-progress" max="10" value="1" aria-label="캐릭터 호감도"></progress>
+                    <p class="character-awakening-note" id="character-affinity-next"></p>
+                    <h3 class="character-affinity-story-heading">스토리</h3>
+                    <div class="character-affinity-stories" aria-label="캐릭터 스토리 목록">
+                      <article class="character-affinity-story" data-required-affinity="3"><div class="character-affinity-story-top"><h4>캐릭터 스토리 1</h4><span class="character-affinity-story-status"></span></div><p>호감도 3 달성 시 해금</p></article>
+                      <article class="character-affinity-story" data-required-affinity="6"><div class="character-affinity-story-top"><h4>캐릭터 스토리 2</h4><span class="character-affinity-story-status"></span></div><p>호감도 6 달성 시 해금</p></article>
+                      <article class="character-affinity-story" data-required-affinity="9"><div class="character-affinity-story-top"><h4>캐릭터 스토리 3</h4><span class="character-affinity-story-status"></span></div><p>호감도 9 달성 시 해금</p></article>
+                    </div>
+                  </div>
+                </div>
                 <div class="character-detail-panel" id="character-panel-profile" role="tabpanel" aria-labelledby="character-tab-profile" tabindex="0" hidden></div>
               </div>
             </section>
@@ -2588,6 +2619,8 @@
         outfits.selectedId = outfits.equippedId;
         renderCharacterOutfits(card);
         document.getElementById('character-panel-outfits').scrollTop = 0;
+        renderCharacterAffinity(card);
+        document.getElementById('character-panel-affinity').scrollTop = 0;
         document.getElementById('character-panel-skills').scrollTop = 0;
         const name = card.querySelector('.character-card-name').textContent;
         document.getElementById('character-detail-name').textContent = name;
@@ -2777,6 +2810,37 @@
         if (!selectedCharacterCard) return;
         equipCharacterOutfit(selectedCharacterCard, getCharacterOutfits(selectedCharacterCard).selectedId);
       });
+      function getCharacterAffinity(card) {
+        // 실제 호감도 데이터가 연결되기 전의 기본 미리보기 값은 1입니다.
+        const value = Number(card.dataset.affinity ?? 1);
+        return Number.isFinite(value) ? Math.min(10, Math.max(0, Math.floor(value))) : 1;
+      }
+      function renderCharacterAffinity(card) {
+        const affinity = getCharacterAffinity(card);
+        document.getElementById('character-affinity-value').textContent = affinity + ' / 10';
+        const progress = document.getElementById('character-affinity-progress');
+        progress.value = affinity;
+        progress.setAttribute('aria-valuetext', '호감도 ' + affinity + ' / 10');
+        const next = [3, 6, 9].find(required => affinity < required);
+        document.getElementById('character-affinity-next').textContent = affinity >= 10
+          ? '최대 호감도에 도달했습니다.'
+          : next ? '호감도 ' + next + '에 도달하면 다음 캐릭터 스토리가 해금됩니다.' : '모든 캐릭터 스토리가 해금되었습니다.';
+        document.querySelectorAll('.character-affinity-story').forEach(story => {
+          const required = Number(story.dataset.requiredAffinity);
+          const unlocked = affinity >= required;
+          story.dataset.unlocked = String(unlocked);
+          const status = story.querySelector('.character-affinity-story-status');
+          status.replaceChildren();
+          if (!unlocked) {
+            const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            icon.setAttribute('viewBox', '0 0 24 24'); icon.setAttribute('fill', 'none'); icon.setAttribute('stroke', 'currentColor'); icon.setAttribute('stroke-width', '1.6'); icon.setAttribute('aria-hidden', 'true');
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', 'M7 10V7a5 5 0 0 1 10 0v3M5 10h14v11H5z'); icon.append(path); status.append(icon);
+          }
+          const label = document.createElement('span'); label.textContent = unlocked ? '해금' : '잠김'; status.append(label);
+          story.querySelector('p').textContent = unlocked ? '호감도 ' + required + ' 달성 · 스토리 해금 완료' : '호감도 ' + required + ' 달성 시 해금';
+        });
+      }
       function selectCharacterTab(selected) {
         document.querySelectorAll('.character-detail-action').forEach(tab => {
           const active = tab === selected;
