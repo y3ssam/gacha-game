@@ -781,6 +781,52 @@
       @media (max-width: 900px) { .summon-layout { grid-template-columns: 170px minmax(0, 1fr); gap: 16px; } .summon-banner-top { flex-direction: column-reverse; gap: 20px; left: 18px; right: 18px; top: 18px; } .summon-banner-actions { align-self: flex-end; } .summon-banner-bottom { left: 18px; right: 18px; bottom: 18px; flex-direction: column; align-items: stretch; gap: 12px; } .summon-pull-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-left: 0; } .summon-pull { height: 52px; font-size: 16px; } }
       @media (max-width: 640px) { .summon-screen { padding: 18px 16px; gap: 14px; } .summon-layout { grid-template-columns: 116px minmax(0, 1fr); gap: 12px; } .summon-banner-choice { padding: 10px 8px; min-height: 76px; } .summon-banner-thumbnail { display: none; } .summon-banner-choice strong { font-size: 12px; } .summon-banner-actions { gap: 5px; flex-wrap: wrap; } .summon-overlay-button { font-size: 11px; padding-inline: 7px; } .summon-banner-top, .summon-banner-bottom { left: 12px; right: 12px; } .summon-banner-heading h3 { font-size: 22px; } .summon-pull-actions { gap: 8px; } .summon-pull { padding-inline: 5px; font-size: 14px; } }
       @media (prefers-reduced-motion: reduce) { #game-preview[data-view="summon"] .summon-layout { animation: none; } #game-preview[data-view="summon"] .game-bottom-menu { transition: none; } }
+      #game-preview:is([data-view="materials"], [data-view="material-dungeon"]) .game-bottom-menu { transform: translateY(100%); visibility: hidden; pointer-events: none; transition: transform 280ms ease, visibility 0s 280ms; }
+      .dungeon-screen { height: 100%; min-height: 0; display: flex; flex-direction: column; gap: 20px; padding: 24px 28px; }
+      .dungeon-screen-heading { display: flex; align-items: center; gap: 16px; flex: none; min-height: 40px; }
+      .dungeon-screen-heading h2 { margin: 0; font-size: 22px; line-height: 1.4; }
+      .dungeon-reset { margin: 0 0 0 auto; color: var(--text-secondary); font-size: 12px; text-align: right; line-height: 1.7; font-variant-numeric: tabular-nums; }
+      .dungeon-reset strong { display: block; color: var(--accent); font-size: 14px; font-weight: 500; }
+      .dungeon-selection-scroll { flex: 1; min-height: 0; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; scrollbar-width: thin; container-type: size; }
+      .dungeon-selection-track { min-width: 100%; width: max-content; height: 100%; display: flex; align-items: center; justify-content: center; gap: 16px; padding: 8px 3px 20px; }
+      .dungeon-choice { flex: none; position: relative; width: clamp(100px, min(calc((100cqw - 70px) / 5), calc((100cqh - 28px) * 2 / 3)), 240px); aspect-ratio: 2 / 3; min-width: 160px; padding: 0; overflow: hidden; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-sidebar); color: var(--text-primary); text-align: left; font: inherit; cursor: pointer; transition: border-color 180ms ease, translate 180ms ease; }
+      .dungeon-choice:hover { border-color: var(--accent); translate: 0 -4px; }
+      .dungeon-choice > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+      .dungeon-choice-copy { position: absolute; inset: auto 0 0; display: grid; gap: 7px; padding: 40px 16px 20px; background: linear-gradient(transparent, #090d14f2 65%); border-bottom: 3px solid var(--accent); }
+      .dungeon-choice-copy strong { font-size: 20px; line-height: 1.4; }
+      .dungeon-choice-copy small { font-size: 12px; color: #b9c3d3; }
+      .dungeon-open-elements { position: absolute; top: 12px; left: 12px; right: 12px; display: flex; flex-wrap: wrap; gap: 5px; }
+      .dungeon-open-elements span { padding: 5px 8px; border: 1px solid #ffffff35; border-radius: 5px; background: #10151de0; color: #eef1f7; font-size: 11px; }
+      .dungeon-detail-layout { min-height: 0; flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 24px; }
+      .dungeon-detail-art { min-height: 0; min-width: 0; position: relative; isolation: isolate; overflow: hidden; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-sidebar); }
+      .dungeon-detail-art > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 42%; z-index: -2; }
+      .dungeon-detail-art::after { content: ''; position: absolute; inset: 0; background: linear-gradient(transparent 30%, #090d14ee); z-index: -1; pointer-events: none; }
+      .dungeon-detail-caption { position: absolute; left: 24px; right: 24px; bottom: 24px; display: grid; gap: 18px; }
+      .dungeon-detail-caption h3 { margin: 0; font-size: 28px; line-height: 1.4; color: #eef1f7; }
+      .dungeon-reward-heading { margin: 0 0 9px; color: #c4ccda; font-size: 12px; }
+      .dungeon-rewards { display: flex; gap: 9px; flex-wrap: wrap; }
+      .dungeon-reward { flex: none; width: 52px; height: 52px; display: grid; place-items: center; border: 1px solid #ffffff35; border-radius: 8px; background: #10151de0; color: #e8c56c; }
+      .dungeon-reward > img { width: 46px; height: 46px; object-fit: contain; }
+      .dungeon-reward .character-equipment-icon { width: 34px; height: 34px; flex: none; }
+      .dungeon-reward svg { width: 28px; height: 28px; }
+      .dungeon-floor-pane { min-height: 0; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
+      .dungeon-floor-pane h3 { margin: 0; flex: none; font-size: 16px; line-height: 24px; }
+      .dungeon-element-tabs { display: flex; gap: 8px; flex: none; }
+      .dungeon-element-tab { flex: 1; height: 34px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface-sidebar); color: var(--text-secondary); font: inherit; font-size: 13px; cursor: pointer; }
+      .dungeon-element-tab[aria-selected="true"] { background: var(--surface-active); color: var(--accent); border-color: var(--accent); }
+      .dungeon-floor-list { min-height: 0; flex: 1; overflow-y: auto; overscroll-behavior-y: contain; scrollbar-gutter: stable; scrollbar-width: thin; display: flex; flex-direction: column; gap: 10px; }
+      .dungeon-floor { flex: none; width: 100%; height: 54px; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-sidebar); color: var(--text-primary); font: inherit; font-size: 15px; cursor: pointer; }
+      .dungeon-floor[aria-pressed="true"] { border-color: var(--accent); background: var(--surface-active); color: var(--accent); }
+      .dungeon-floor-stars { color: var(--text-secondary); font-size: 18px; letter-spacing: 2px; }
+      .dungeon-floor-footer { flex: none; display: grid; gap: 10px; }
+      .dungeon-prepare-status { margin: 0; min-height: 20px; color: var(--text-secondary); font-size: 12px; line-height: 20px; }
+      .dungeon-prepare { width: 100%; height: 48px; border: 1px solid var(--action-background); border-radius: 9px; background: var(--action-background); color: var(--action-text); font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; }
+      .dungeon-prepare:hover { background: var(--action-hover); }
+      .dungeon-screen button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -3px; }
+      #game-preview[data-view="materials"] .dungeon-choice { animation: character-card-enter 650ms cubic-bezier(.22, 1, .36, 1) both, character-card-fade 650ms ease-in-out both; animation-delay: var(--dungeon-enter-delay); }
+      #game-preview[data-view="material-dungeon"] .dungeon-detail-layout { animation: character-toolbar-enter 450ms ease-out both; }
+      @media (max-width: 760px) { .dungeon-screen { padding: 18px 16px; gap: 16px; } .dungeon-detail-layout { grid-template-columns: minmax(0, 1fr) 210px; gap: 16px; } .dungeon-detail-caption { left: 16px; right: 16px; bottom: 16px; } .dungeon-detail-caption h3 { font-size: 22px; } .dungeon-reset { font-size: 10px; } .dungeon-choice-copy { padding-inline: 12px; } }
+      @media (prefers-reduced-motion: reduce) { .dungeon-choice { transition: none; } #game-preview[data-view="materials"] .dungeon-choice, #game-preview[data-view="material-dungeon"] .dungeon-detail-layout { animation: none; } #game-preview:is([data-view="materials"], [data-view="material-dungeon"]) .game-bottom-menu { transition: none; } }
       .characters-screen { height: 100%; min-height: 0; padding: 24px 28px; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; }
       .characters-toolbar { display: grid; grid-template-columns: minmax(180px, 1fr) auto; align-items: end; gap: 20px; }
       .character-search { position: relative; min-width: 0; }
@@ -1174,6 +1220,17 @@
             </div>
           </div>
           <div class="game-stage" id="game-stage">
+            <section class="dungeon-screen" id="materials-screen" aria-labelledby="materials-title" hidden>
+              <div class="dungeon-screen-heading"><button class="connection-back" id="materials-back" type="button" aria-label="전투 메뉴로 돌아가기">◀</button><h2 id="materials-title">재료 던전</h2><p class="dungeon-reset">한국 시간 자정에 속성 변경<strong id="materials-reset-countdown"></strong></p></div>
+              <div class="dungeon-selection-scroll" id="dungeon-selection-scroll"><div class="dungeon-selection-track" id="dungeon-selection-track"></div></div>
+            </section>
+            <section class="dungeon-screen" id="material-dungeon-screen" aria-labelledby="material-dungeon-title" hidden>
+              <div class="dungeon-screen-heading"><button class="connection-back" id="material-dungeon-back" type="button" aria-label="재료 던전 목록으로 돌아가기">◀</button><h2 id="material-dungeon-title"></h2><p class="dungeon-reset">한국 시간 자정에 속성 변경<strong id="dungeon-reset-countdown"></strong></p></div>
+              <div class="dungeon-detail-layout">
+                <div class="dungeon-detail-art"><img id="dungeon-detail-image" alt="" /><div class="dungeon-detail-caption"><h3 id="dungeon-detail-name"></h3><div><p class="dungeon-reward-heading">주요 보상</p><div class="dungeon-rewards" id="dungeon-rewards"></div></div></div></div>
+                <aside class="dungeon-floor-pane" aria-label="던전 층 선택"><h3>층 선택</h3><div class="dungeon-element-tabs" id="dungeon-element-tabs" role="tablist" aria-label="개방 속성"></div><div class="dungeon-floor-list" id="dungeon-floor-list"></div><div class="dungeon-floor-footer"><p class="dungeon-prepare-status" id="dungeon-prepare-status" role="status"></p><button class="dungeon-prepare" id="dungeon-prepare" type="button">전투 준비</button></div></aside>
+              </div>
+            </section>
             <section class="summon-screen" id="summon-screen" aria-labelledby="summon-title" hidden>
               <h2 id="summon-title">소환</h2>
               <div class="summon-layout">
@@ -2758,6 +2815,8 @@
         const isParty = view === 'party';
         const isInventory = view === 'inventory';
         const isSummon = view === 'summon';
+        const isMaterials = view === 'materials';
+        const isMaterialDungeon = view === 'material-dungeon';
         if (!isSummon && document.getElementById('summon-dialog').open) document.getElementById('summon-dialog').close();
         const isEquipmentPicker = view === 'equipment-picker';
         const isEquipmentEnhancement = view === 'equipment-enhancement';
@@ -2780,13 +2839,13 @@
             card.style.setProperty('--card-enter-delay', 100 + index * 100 + 'ms');
           });
         }
-        const isSubscreen = isSummon || isInventory || isParty || isBattle || isScenarios || isChapters || isStoryPreview || isCombatPreview || isCharacters || isCharacterDetail || isEquipmentPicker || isEquipmentEnhancement;
+        const isSubscreen = isMaterials || isMaterialDungeon || isSummon || isInventory || isParty || isBattle || isScenarios || isChapters || isStoryPreview || isCombatPreview || isCharacters || isCharacterDetail || isEquipmentPicker || isEquipmentEnhancement;
         const game = document.getElementById('game-preview');
         if (game.dataset.view === 'story-preview' && !isStoryPreview) {
           stopDialogueTyping();
           setDialogueAuto(false);
         }
-        game.dataset.view = isSummon ? 'summon' : isInventory ? 'inventory' : isParty ? 'party' : isEquipmentEnhancement ? 'equipment-enhancement' : isEquipmentPicker ? 'equipment-picker' : isCharacterDetail ? 'character-detail' : isCharacters ? 'characters' : isCombatPreview ? 'combat-preview' : isStoryPreview ? 'story-preview' : isChapters ? 'chapters' : isScenarios ? 'scenarios' : isBattle ? 'battle' : 'home';
+        game.dataset.view = isMaterials ? 'materials' : isMaterialDungeon ? 'material-dungeon' : isSummon ? 'summon' : isInventory ? 'inventory' : isParty ? 'party' : isEquipmentEnhancement ? 'equipment-enhancement' : isEquipmentPicker ? 'equipment-picker' : isCharacterDetail ? 'character-detail' : isCharacters ? 'characters' : isCombatPreview ? 'combat-preview' : isStoryPreview ? 'story-preview' : isChapters ? 'chapters' : isScenarios ? 'scenarios' : isBattle ? 'battle' : 'home';
         game.setAttribute('aria-label', isCharacters ? '캐릭터 화면' : isCombatPreview ? '전투 미리보기' : isStoryPreview ? '시나리오 미리보기' : isChapters ? '챕터 목록 화면' : isScenarios ? '시나리오 목록 화면' : isBattle ? '전투 화면' : '게임 메인 화면');
         const menu = document.querySelector('.game-bottom-menu');
         menu.inert = isSubscreen;
@@ -2797,6 +2856,14 @@
         homeButton.setAttribute('aria-hidden', String(!isSubscreen));
         document.getElementById('game-stage').setAttribute('aria-label', isCharacters ? '캐릭터 화면' : isCombatPreview ? '전투 미리보기' : isStoryPreview ? '시나리오 미리보기' : isChapters ? '챕터 목록 화면' : isScenarios ? '시나리오 목록 화면' : isBattle ? '전투 화면' : '메인 화면');
         document.getElementById('characters-screen').hidden = !isCharacters;
+        document.getElementById('materials-screen').hidden = !isMaterials;
+        document.getElementById('material-dungeon-screen').hidden = !isMaterialDungeon;
+        if (isMaterials || isMaterialDungeon) {
+          game.setAttribute('aria-label', isMaterials ? '재료 던전 목록' : '재료 던전 층 선택');
+          document.getElementById('game-stage').setAttribute('aria-label', isMaterials ? '재료 던전 목록' : '재료 던전 층 선택');
+          refreshDungeonSchedule();
+          if (isMaterials) renderMaterialDungeons(); else renderMaterialDungeon();
+        }
         document.getElementById('inventory-screen').hidden = !isInventory;
         document.getElementById('summon-screen').hidden = !isSummon;
         if (isSummon) {
@@ -3591,6 +3658,113 @@
       document.getElementById('summon-regenerate').addEventListener('click', () => { document.getElementById('summon-status').textContent = '배너 이미지 재생성 기능은 준비 중이에요.'; });
       ['summon-once', 'summon-ten'].forEach(id => document.getElementById(id).addEventListener('click', () => { document.getElementById('summon-status').textContent = '소환 기능은 준비 중이에요.'; }));
       document.getElementById('game-summon').addEventListener('click', () => { showGameView('summon'); document.getElementById('game-home').focus({ preventScroll: true }); });
+      const materialDungeonKinds = [
+        { id: 'growth', name: '성장', reward: '성장 재료' }, { id: 'gold', name: '골드', reward: '골드' },
+        { id: 'equipment', name: '장비', reward: '장비' }, { id: 'skill', name: '스킬 강화', reward: '각인석', elemental: true },
+        { id: 'breakthrough', name: '돌파', reward: '촉매', elemental: true },
+      ];
+      const dungeonElementNames = { fire: '불', water: '물', wind: '바람', earth: '땅', lightning: '전기', ice: '얼음', nature: '풀', light: '빛', dark: '어둠' };
+      const dungeonWeekElements = [['light', 'dark'], ['fire'], ['water'], ['wind'], ['earth'], ['lightning'], ['ice', 'nature']];
+      function getKoreanDungeonDay(now = Date.now()) {
+        const offset = 9 * 60 * 60 * 1000;
+        const local = new Date(now + offset);
+        return { key: local.toISOString().slice(0, 10), elements: dungeonWeekElements[local.getUTCDay()].slice(), nextAt: (Math.floor((now + offset) / 86400000) + 1) * 86400000 - offset };
+      }
+      const dungeonScreenState = { category: 'growth', element: null, floor: 1 };
+      let currentDungeonDay = getKoreanDungeonDay();
+      function getDungeonImage(category, element) {
+        return 'assets/dungeons/' + category + (['skill', 'breakthrough'].includes(category) ? '-' + element : '') + '.png';
+      }
+      function updateDungeonCountdown(now = Date.now()) {
+        const seconds = Math.max(0, Math.ceil((currentDungeonDay.nextAt - now) / 1000));
+        const label = '다음 변경까지 ' + [Math.floor(seconds / 3600), Math.floor(seconds / 60) % 60, seconds % 60].map(value => String(value).padStart(2, '0')).join(':');
+        ['materials-reset-countdown', 'dungeon-reset-countdown'].forEach(id => { document.getElementById(id).textContent = label; });
+      }
+      function refreshDungeonSchedule(now = Date.now()) {
+        const next = getKoreanDungeonDay(now), changed = next.key !== currentDungeonDay.key;
+        currentDungeonDay = next;
+        if (!next.elements.includes(dungeonScreenState.element)) dungeonScreenState.element = next.elements[0];
+        if (changed) {
+          const view = document.getElementById('game-preview').dataset.view;
+          if (view === 'materials') renderMaterialDungeons();
+          if (view === 'material-dungeon') renderMaterialDungeon();
+        }
+        updateDungeonCountdown(now);
+      }
+      function renderMaterialDungeons() {
+        const track = document.getElementById('dungeon-selection-track'); track.replaceChildren();
+        materialDungeonKinds.forEach((kind, index) => {
+          const button = document.createElement('button'); button.type = 'button'; button.className = 'dungeon-choice'; button.id = 'dungeon-choice-' + kind.id;
+          button.style.setProperty('--dungeon-enter-delay', index * 70 + 'ms');
+          const image = document.createElement('img'); image.src = getDungeonImage(kind.id, currentDungeonDay.elements[0]); image.alt = ''; image.draggable = false;
+          const copy = document.createElement('span'); copy.className = 'dungeon-choice-copy';
+          const title = document.createElement('strong'); title.textContent = kind.name;
+          const reward = document.createElement('small'); reward.textContent = kind.reward; copy.append(title, reward); button.append(image, copy);
+          if (kind.elemental) {
+            const elements = document.createElement('span'); elements.className = 'dungeon-open-elements';
+            currentDungeonDay.elements.forEach(element => { const badge = document.createElement('span'); badge.textContent = dungeonElementNames[element]; elements.append(badge); }); button.append(elements);
+          }
+          button.setAttribute('aria-label', kind.name + ' 던전' + (kind.elemental ? ' · 오늘 개방 ' + currentDungeonDay.elements.map(element => dungeonElementNames[element]).join(', ') : ''));
+          button.addEventListener('click', () => {
+            refreshDungeonSchedule(); dungeonScreenState.category = kind.id; dungeonScreenState.element = currentDungeonDay.elements[0]; dungeonScreenState.floor = 1;
+            showGameView('material-dungeon'); document.getElementById('material-dungeon-back').focus({ preventScroll: true });
+          }); track.append(button);
+        });
+      }
+      function getDungeonRewards(category, element) {
+        if (category === 'growth') return [{ id: 'growth-shard', name: '성장의 조각' }, { id: 'growth-crystal', name: '성장의 결정' }, { id: 'growth-essence', name: '성장의 정수' }];
+        if (category === 'gold') return [{ name: '골드', gold: true }];
+        if (category === 'equipment') return characterEquipmentTypes.map(type => ({ name: type.name, equipment: type.id }));
+        const korean = dungeonElementNames[element], prefix = materialElements[korean].name;
+        return [{ id: (category === 'skill' ? 'inscription-' : 'catalyst-') + element, name: prefix + (category === 'skill' ? ' 각인석' : ' 촉매') }];
+      }
+      function renderMaterialDungeon() {
+        const kind = materialDungeonKinds.find(kind => kind.id === dungeonScreenState.category) || materialDungeonKinds[0];
+        if (!currentDungeonDay.elements.includes(dungeonScreenState.element)) dungeonScreenState.element = currentDungeonDay.elements[0];
+        const element = dungeonScreenState.element;
+        document.getElementById('material-dungeon-title').textContent = kind.name + ' 던전';
+        const name = (kind.elemental ? dungeonElementNames[element] + ' · ' : '') + kind.name + ' 던전';
+        document.getElementById('dungeon-detail-name').textContent = name + ' · ' + dungeonScreenState.floor + '층';
+        const image = document.getElementById('dungeon-detail-image'), src = getDungeonImage(kind.id, element);
+        if (image.getAttribute('src') !== src) image.src = src;
+        image.alt = name;
+        document.getElementById('dungeon-reset-countdown').parentElement.hidden = !kind.elemental;
+        const tabs = document.getElementById('dungeon-element-tabs'); tabs.replaceChildren(); tabs.hidden = !kind.elemental;
+        if (kind.elemental) currentDungeonDay.elements.forEach(id => {
+          const tab = document.createElement('button'); tab.type = 'button'; tab.className = 'dungeon-element-tab'; tab.dataset.element = id; tab.setAttribute('role', 'tab'); tab.setAttribute('aria-selected', String(id === element)); tab.tabIndex = id === element ? 0 : -1; tab.textContent = dungeonElementNames[id];
+          tab.addEventListener('click', () => { refreshDungeonSchedule(); if (!currentDungeonDay.elements.includes(id)) return; dungeonScreenState.element = id; renderMaterialDungeon(); document.querySelector('.dungeon-element-tab[aria-selected="true"]').focus({ preventScroll: true }); }); tabs.append(tab);
+        });
+        const floors = document.getElementById('dungeon-floor-list'), scrollTop = floors.scrollTop; floors.replaceChildren();
+        // 화면 확인용으로 5개 층을 열어 둡니다. 실제 해금 조건·보상량·에너지 비용은 추후 연결합니다.
+        for (let floor = 1; floor <= 5; floor++) {
+          const button = document.createElement('button'); button.type = 'button'; button.className = 'dungeon-floor'; button.dataset.floor = floor; button.setAttribute('aria-pressed', String(floor === dungeonScreenState.floor)); button.setAttribute('aria-label', floor + '층 · 미클리어');
+          const label = document.createElement('span'); label.textContent = floor + '층'; const stars = document.createElement('span'); stars.className = 'dungeon-floor-stars'; stars.textContent = '☆☆☆'; stars.setAttribute('aria-hidden', 'true'); button.append(label, stars);
+          button.addEventListener('click', () => { refreshDungeonSchedule(); dungeonScreenState.floor = floor; renderMaterialDungeon(); document.querySelector('.dungeon-floor[data-floor="' + floor + '"]').focus({ preventScroll: true }); }); floors.append(button);
+        }
+        floors.scrollTop = scrollTop;
+        const rewards = document.getElementById('dungeon-rewards'); rewards.replaceChildren();
+        getDungeonRewards(kind.id, element).forEach(reward => {
+          const tile = document.createElement('div'); tile.className = 'dungeon-reward'; tile.title = reward.name; tile.setAttribute('role', 'img'); tile.setAttribute('aria-label', reward.name);
+          if (reward.gold) {
+            const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); icon.setAttribute('viewBox', '0 0 24 24'); icon.setAttribute('fill', 'none'); icon.setAttribute('stroke', 'currentColor'); icon.setAttribute('stroke-width', '1.6'); icon.innerHTML = '<circle cx="12" cy="12" r="9"/><path d="M15 8h-4a2 2 0 0 0 0 4h2a2 2 0 0 1 0 4H9m3-10v12"/>'; tile.append(icon);
+          } else if (reward.equipment) tile.append(createEquipmentIcon(reward.equipment));
+          else { const image = document.createElement('img'); image.src = 'assets/materials/' + reward.id + '.png'; image.alt = ''; tile.append(image); }
+          rewards.append(tile);
+        });
+        document.getElementById('dungeon-prepare-status').textContent = '';
+      }
+      document.getElementById('materials-entry-card').addEventListener('click', () => { showGameView('materials'); document.getElementById('materials-back').focus({ preventScroll: true }); });
+      document.getElementById('materials-back').addEventListener('click', () => { showGameView('battle'); document.getElementById('materials-entry-card').focus({ preventScroll: true }); });
+      document.getElementById('material-dungeon-back').addEventListener('click', () => { showGameView('materials'); document.getElementById('dungeon-choice-' + dungeonScreenState.category).focus({ preventScroll: true }); });
+      document.getElementById('dungeon-prepare').addEventListener('click', () => { refreshDungeonSchedule(); document.getElementById('dungeon-prepare-status').textContent = '전투 준비 화면은 준비 중이에요.'; });
+      document.getElementById('dungeon-element-tabs').addEventListener('keydown', event => {
+        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+        event.preventDefault(); const tabs = Array.from(event.currentTarget.querySelectorAll('button')), current = tabs.indexOf(document.activeElement);
+        const next = event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : (current + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+        tabs[next]?.click();
+      });
+      setInterval(() => { if (['materials', 'material-dungeon'].includes(document.getElementById('game-preview').dataset.view)) refreshDungeonSchedule(); }, 1000);
+      document.addEventListener('visibilitychange', () => { if (!document.hidden && ['materials', 'material-dungeon'].includes(document.getElementById('game-preview').dataset.view)) refreshDungeonSchedule(); });
       const skillUpgradeRules = { maxLevel: 10, goldCost: 300000, materialCount: 1 };
       let skillUpgradeTarget = null;
       let equipmentEnhancementTarget = null;

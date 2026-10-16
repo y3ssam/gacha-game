@@ -223,13 +223,13 @@ export function createAppServer({ testConnection = testVertexConnection, store =
         }
         return;
       }
-      // 생성한 재료 아이콘과 미리보기만 허용하며 키 파일과 서버 소스는 제공하지 않습니다.
-      const materialAsset = route.match(/^\/assets\/materials\/(?:([a-z0-9-]+\.png|manifest\.json|generation-prompts\.json|index\.html))?$/);
+      // 생성된 재료·던전 이미지 폴더만 허용하며 키 파일과 서버 소스는 제공하지 않습니다.
+      const materialAsset = route.match(/^\/assets\/(materials|dungeons)\/(?:([a-z0-9-]+\.png|manifest\.json|generation-prompts(?:-elemental)?\.json|index\.html))?$/);
       if (materialAsset) {
         if (req.method !== 'GET' && req.method !== 'HEAD') return sendJson(res, 405, { ok: false });
-        const filename = materialAsset[1] || 'index.html';
+        const filename = materialAsset[2] || 'index.html';
         let asset;
-        try { asset = await readFile(path.join(ROOT, 'assets', 'materials', filename)); }
+        try { asset = await readFile(path.join(ROOT, 'assets', materialAsset[1], filename)); }
         catch (error) { if (error.code === 'ENOENT') return sendJson(res, 404, { ok: false }); throw error; }
         res.writeHead(200, {
           'Content-Type': filename.endsWith('.png') ? 'image/png' : filename.endsWith('.json') ? 'application/json; charset=utf-8' : 'text/html; charset=utf-8',
