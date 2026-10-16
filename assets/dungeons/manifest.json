@@ -1,33 +1,156 @@
 {
-  "version": 1,
-  "aspectRatio": "2:3",
+  "version": 2,
   "width": 1024,
   "height": 1536,
+  "aspectRatio": "2:3",
   "images": [
     {
       "id": "growth",
       "name": "성장",
+      "category": "growth",
       "file": "growth.png"
     },
     {
       "id": "gold",
       "name": "골드",
+      "category": "gold",
       "file": "gold.png"
     },
     {
       "id": "equipment",
       "name": "장비",
+      "category": "equipment",
       "file": "equipment.png"
     },
     {
-      "id": "skill",
-      "name": "스킬 강화",
-      "file": "skill.png"
+      "id": "skill-fire",
+      "name": "스킬 강화 · 불",
+      "category": "skill",
+      "element": "fire",
+      "file": "skill-fire.png"
     },
     {
-      "id": "breakthrough",
-      "name": "돌파",
-      "file": "breakthrough.png"
+      "id": "skill-water",
+      "name": "스킬 강화 · 물",
+      "category": "skill",
+      "element": "water",
+      "file": "skill-water.png"
+    },
+    {
+      "id": "skill-wind",
+      "name": "스킬 강화 · 바람",
+      "category": "skill",
+      "element": "wind",
+      "file": "skill-wind.png"
+    },
+    {
+      "id": "skill-earth",
+      "name": "스킬 강화 · 땅",
+      "category": "skill",
+      "element": "earth",
+      "file": "skill-earth.png"
+    },
+    {
+      "id": "skill-lightning",
+      "name": "스킬 강화 · 전기",
+      "category": "skill",
+      "element": "lightning",
+      "file": "skill-lightning.png"
+    },
+    {
+      "id": "skill-ice",
+      "name": "스킬 강화 · 얼음",
+      "category": "skill",
+      "element": "ice",
+      "file": "skill-ice.png"
+    },
+    {
+      "id": "skill-nature",
+      "name": "스킬 강화 · 풀",
+      "category": "skill",
+      "element": "nature",
+      "file": "skill-nature.png"
+    },
+    {
+      "id": "skill-light",
+      "name": "스킬 강화 · 빛",
+      "category": "skill",
+      "element": "light",
+      "file": "skill-light.png"
+    },
+    {
+      "id": "skill-dark",
+      "name": "스킬 강화 · 어둠",
+      "category": "skill",
+      "element": "dark",
+      "file": "skill-dark.png"
+    },
+    {
+      "id": "breakthrough-fire",
+      "name": "돌파 · 불",
+      "category": "breakthrough",
+      "element": "fire",
+      "file": "breakthrough-fire.png"
+    },
+    {
+      "id": "breakthrough-water",
+      "name": "돌파 · 물",
+      "category": "breakthrough",
+      "element": "water",
+      "file": "breakthrough-water.png"
+    },
+    {
+      "id": "breakthrough-wind",
+      "name": "돌파 · 바람",
+      "category": "breakthrough",
+      "element": "wind",
+      "file": "breakthrough-wind.png"
+    },
+    {
+      "id": "breakthrough-earth",
+      "name": "돌파 · 땅",
+      "category": "breakthrough",
+      "element": "earth",
+      "file": "breakthrough-earth.png"
+    },
+    {
+      "id": "breakthrough-lightning",
+      "name": "돌파 · 전기",
+      "category": "breakthrough",
+      "element": "lightning",
+      "file": "breakthrough-lightning.png"
+    },
+    {
+      "id": "breakthrough-ice",
+      "name": "돌파 · 얼음",
+      "category": "breakthrough",
+      "element": "ice",
+      "file": "breakthrough-ice.png"
+    },
+    {
+      "id": "breakthrough-nature",
+      "name": "돌파 · 풀",
+      "category": "breakthrough",
+      "element": "nature",
+      "file": "breakthrough-nature.png"
+    },
+    {
+      "id": "breakthrough-light",
+      "name": "돌파 · 빛",
+      "category": "breakthrough",
+      "element": "light",
+      "file": "breakthrough-light.png"
+    },
+    {
+      "id": "breakthrough-dark",
+      "name": "돌파 · 어둠",
+      "category": "breakthrough",
+      "element": "dark",
+      "file": "breakthrough-dark.png"
     }
+  ],
+  "referenceImages": [
+    "skill.png",
+    "breakthrough.png"
   ]
 }
