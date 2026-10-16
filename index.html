@@ -1000,7 +1000,7 @@
       .character-equipment-slots { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 10px; }
       .character-equipment-slot { position: relative; min-height: 0; min-width: 0; padding: 12px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-sidebar); color: var(--text-primary); font: inherit; text-align: left; cursor: pointer; }
       .character-equipment-slot strong { position: absolute; top: 12px; left: 14px; color: var(--accent); font-size: 13px; }
-      .character-equipment-slot span { position: absolute; inset: 0; display: grid; place-items: center; padding: 26px 10px; color: var(--text-secondary); font-size: 12px; text-align: center; overflow-wrap: anywhere; }
+      .character-equipment-slot > .equipment-slot-content { position: absolute; inset: 0; display: grid; place-items: center; padding: 26px 10px; color: var(--text-secondary); font-size: 12px; text-align: center; overflow-wrap: anywhere; }
       .character-equipment-slot:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
       .character-equipment-list-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
       .character-equipment-list-heading h4 { margin: 0; font-size: 16px; }
@@ -1044,7 +1044,12 @@
       .equipment-comparison > button:disabled { background: var(--surface-active); border-color: var(--border); color: var(--text-secondary); cursor: default; }
       .character-equipment-choice { width: 100%; aspect-ratio: 1; min-width: 0; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 14px; color: var(--text-primary); font: inherit; text-align: center; cursor: pointer; }
       .character-equipment-choice strong { display: block; width: 100%; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
-      .character-equipment-icon { display: grid; place-items: center; flex: 1; min-height: 0; color: var(--accent); }
+      .character-equipment-icon { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); place-items: center; flex: 1; min-height: 0; min-width: 0; color: var(--accent); }
+      .character-equipment-choice .character-equipment-icon { width: 100%; }
+      .character-equipment-icon img { display: block; width: 100%; height: 100%; min-height: 0; object-fit: contain; }
+      .character-equipment-slot > .equipment-slot-content:has(img) { grid-template-rows: minmax(0, 1fr) auto; gap: 2px; padding: 28px 8px 7px; }
+      .character-equipment-slot .equipment-slot-content .character-equipment-icon { width: 100%; height: 100%; }
+      .character-equipment-slot .equipment-slot-content > span:last-child { font-size: 10px; line-height: 1.25; }
       .character-equipment-icon svg { width: 52px; height: 52px; max-width: 100%; max-height: 100%; }
       .character-equipment-choice[aria-pressed="true"] { border-color: var(--accent); background: var(--surface-active); }
       .character-equipment-choice:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -3px; }
@@ -1057,6 +1062,7 @@
       .equipment-enhancement-art::after { width: min(49%, 210px); transform: rotate(60deg); }
       .equipment-enhancement-emblem { display: grid; justify-items: center; gap: 16px; z-index: 1; }
       .equipment-enhancement-emblem .character-equipment-icon { padding: 24px; border: 1px solid var(--accent); border-radius: 16px; background: var(--surface-sidebar); box-shadow: 0 12px 32px #0003; }
+      .equipment-enhancement-emblem .character-equipment-icon:has(img) { width: clamp(112px, 16vw, 200px); height: clamp(112px, 16vw, 200px); }
       .equipment-enhancement-emblem svg { width: 88px; height: 88px; }
       .equipment-enhancement-emblem strong { color: var(--accent); font-size: 26px; }
       .equipment-enhancement-details { min-height: 0; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; padding-right: 12px; }
@@ -1087,6 +1093,7 @@
       .equipment-sheet[data-rarity] .equipment-sheet-icon { border-color: var(--equipment-rarity-color); }
       .equipment-sheet-main { display: grid; grid-template-columns: 72px minmax(0, 1fr); align-items: center; gap: 16px; }
       .equipment-sheet-icon { position: relative; display: grid; place-items: center; width: 72px; aspect-ratio: 1; padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-active); }
+      .equipment-sheet-icon .character-equipment-icon { width: 100%; height: 100%; }
       .equipment-sheet-icon .character-equipment-icon svg { width: 40px; height: 40px; }
       .equipment-sheet-icon > span:last-child { position: absolute; top: 2px; left: 7px; color: var(--accent); font-size: 12px; font-weight: 600; }
       .equipment-sheet-primary-label { display: block; color: var(--text-secondary); font-size: 12px; }
@@ -1305,7 +1312,7 @@
                 </div>
                 </div>
                 <div class="character-filters" aria-label="캐릭터 필터와 정렬">
-                  <div class="character-filter"><label for="character-role">역할</label><select class="connection-input" id="character-role"><option value="all">전체</option><option value="warrior">전사</option><option value="knight">기사</option><option value="swordsman">검사</option><option value="rogue">도적</option><option value="shooter">사수</option><option value="hunter">사냥꾼</option><option value="mage">마법사</option><option value="healer">힐러</option></select></div>
+                  <div class="character-filter"><label for="character-role">역할</label><select class="connection-input" id="character-role"><option value="all">전체</option><option value="warrior">전사</option><option value="knight">기사</option><option value="swordsman">검사</option><option value="assassin">암살자</option><option value="tactician">전술가</option><option value="hunter">사냥꾼</option><option value="mage">마법사</option><option value="healer">치유사</option></select></div>
                   <div class="character-filter"><label for="character-element">속성</label><select class="connection-input" id="character-element"><option value="all">전체</option><option value="fire">불</option><option value="water">물</option><option value="wind">바람</option><option value="earth">땅</option><option value="electric">전기</option><option value="ice">얼음</option><option value="grass">풀</option><option value="light">빛</option><option value="dark">어둠</option></select></div>
                   <div class="character-filter"><label for="character-sort">정렬</label><select class="connection-input" id="character-sort"><option value="rarity">희귀도순</option><option value="power">전투력순</option><option value="level">레벨순</option><option value="new">신규순</option></select></div>
                 </div>
@@ -3464,9 +3471,10 @@
       const previewInventoryMaterialCounts = {};
       const previewInventoryConsumables = [];
       function getInventoryEquipment() {
-        return Array.from(document.querySelectorAll('#characters-screen .character-portrait-card')).flatMap((card, cardIndex) => {
-          const state = getCharacterEquipment(card);
-          return state.items.map(item => ({ key: cardIndex + ':' + item.id, card, item, equipped: Object.values(state.equipped).includes(item.id) }));
+        const cards = Array.from(document.querySelectorAll('#characters-screen .character-portrait-card'));
+        return getPreviewEquipmentInventory().map(item => {
+          const card = cards.find(card => Object.values(getCharacterEquipment(card).equipped).includes(item.id));
+          return { key: item.id, card: card || null, item, equipped: Boolean(card) };
         });
       }
       function getInventoryMaterials() {
@@ -3545,7 +3553,7 @@
             tile.type = 'button'; tile.dataset.inventoryItem = entry.key; tile.setAttribute('aria-pressed', String(inventoryState.selectedEquipment === entry.key));
             tile.setAttribute('aria-label', equipmentDisplayName(entry.item) + ' · ' + getEquipmentRarity(entry.item) + '성' + (entry.equipped ? ' · 착용 중' : '') + ' · 옵션 보기');
             const stage = document.createElement('span'); stage.className = 'inventory-item-stage'; stage.textContent = '+' + entry.item.enhancement;
-            tile.append(stage, createEquipmentIcon(entry.item.type), createEquipmentStars(entry.item));
+            tile.append(stage, createEquipmentIcon(entry.item), createEquipmentStars(entry.item));
             if (entry.equipped) { const badge = document.createElement('span'); badge.className = 'inventory-item-equipped'; badge.textContent = '착용'; tile.append(badge); }
             tile.addEventListener('click', () => {
               inventoryState.selectedEquipment = entry.key;
@@ -3630,7 +3638,7 @@
           const row = document.createElement('div'); row.className = 'summon-appearance-row';
           const name = document.createElement('div'); name.className = 'summon-appearance-name';
           if (entry.item) {
-            applyEquipmentRarity(row, entry.item); row.append(createEquipmentIcon(entry.item.type));
+            applyEquipmentRarity(row, entry.item); row.append(createEquipmentIcon(entry.item));
             name.textContent = entry.item.name;
             const type = document.createElement('small'); type.textContent = characterEquipmentTypes.find(type => type.id === entry.item.type)?.name || '장비'; name.append(type); row.append(name, createEquipmentStars(entry.item));
           } else {
@@ -4286,11 +4294,38 @@
         { id: 'necklace', name: '목걸이', examples: ['작은 펜던트', '별빛 목걸이'] },
       ];
       const characterEquipmentStatLabels = { hp: '체력', attack: '공격력', defense: '방어력', speed: '속도', critRate: '치명타 확률', critDamage: '치명타 피해', effectHit: '효과 적중', effectResist: '효과 저항' };
-      // 세트 효과와 수치는 화면 확인용 예시이며 최종 게임 규칙은 아닙니다.
-      const characterEquipmentSets = {
-        guard: { name: '수호', bonuses: [{ pieces: 2, stats: { hp: 200 } }, { pieces: 4, stats: { defense: 30 } }] },
-        assault: { name: '맹공', bonuses: [{ pieces: 2, stats: { attack: 30 } }, { pieces: 4, stats: { critDamage: 20 } }] },
-      };
+      // manifest.json의 세트 기획을 게임에 내장합니다. 능력치/비용은 밸런스 초안입니다.
+      const characterEquipmentSets = {"silver-oath":{"name":"백은의 맹세","classId":"knight","className":"기사","bonuses":[{"pieces":2,"stats":[{"stat":"defense","value":15,"mode":"percent"}]},{"pieces":4,"stats":[{"stat":"hp","value":20,"mode":"percent"}],"special":{"trigger":"afterBasicAttack","chance":0.8,"type":"shield","target":"self","scaleStat":"defense","scale":1,"duration":1,"description":"기본 공격 후 80% 확률로 자신에게 방어력 100%만큼 보호막, 1턴"}}]},"unyielding":{"name":"불굴의 투지","classId":"warrior","className":"전사","bonuses":[{"pieces":2,"stats":[{"stat":"hp","value":15,"mode":"percent"}]},{"pieces":4,"stats":[{"stat":"defense","value":20,"mode":"percent"}],"special":{"trigger":"onBasicAttackHit","chance":0.6,"type":"taunt","target":"primaryEnemy","duration":1,"description":"기본 공격 적중 시 60% 확률로 대상 도발, 1턴"}}]},"shadow-fang":{"name":"그림자 송곳니","classId":"assassin","className":"암살자","bonuses":[{"pieces":2,"stats":[{"stat":"critRate","value":10,"mode":"percentagePoints"}]},{"pieces":4,"stats":[{"stat":"attack","value":20,"mode":"percent"}],"special":{"trigger":"onBasicAttackHit","chance":0.8,"type":"bleed","target":"primaryEnemy","scaleStat":"attack","scale":0.15,"duration":2,"tick":"targetTurnStart","description":"기본 공격 적중 시 80% 확률로 출혈, 2턴. 대상 턴 시작마다 착용자 공격력 15% 피해"}}]},"dawn-blade":{"name":"여명의 검로","classId":"swordsman","className":"검사","bonuses":[{"pieces":2,"stats":[{"stat":"attack","value":15,"mode":"percent"}]},{"pieces":4,"stats":[{"stat":"critDamage","value":20,"mode":"percentagePoints"}],"special":{"trigger":"afterBasicAttack","chance":0.8,"type":"bonusDamage","target":"primaryEnemy","scaleStat":"attack","scale":0.3,"description":"기본 공격 후 80% 확률로 같은 대상에게 공격력 30%의 추가 피해"}}]},"trackers-eye":{"name":"추적자의 눈","classId":"hunter","className":"사냥꾼","bonuses":[{"pieces":2,"stats":[{"stat":"attack","value":15,"mode":"percent"}]},{"pieces":4,"stats":[{"stat":"critRate","value":10,"mode":"percentagePoints"}],"special":{"trigger":"onBasicAttackHit","chance":0.8,"type":"defenseDown","target":"primaryEnemy","value":0.15,"duration":1,"description":"기본 공격 적중 시 80% 확률로 대상 방어력 15% 감소, 1턴"}}]},"star-record":{"name":"별의 기록","classId":"mage","className":"마법사","bonuses":[{"pieces":2,"stats":[{"stat":"attack","value":15,"mode":"percent"}]},{"pieces":4,"stats":[{"stat":"effectHit","value":15,"mode":"percentagePoints"}],"special":{"trigger":"onActiveSkillDamage","chance":0.8,"type":"speedDown","target":"eachDamagedEnemy","value":0.15,"duration":1,"description":"액티브 스킬로 피해를 준 대상마다 80% 확률로 속도 15% 감소, 1턴"}}]},"victory-plan":{"name":"승리의 수순","classId":"tactician","className":"전술가","bonuses":[{"pieces":2,"stats":[{"stat":"speed","value":10,"mode":"percent"}]},{"pieces":4,"stats":[{"stat":"effectResist","value":20,"mode":"percentagePoints"}],"special":{"trigger":"afterBasicAttack","chance":0.8,"type":"energyRecovery","target":"allAlliesIncludingSelf","value":15,"unit":"percentagePoints","roll":"onceForWholeTeam","cap":100,"description":"기본 공격 후 80% 확률로 자신을 포함한 모든 아군의 에너지 15%p 회복"}}]},"daybreak-prayer":{"name":"새벽의 기도","classId":"healer","className":"치유사","bonuses":[{"pieces":2,"stats":[{"stat":"hp","value":15,"mode":"percent"}]},{"pieces":4,"stats":[{"stat":"effectResist","value":20,"mode":"percentagePoints"}],"special":{"trigger":"ownTurnEnd","chance":0.8,"type":"heal","target":"allyWithLowestHpRatio","scaleStat":"hp","scale":0.05,"description":"자신의 턴 종료 시 80% 확률로 체력 비율이 가장 낮은 아군을 착용자 최대 체력의 5%만큼 회복"}}]},"pathfinder":{"name":"개척자의 발걸음","classId":null,"className":"공용","bonuses":[{"pieces":2,"stats":[{"stat":"hp","value":15,"mode":"percent"}]},{"pieces":4,"stats":[{"stat":"attack","value":20,"mode":"percent"}],"special":null}]},"ancient-legacy":{"name":"고대의 유산","classId":null,"className":"공용","bonuses":[{"pieces":2,"stats":[{"stat":"defense","value":15,"mode":"percent"}]},{"pieces":4,"stats":[{"stat":"effectResist","value":20,"mode":"percentagePoints"}],"special":null}]}};
+      const equipmentAssetCatalog = [{"id":"silver-oath-weapon","name":"백은의 맹세 · 무기","setId":"silver-oath","classId":"knight","slot":"weapon","file":"silver-oath-weapon.png"},{"id":"silver-oath-armor","name":"백은의 맹세 · 갑옷","setId":"silver-oath","classId":"knight","slot":"armor","file":"silver-oath-armor.png"},{"id":"silver-oath-gloves","name":"백은의 맹세 · 장갑","setId":"silver-oath","classId":"knight","slot":"gloves","file":"silver-oath-gloves.png"},{"id":"silver-oath-shoes","name":"백은의 맹세 · 신발","setId":"silver-oath","classId":"knight","slot":"shoes","file":"silver-oath-shoes.png"},{"id":"silver-oath-ring","name":"백은의 맹세 · 반지","setId":"silver-oath","classId":"knight","slot":"ring","file":"silver-oath-ring.png"},{"id":"silver-oath-necklace","name":"백은의 맹세 · 목걸이","setId":"silver-oath","classId":"knight","slot":"necklace","file":"silver-oath-necklace.png"},{"id":"unyielding-weapon","name":"불굴의 투지 · 무기","setId":"unyielding","classId":"warrior","slot":"weapon","file":"unyielding-weapon.png"},{"id":"unyielding-armor","name":"불굴의 투지 · 갑옷","setId":"unyielding","classId":"warrior","slot":"armor","file":"unyielding-armor.png"},{"id":"unyielding-gloves","name":"불굴의 투지 · 장갑","setId":"unyielding","classId":"warrior","slot":"gloves","file":"unyielding-gloves.png"},{"id":"unyielding-shoes","name":"불굴의 투지 · 신발","setId":"unyielding","classId":"warrior","slot":"shoes","file":"unyielding-shoes.png"},{"id":"unyielding-ring","name":"불굴의 투지 · 반지","setId":"unyielding","classId":"warrior","slot":"ring","file":"unyielding-ring.png"},{"id":"unyielding-necklace","name":"불굴의 투지 · 목걸이","setId":"unyielding","classId":"warrior","slot":"necklace","file":"unyielding-necklace.png"},{"id":"shadow-fang-weapon","name":"그림자 송곳니 · 무기","setId":"shadow-fang","classId":"assassin","slot":"weapon","file":"shadow-fang-weapon.png"},{"id":"shadow-fang-armor","name":"그림자 송곳니 · 갑옷","setId":"shadow-fang","classId":"assassin","slot":"armor","file":"shadow-fang-armor.png"},{"id":"shadow-fang-gloves","name":"그림자 송곳니 · 장갑","setId":"shadow-fang","classId":"assassin","slot":"gloves","file":"shadow-fang-gloves.png"},{"id":"shadow-fang-shoes","name":"그림자 송곳니 · 신발","setId":"shadow-fang","classId":"assassin","slot":"shoes","file":"shadow-fang-shoes.png"},{"id":"shadow-fang-ring","name":"그림자 송곳니 · 반지","setId":"shadow-fang","classId":"assassin","slot":"ring","file":"shadow-fang-ring.png"},{"id":"shadow-fang-necklace","name":"그림자 송곳니 · 목걸이","setId":"shadow-fang","classId":"assassin","slot":"necklace","file":"shadow-fang-necklace.png"},{"id":"dawn-blade-weapon","name":"여명의 검로 · 무기","setId":"dawn-blade","classId":"swordsman","slot":"weapon","file":"dawn-blade-weapon.png"},{"id":"dawn-blade-armor","name":"여명의 검로 · 갑옷","setId":"dawn-blade","classId":"swordsman","slot":"armor","file":"dawn-blade-armor.png"},{"id":"dawn-blade-gloves","name":"여명의 검로 · 장갑","setId":"dawn-blade","classId":"swordsman","slot":"gloves","file":"dawn-blade-gloves.png"},{"id":"dawn-blade-shoes","name":"여명의 검로 · 신발","setId":"dawn-blade","classId":"swordsman","slot":"shoes","file":"dawn-blade-shoes.png"},{"id":"dawn-blade-ring","name":"여명의 검로 · 반지","setId":"dawn-blade","classId":"swordsman","slot":"ring","file":"dawn-blade-ring.png"},{"id":"dawn-blade-necklace","name":"여명의 검로 · 목걸이","setId":"dawn-blade","classId":"swordsman","slot":"necklace","file":"dawn-blade-necklace.png"},{"id":"trackers-eye-weapon","name":"추적자의 눈 · 무기","setId":"trackers-eye","classId":"hunter","slot":"weapon","file":"trackers-eye-weapon.png"},{"id":"trackers-eye-armor","name":"추적자의 눈 · 갑옷","setId":"trackers-eye","classId":"hunter","slot":"armor","file":"trackers-eye-armor.png"},{"id":"trackers-eye-gloves","name":"추적자의 눈 · 장갑","setId":"trackers-eye","classId":"hunter","slot":"gloves","file":"trackers-eye-gloves.png"},{"id":"trackers-eye-shoes","name":"추적자의 눈 · 신발","setId":"trackers-eye","classId":"hunter","slot":"shoes","file":"trackers-eye-shoes.png"},{"id":"trackers-eye-ring","name":"추적자의 눈 · 반지","setId":"trackers-eye","classId":"hunter","slot":"ring","file":"trackers-eye-ring.png"},{"id":"trackers-eye-necklace","name":"추적자의 눈 · 목걸이","setId":"trackers-eye","classId":"hunter","slot":"necklace","file":"trackers-eye-necklace.png"},{"id":"star-record-weapon","name":"별의 기록 · 무기","setId":"star-record","classId":"mage","slot":"weapon","file":"star-record-weapon.png"},{"id":"star-record-armor","name":"별의 기록 · 갑옷","setId":"star-record","classId":"mage","slot":"armor","file":"star-record-armor.png"},{"id":"star-record-gloves","name":"별의 기록 · 장갑","setId":"star-record","classId":"mage","slot":"gloves","file":"star-record-gloves.png"},{"id":"star-record-shoes","name":"별의 기록 · 신발","setId":"star-record","classId":"mage","slot":"shoes","file":"star-record-shoes.png"},{"id":"star-record-ring","name":"별의 기록 · 반지","setId":"star-record","classId":"mage","slot":"ring","file":"star-record-ring.png"},{"id":"star-record-necklace","name":"별의 기록 · 목걸이","setId":"star-record","classId":"mage","slot":"necklace","file":"star-record-necklace.png"},{"id":"victory-plan-weapon","name":"승리의 수순 · 무기","setId":"victory-plan","classId":"tactician","slot":"weapon","file":"victory-plan-weapon.png"},{"id":"victory-plan-armor","name":"승리의 수순 · 갑옷","setId":"victory-plan","classId":"tactician","slot":"armor","file":"victory-plan-armor.png"},{"id":"victory-plan-gloves","name":"승리의 수순 · 장갑","setId":"victory-plan","classId":"tactician","slot":"gloves","file":"victory-plan-gloves.png"},{"id":"victory-plan-shoes","name":"승리의 수순 · 신발","setId":"victory-plan","classId":"tactician","slot":"shoes","file":"victory-plan-shoes.png"},{"id":"victory-plan-ring","name":"승리의 수순 · 반지","setId":"victory-plan","classId":"tactician","slot":"ring","file":"victory-plan-ring.png"},{"id":"victory-plan-necklace","name":"승리의 수순 · 목걸이","setId":"victory-plan","classId":"tactician","slot":"necklace","file":"victory-plan-necklace.png"},{"id":"daybreak-prayer-weapon","name":"새벽의 기도 · 무기","setId":"daybreak-prayer","classId":"healer","slot":"weapon","file":"daybreak-prayer-weapon.png"},{"id":"daybreak-prayer-armor","name":"새벽의 기도 · 갑옷","setId":"daybreak-prayer","classId":"healer","slot":"armor","file":"daybreak-prayer-armor.png"},{"id":"daybreak-prayer-gloves","name":"새벽의 기도 · 장갑","setId":"daybreak-prayer","classId":"healer","slot":"gloves","file":"daybreak-prayer-gloves.png"},{"id":"daybreak-prayer-shoes","name":"새벽의 기도 · 신발","setId":"daybreak-prayer","classId":"healer","slot":"shoes","file":"daybreak-prayer-shoes.png"},{"id":"daybreak-prayer-ring","name":"새벽의 기도 · 반지","setId":"daybreak-prayer","classId":"healer","slot":"ring","file":"daybreak-prayer-ring.png"},{"id":"daybreak-prayer-necklace","name":"새벽의 기도 · 목걸이","setId":"daybreak-prayer","classId":"healer","slot":"necklace","file":"daybreak-prayer-necklace.png"},{"id":"pathfinder-weapon","name":"개척자의 발걸음 · 무기","setId":"pathfinder","classId":null,"slot":"weapon","file":"pathfinder-weapon.png"},{"id":"pathfinder-armor","name":"개척자의 발걸음 · 갑옷","setId":"pathfinder","classId":null,"slot":"armor","file":"pathfinder-armor.png"},{"id":"pathfinder-gloves","name":"개척자의 발걸음 · 장갑","setId":"pathfinder","classId":null,"slot":"gloves","file":"pathfinder-gloves.png"},{"id":"pathfinder-shoes","name":"개척자의 발걸음 · 신발","setId":"pathfinder","classId":null,"slot":"shoes","file":"pathfinder-shoes.png"},{"id":"pathfinder-ring","name":"개척자의 발걸음 · 반지","setId":"pathfinder","classId":null,"slot":"ring","file":"pathfinder-ring.png"},{"id":"pathfinder-necklace","name":"개척자의 발걸음 · 목걸이","setId":"pathfinder","classId":null,"slot":"necklace","file":"pathfinder-necklace.png"},{"id":"ancient-legacy-weapon","name":"고대의 유산 · 무기","setId":"ancient-legacy","classId":null,"slot":"weapon","file":"ancient-legacy-weapon.png"},{"id":"ancient-legacy-armor","name":"고대의 유산 · 갑옷","setId":"ancient-legacy","classId":null,"slot":"armor","file":"ancient-legacy-armor.png"},{"id":"ancient-legacy-gloves","name":"고대의 유산 · 장갑","setId":"ancient-legacy","classId":null,"slot":"gloves","file":"ancient-legacy-gloves.png"},{"id":"ancient-legacy-shoes","name":"고대의 유산 · 신발","setId":"ancient-legacy","classId":null,"slot":"shoes","file":"ancient-legacy-shoes.png"},{"id":"ancient-legacy-ring","name":"고대의 유산 · 반지","setId":"ancient-legacy","classId":null,"slot":"ring","file":"ancient-legacy-ring.png"},{"id":"ancient-legacy-necklace","name":"고대의 유산 · 목걸이","setId":"ancient-legacy","classId":null,"slot":"necklace","file":"ancient-legacy-necklace.png"}];
+      let previewEquipmentInventory;
+      function getPreviewEquipmentInventory() {
+        if (!previewEquipmentInventory) previewEquipmentInventory = equipmentAssetCatalog.map((asset, index) => {
+          const [key, value] = Object.entries({ weapon: { attack: 40 }, armor: { hp: 300 }, gloves: { attack: 20 }, shoes: { speed: 5 }, ring: { defense: 20 }, necklace: { hp: 150 } }[asset.slot])[0];
+          const rarity = 3 + Math.floor(index / 6) % 3;
+          const subKeys = Object.keys(equipmentEnhancementRules.gains).filter(option => option !== key).slice(0, rarity - 2);
+          return refreshEquipmentOptionStats({ id: asset.id, name: asset.name, type: asset.slot, classId: asset.classId, setId: asset.setId,
+            image: 'assets/equipment/' + asset.file, rarity, enhancement: 0,
+            mainOption: { key, value: Math.round(value * (1 + (rarity - 3) * .25)) },
+            subOptions: subKeys.map(key => ({ key, value: equipmentEnhancementRules.gains[key] })) });
+        });
+        return previewEquipmentInventory;
+      }
+      function canEquipCharacterEquipment(card, item) {
+        if (!card || !item) return false;
+        const set = characterEquipmentSets[item.setId];
+        return Boolean(set && (!set.classId || getCharacterBaseStats(card).role === set.className));
+      }
+      function describeEquipmentSetBonus(bonus) {
+        const stats = bonus.stats.map(effect => characterEquipmentStatLabels[effect.stat] + ' +' + effect.value + '%').join(' · ');
+        return stats + (bonus.special ? ' · ' + bonus.special.description : '');
+      }
+      // 전투 구현 시 스킬과 별도 판정할 특수 효과. 6개 착용해도 4세트 효과는 한 번만 제공합니다.
+      function getCharacterEquipmentSpecialEffects(card, equipmentState) {
+        const state = equipmentState || getCharacterEquipment(card), counts = getCharacterEquipmentSetCounts(state);
+        return Object.entries(characterEquipmentSets).flatMap(([id, set]) => set.bonuses
+          .filter(bonus => bonus.special && (counts[id] || 0) >= bonus.pieces)
+          .map(bonus => ({ ...bonus.special, setId: id })));
+      }
       function describeEquipmentStats(stats) {
         return Object.entries(stats).map(([key, value]) => characterEquipmentStatLabels[key] + ' +' + value.toLocaleString('ko-KR') + (['critRate', 'critDamage', 'effectHit', 'effectResist'].includes(key) ? '%' : '')).join(' · ');
       }
@@ -4341,7 +4376,7 @@
         const main = document.createElement('div'); main.className = 'equipment-sheet-main';
         const icon = document.createElement('div'); icon.className = 'equipment-sheet-icon';
         const stage = document.createElement('span'); stage.textContent = '+' + item.enhancement;
-        icon.append(createEquipmentIcon(item.type), stage);
+        icon.append(createEquipmentIcon(item), stage);
         const primary = document.createElement('div');
         const label = document.createElement('span'); label.className = 'equipment-sheet-primary-label'; label.textContent = '주 옵션 · ' + characterEquipmentStatLabels[item.mainOption.key];
         const value = document.createElement('strong'); value.className = 'equipment-sheet-primary-value';
@@ -4365,8 +4400,8 @@
         }
         const set = characterEquipmentSets[item.setId];
         const setBox = document.createElement('div'); setBox.className = 'equipment-sheet-set';
-        const setName = document.createElement('strong'); setName.textContent = set.name + ' 세트'; setBox.append(setName);
-        set.bonuses.forEach(bonus => { const effect = document.createElement('span'); effect.textContent = bonus.pieces + '세트 · ' + describeEquipmentStats(bonus.stats); setBox.append(effect); });
+        const setName = document.createElement('strong'); setName.textContent = set.name + ' · ' + (set.className ? set.className + ' 전용' : '공용'); setBox.append(setName);
+        set.bonuses.forEach(bonus => { const effect = document.createElement('span'); effect.textContent = bonus.pieces + '세트 · ' + describeEquipmentSetBonus(bonus); setBox.append(effect); });
         sheet.append(setBox); return sheet;
       }
       function calculateEquipmentEnhancement(item, gold, rules = equipmentEnhancementRules, random = Math.random) {
@@ -4400,28 +4435,29 @@
         return counts;
       }
       function getCharacterEquipmentTotalStats(card, equipmentState) {
-        const total = getCharacterBaseStats(card);
+        const base = getCharacterBaseStats(card), total = { ...base };
         const state = equipmentState || getCharacterEquipment(card);
-        const add = stats => Object.entries(stats).forEach(([key, value]) => { total[key] += value; });
-        Object.values(state.equipped).forEach(id => { const item = state.items.find(item => item.id === id); if (item) add(item.stats); });
+        Object.values(state.equipped).forEach(id => {
+          const item = state.items.find(item => item.id === id);
+          if (item) Object.entries(item.stats).forEach(([key, value]) => { total[key] += value; });
+        });
         const counts = getCharacterEquipmentSetCounts(state);
-        Object.entries(characterEquipmentSets).forEach(([id, set]) => set.bonuses.forEach(bonus => { if ((counts[id] || 0) >= bonus.pieces) add(bonus.stats); }));
+        // 비율 보너스는 장비 옵션을 더하기 전 기본 스탯 기준이며 서로 곱하지 않습니다.
+        const percentageBonuses = {};
+        Object.entries(characterEquipmentSets).forEach(([id, set]) => set.bonuses.forEach(bonus => {
+          if ((counts[id] || 0) < bonus.pieces) return;
+          bonus.stats.forEach(effect => {
+            if (effect.mode === 'percent') percentageBonuses[effect.stat] = (percentageBonuses[effect.stat] || 0) + effect.value;
+            else total[effect.stat] += effect.value;
+          });
+        }));
+        Object.entries(percentageBonuses).forEach(([key, percent]) => { total[key] += Math.round(base[key] * percent / 100); });
         return total;
       }
       function getCharacterEquipment(card) {
-        if (!previewCharacterEquipment.has(card)) {
-          // 실제 인벤토리·저장 연동 전의 캐릭터별 화면 확인용 장비입니다.
-          previewCharacterEquipment.set(card, {
-            selectedType: 'weapon', equipped: {},
-            items: characterEquipmentTypes.flatMap((type, typeIndex) => type.examples.map((name, index) => {
-              const base = { weapon: { attack: 40 }, armor: { hp: 300 }, gloves: { attack: 20 }, shoes: { speed: 5 }, ring: { defense: 20 }, necklace: { hp: 150 } }[type.id];
-              const [key, value] = Object.entries(base)[0];
-              const subKeys = Object.keys(equipmentEnhancementRules.gains).filter(option => option !== key).slice(0, index === 0 ? 1 : 4);
-              return refreshEquipmentOptionStats({ id: type.id + '-' + index, type: type.id, name, rarity: 3 + (typeIndex + index) % 3, setId: index === 0 ? 'guard' : 'assault', enhancement: 0,
-                mainOption: { key, value: value * (index + 1) }, subOptions: subKeys.map(key => ({ key, value: equipmentEnhancementRules.gains[key] })) });
-            })),
-          });
-        }
+        if (!previewCharacterEquipment.has(card)) previewCharacterEquipment.set(card, {
+          selectedType: 'weapon', equipped: {}, items: getPreviewEquipmentInventory(),
+        });
         return previewCharacterEquipment.get(card);
       }
       function openEquipmentEnhancement(itemId, returnView) {
@@ -4445,7 +4481,7 @@
         document.getElementById('equipment-enhancement-title').textContent = equipmentDisplayName(item) + ' · 강화';
         document.getElementById('equipment-enhancement-details').replaceChildren(createEquipmentSheet(item, true));
         const emblem = document.getElementById('equipment-enhancement-emblem'); emblem.replaceChildren();
-        const level = document.createElement('strong'); level.textContent = '+' + item.enhancement; emblem.append(createEquipmentIcon(item.type), level);
+        const level = document.createElement('strong'); level.textContent = '+' + item.enhancement; emblem.append(createEquipmentIcon(item), level);
         document.getElementById('equipment-enhancement-cost').textContent = '보유 골드 ' + previewGameWallet.gold.toLocaleString('ko-KR') + (maxed ? '' : '\n강화 비용 ' + cost.toLocaleString('ko-KR') + ' 골드');
         const button = document.getElementById('equipment-enhancement-confirm');
         button.disabled = maxed || previewGameWallet.gold < cost;
@@ -4488,7 +4524,11 @@
           button.setAttribute('aria-label', type.name + ' · ' + (item ? equipmentDisplayName(item) + ' · ' + getEquipmentRarity(item) + '성' : '미장착') + (item ? ' · 우클릭으로 강화, 교체 또는 해제' : ' · 클릭하여 장착'));
           if (item) button.setAttribute('aria-haspopup', 'menu');
           const name = document.createElement('strong'); name.textContent = type.name;
-          const equipped = document.createElement('span'); equipped.textContent = item ? equipmentDisplayName(item) : '미장착';
+          const equipped = document.createElement('span'); equipped.className = 'equipment-slot-content';
+          if (item) {
+            const caption = document.createElement('span'); caption.textContent = equipmentDisplayName(item);
+            equipped.append(createEquipmentIcon(item), caption);
+          } else equipped.textContent = '미장착';
           button.append(name, equipped);
           if (item) { applyEquipmentRarity(button, item); button.append(createEquipmentStars(item)); }
           slots.append(button);
@@ -4516,13 +4556,23 @@
           const heading = document.createElement('strong'); heading.textContent = set.name + ' · ' + count + '개'; slot.append(heading);
           activeBonuses.forEach(bonus => {
             const effect = document.createElement('p'); effect.className = 'character-equipment-set'; effect.dataset.active = 'true';
-            effect.textContent = bonus.pieces + '세트: ' + describeEquipmentStats(bonus.stats); slot.append(effect);
+            effect.textContent = bonus.pieces + '세트: ' + describeEquipmentSetBonus({ ...bonus, special: null }); slot.append(effect);
+            if (bonus.special) {
+              const special = document.createElement('p'); special.className = 'character-equipment-set'; special.dataset.active = 'true';
+              special.textContent = bonus.special.description; special.title = bonus.special.description; slot.append(special);
+            }
           });
           sets.append(slot);
         });
         while (sets.children.length < 3) { const empty = document.createElement('div'); empty.className = 'character-equipment-set-slot'; empty.setAttribute('aria-label', '빈 세트 효과 칸'); sets.append(empty); }
       }
-      function createEquipmentIcon(type) {
+      function createEquipmentIcon(equipment) {
+        const type = typeof equipment === 'string' ? equipment : equipment.type;
+        if (typeof equipment === 'object' && equipment.image) {
+          const icon = document.createElement('span'); icon.className = 'character-equipment-icon'; icon.setAttribute('aria-hidden', 'true');
+          const image = document.createElement('img'); image.src = equipment.image; image.alt = ''; image.loading = 'lazy'; image.decoding = 'async';
+          icon.append(image); return icon;
+        }
         const paths = {
           weapon: 'M14 3h7v7L10 21l-7-7L14 3Zm-8 8 7 7M3 21l4-4',
           armor: 'm8 3-5 4 3 5 2-2v11h8V10l2 2 3-5-5-4c0 4-8 4-8 0Z',
@@ -4541,7 +4591,7 @@
         const type = characterEquipmentTypes.find(type => type.id === state.selectedType);
         document.getElementById('character-equipment-list-title').textContent = '보유 ' + type.name;
         const list = document.getElementById('character-equipment-list'); list.replaceChildren();
-        const items = state.items.filter(item => item.type === state.selectedType);
+        const items = state.items.filter(item => item.type === state.selectedType && canEquipCharacterEquipment(card, item));
         items.forEach(item => {
           const equipped = state.equipped[item.type] === item.id;
           const row = document.createElement('button'); row.type = 'button'; row.className = 'character-equipment-item character-equipment-choice'; row.dataset.equipmentId = item.id; row.dataset.equipped = String(equipped);
@@ -4549,7 +4599,7 @@
           row.setAttribute('aria-pressed', String(state.selectedItemId === item.id));
           row.setAttribute('aria-label', item.name + ' · ' + getEquipmentRarity(item) + '성' + (equipped ? ' · 장착 중' : ''));
           const name = document.createElement('strong'); name.textContent = equipmentDisplayName(item);
-          row.append(createEquipmentIcon(item.type), name, createEquipmentStars(item)); list.append(row);
+          row.append(createEquipmentIcon(item), name, createEquipmentStars(item)); list.append(row);
         });
         if (!items.length) { const empty = document.createElement('p'); empty.className = 'character-awakening-note'; empty.textContent = '보유한 ' + type.name + ' 장비가 없습니다.'; list.append(empty); }
         renderSelectedEquipment(card);
@@ -4558,7 +4608,13 @@
         if (!card) return false;
         const state = getCharacterEquipment(card);
         const item = state.items.find(item => item.id === itemId);
-        if (!item || !characterEquipmentTypes.some(type => type.id === item.type)) return false;
+        if (!item || !characterEquipmentTypes.some(type => type.id === item.type) || !canEquipCharacterEquipment(card, item)) return false;
+        // 장비 인스턴스 하나를 여러 캐릭터가 함께 착용할 수 없습니다.
+        document.querySelectorAll('#characters-screen .character-portrait-card').forEach(other => {
+          if (other === card) return;
+          const otherState = getCharacterEquipment(other);
+          if (otherState.equipped[item.type] === item.id) delete otherState.equipped[item.type];
+        });
         state.equipped[item.type] = item.id;
         if (card === selectedCharacterCard) { renderCharacterEquipment(card); renderCharacterInfo(card); }
         return true;
@@ -4611,7 +4667,7 @@
         else { const hint = document.createElement('p'); hint.textContent = '장비를 선택하세요.'; box.append(hint); }
         const confirm = document.getElementById('equipment-confirm');
         document.getElementById('equipment-enhance-selected').disabled = !selected || selected.enhancement >= equipmentEnhancementRules.maxLevel;
-        confirm.disabled = !selected || selected.id === current?.id;
+        confirm.disabled = !selected || !canEquipCharacterEquipment(card, selected) || selected.id === current?.id;
         confirm.textContent = selected && selected.id === current?.id ? '장착 중' : current ? '교체' : '장착';
       }
       function hideEquipmentOverlays() {
