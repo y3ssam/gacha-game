@@ -639,6 +639,12 @@
       .character-card-info { position: absolute; left: 14px; right: 14px; bottom: 14px; display: flex; align-items: baseline; gap: 10px; color: var(--text-primary); }
       .character-card-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; font-weight: 600; }
       .character-card-level { flex-shrink: 0; font-size: 12px; font-variant-numeric: tabular-nums; }
+      #game-preview[data-view="characters"] .characters-toolbar { animation: character-toolbar-enter 450ms ease-out both; }
+      #game-preview[data-view="characters"] .character-portrait-card { animation: character-card-enter 650ms cubic-bezier(.22, 1, .36, 1) both, character-card-fade 650ms ease-in-out both; animation-delay: var(--character-enter-delay, 100ms); }
+      @keyframes character-toolbar-enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes character-card-enter { from { transform: translateY(18px); } to { transform: translateY(0); } }
+      @keyframes character-card-fade { from { opacity: 0; } to { opacity: 1; } }
+      @media (prefers-reduced-motion: reduce) { #game-preview[data-view="characters"] .characters-toolbar, #game-preview[data-view="characters"] .character-portrait-card { animation: none; } }
     </style>
   </head>
   <body>
@@ -2051,6 +2057,11 @@
       document.addEventListener('visibilitychange', () => { if (!document.hidden) updateGameEnergy(); });
       function showGameView(view) {
         const isCharacters = view === 'characters';
+        if (isCharacters) {
+          Array.from(document.querySelectorAll('.character-portrait-card')).forEach((card, index) => {
+            card.style.setProperty('--character-enter-delay', 100 + index * 100 + 'ms');
+          });
+        }
         const isCombatPreview = view === 'combat-preview';
         const isStoryPreview = view === 'story-preview';
         const isBattle = view === 'battle';
