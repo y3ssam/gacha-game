@@ -644,7 +644,8 @@
       .character-detail-stars { display: flex; gap: 2px; }
       .character-detail-stars svg { width: 18px; height: 18px; }
       .character-detail-level { color: var(--text-secondary); font-size: 15px; white-space: nowrap; }
-      .character-detail-illustration { flex: 1; min-height: 280px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface-sidebar); overflow: hidden; }
+      .character-detail-body { flex: 1; min-height: 240px; container-type: size; }
+      .character-detail-illustration { width: min(45cqw, 66.6667cqh); aspect-ratio: 2 / 3; border: 1px solid var(--border); border-radius: 16px; background: var(--surface-sidebar); overflow: hidden; }
       .character-detail-illustration img { display: block; width: 100%; height: 100%; object-fit: contain; }
       @media (max-width: 760px) { .character-detail-screen { padding: 20px 16px; } .character-detail-heading { gap: 12px; } .character-detail-heading h2 { font-size: 24px; } }
       @media (hover: hover) and (pointer: fine) {
@@ -793,7 +794,9 @@
                 <h2 id="character-detail-name"></h2>
                 <div class="character-detail-meta"><span class="character-detail-stars" id="character-detail-stars"></span><span class="character-detail-level" id="character-detail-level"></span></div>
               </div>
-              <div class="character-detail-illustration" id="character-detail-illustration" role="img" aria-label="캐릭터 일러스트 영역"></div>
+              <div class="character-detail-body">
+                <div class="character-detail-illustration" id="character-detail-illustration" role="img" aria-label="캐릭터 일러스트 영역"></div>
+              </div>
             </section>
             <section class="story-preview-screen" id="combat-preview-screen" aria-label="전투 미리보기" hidden>
               <div class="story-preview-top">
