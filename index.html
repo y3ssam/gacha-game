@@ -405,6 +405,32 @@
       .world-secondary:disabled { opacity: .4; cursor: default; }
       @media (max-width: 800px) { .world-steps { display: flex; overflow-x: auto; padding: 3px 3px 10px; } .world-step { flex: 0 0 auto; padding-inline: 14px; } }
       @media (max-width: 640px) { .world-two-columns, .world-check-grid { grid-template-columns: minmax(0, 1fr); } .world-profile-list { padding: 16px; } .world-theme { flex-wrap: wrap; } .world-footer-actions { width: 100%; } .world-footer-actions > button { flex: 1; width: auto; min-width: 0; } }
+      .lore-entry-form { display: grid; gap: 24px; width: min(100%, 780px); margin: 24px auto 12px; }
+      .lore-entry-form .connection-input { text-align: left; font-family: inherit; }
+      .lore-entry-form select { text-align-last: left; }
+      #lore-entry-description { height: 96px; }
+      .lore-section-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+      .lore-section-heading h2 { margin: 0; font-size: 16px; }
+      .lore-section-heading button { min-height: 36px; padding: 6px 16px; }
+      .lore-sections { display: grid; gap: 12px; }
+      .lore-section { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+      .lore-section[data-dragging="true"] { opacity: .4; }
+      .lore-section[data-drop="true"] { border-top: 3px solid var(--accent); }
+      .lore-section-bar { display: flex; align-items: stretch; min-height: 54px; background: var(--surface-hover); }
+      .lore-section-bar button { border: 0; background: transparent; color: var(--text-secondary); font: inherit; cursor: pointer; }
+      .lore-section-bar .section-toggle { flex: 1; min-width: 0; padding: 14px 8px; text-align: left; color: var(--text-primary); font-size: 14px; overflow-wrap: anywhere; }
+      .section-handle, .section-delete { flex: 0 0 46px; }
+      .lore-section-bar .section-handle { cursor: grab; touch-action: none; }
+      .lore-section-bar .section-delete { color: #ff9fb2; font-size: 18px; }
+      .lore-section-bar button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -3px; }
+      .lore-section-body { display: grid; gap: 18px; padding: 20px; }
+      .lore-section-body textarea { min-height: 160px; }
+      .lore-entry-list { display: grid; gap: 12px; margin-top: 20px; }
+      .lore-entry-card { width: 100%; padding: 20px; border: 1px solid var(--border); border-radius: 12px; background: transparent; color: var(--text-primary); text-align: left; font: inherit; cursor: pointer; }
+      .lore-entry-card:hover { background: var(--surface-hover); }
+      .lore-entry-card:focus-visible { outline: 2px solid var(--focus-ring); }
+      .lore-entry-card strong { display: block; font-size: 14px; overflow-wrap: anywhere; }
+      .lore-entry-card p { margin: 8px 0 0; color: var(--text-secondary); font-size: 12px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
     </style>
   </head>
   <body>
@@ -448,6 +474,7 @@
           <p id="page-description">스토리를 만드는 AI와 이미지를 그리는 AI를 연결하세요.</p>
         </header>
         <div class="content-body" id="lorebook" hidden>
+          <div id="lore-list-view">
           <div class="lore-toolbar">
             <div class="lore-tabs" role="tablist" aria-label="로어북 종류">
               <button class="lore-tab" type="button" role="tab" id="lore-world-tab" aria-selected="true" aria-controls="lore-world-panel">세계관</button>
@@ -456,12 +483,26 @@
             </div>
             <div class="lore-actions">
               <button class="add-lore-button" id="add-lore-folder" type="button">+ 폴더 추가</button>
-              <button class="add-lore-button" type="button">+ 로어북 추가</button>
+              <button class="add-lore-button" id="add-lore-entry" type="button">+ 로어북 추가</button>
             </div>
           </div>
           <section class="ai-panel" role="tabpanel" id="lore-world-panel" aria-labelledby="lore-world-tab" tabindex="0"></section>
           <section class="ai-panel" role="tabpanel" id="lore-protagonist-panel" aria-labelledby="lore-protagonist-tab" tabindex="0" hidden></section>
           <section class="ai-panel" role="tabpanel" id="lore-character-panel" aria-labelledby="lore-character-tab" tabindex="0" hidden></section>
+          </div>
+          <section id="lore-editor" aria-label="로어북 작성" hidden>
+            <button class="connection-back" id="lore-back" type="button" aria-label="로어북 목록으로 돌아가기" title="로어북 목록으로 돌아가기">◀</button>
+            <form id="lore-entry-form" class="lore-entry-form" autocomplete="off">
+              <div class="world-two-columns">
+                <div class="connection-field"><label for="lore-entry-type">구분</label><select class="connection-input" id="lore-entry-type"><option value="lore-world-tab">세계관</option><option value="lore-protagonist-tab">주인공</option><option value="lore-character-tab">등장인물</option></select></div>
+                <div class="connection-field"><label for="lore-entry-folder">폴더</label><select class="connection-input" id="lore-entry-folder"></select></div>
+              </div>
+              <div class="connection-field"><label for="lore-entry-name">로어북 이름</label><input class="connection-input" id="lore-entry-name" maxlength="120" required /></div>
+              <div class="connection-field"><label for="lore-entry-description">로어북 설명</label><textarea class="connection-input" id="lore-entry-description" rows="3" placeholder="목록에서 이름 아래에 표시할 짧은 설명을 적어주세요."></textarea></div>
+              <div class="lore-section-heading"><h2>로어북 섹션</h2><button class="world-secondary" id="add-lore-section" type="button">+ 추가</button></div>
+              <div id="lore-sections" class="lore-sections"></div>
+            </form>
+          </section>
         </div>
         <div class="content-body" id="worlds" hidden>
           <div id="world-list-view"><div class="world-toolbar"><button class="add-world-button" id="add-world" type="button">+ 세계관 추가</button></div></div>
@@ -635,6 +676,10 @@
 <footer class="editor-footer world-footer" id="world-footer" hidden>
           <p class="save-status" id="world-status" role="status" aria-live="polite">화면 미리보기 · 실제 생성은 아직 진행하지 않아요.</p>
           <div class="world-footer-actions"><button class="world-secondary" id="world-previous" type="button" disabled>이전</button><button class="save-connection-button" id="world-next" type="button">다음</button></div>
+        </footer>
+        <footer class="editor-footer" id="lore-editor-footer" hidden>
+          <p class="save-status" id="lore-save-status" role="status" aria-live="polite"></p>
+          <button class="save-connection-button" type="submit" form="lore-entry-form">저장</button>
         </footer>
         <div class="folder-menu" id="folder-menu" role="menu" aria-label="폴더 관리" hidden>
           <button type="button" role="menuitem" data-action="rename">이름 변경</button>
@@ -1065,6 +1110,7 @@
         const isLorebook = section === 'lorebook';
         document.getElementById('worlds').hidden = !isWorlds;
         document.getElementById('lorebook').hidden = !isLorebook;
+        document.getElementById('lore-editor-footer').hidden = !isLorebook || document.getElementById('lore-editor').hidden;
         document.getElementById('ai-connection-body').hidden = isWorlds || isLorebook;
         document.getElementById('world-footer').hidden = !isWorlds || document.getElementById('world-editor').hidden;
         editorFooter.hidden = true;
@@ -1140,6 +1186,12 @@
         });
       });
 
+      const loreEntryStorageKey = 'gacha-game.lore-entries.v1';
+      let loreEntries = [];
+      try {
+        const stored = JSON.parse(localStorage.getItem(loreEntryStorageKey) || '[]');
+        if (Array.isArray(stored)) loreEntries = stored.filter(entry => entry && typeof entry.id === 'string' && loreTabs.some(tab => tab.id === entry.type) && typeof entry.name === 'string' && typeof entry.description === 'string' && Array.isArray(entry.sections) && entry.sections.every(section => section && typeof section.id === 'string' && typeof section.name === 'string' && typeof section.description === 'string'));
+      } catch { /* 저장된 로어북 형식이 잘못되면 빈 목록으로 시작합니다. */ }
       const folderStorageKey = 'gacha-game.lore-folders.v1';
       const folderDialog = document.getElementById('folder-dialog');
       const folderName = document.getElementById('folder-name');
@@ -1177,9 +1229,10 @@
       function renderLoreFolders(focusId) {
         const tab = loreTabs.find(item => item.getAttribute('aria-selected') === 'true');
         const panel = document.getElementById(tab.getAttribute('aria-controls'));
-        const folders = loreFolders[tab.id] || [];
+        const folders = [...(loreFolders[tab.id] || [])];
+        if (loreEntries.some(entry => entry.type === tab.id && !folders.some(folder => folder.id === entry.folderId))) folders.push({ id: '', name: '미분류' });
         panel.replaceChildren();
-        if (!folders.length) return;
+        if (!folders.length) { renderLoreEntryList(panel, tab.id, ''); return; }
         if (!folders.some(folder => folder.id === selectedFolders[tab.id])) selectedFolders[tab.id] = folders[0].id;
         const row = document.createElement('div');
         row.className = 'folder-tabs';
@@ -1226,6 +1279,7 @@
           row.append(button);
         });
         panel.append(row, content);
+        renderLoreEntryList(content, tab.id, selectedFolders[tab.id]);
         if (focusId) Array.from(row.children).find(button => button.id === 'folder-' + focusId)?.focus();
       }
       document.getElementById('add-lore-folder').addEventListener('click', () => {
@@ -1375,6 +1429,160 @@
         if (worldStepIndex < 6) showWorldStep(worldStepIndex + 1, true);
         else document.getElementById('world-status').textContent = '아직 화면만 구성된 상태예요. 세계 생성 기능은 다음에 연결할 예정이에요.';
       });
+      let loreDraft = null;
+      let openLoreSectionId = null;
+      let draggedLoreSectionId = null;
+      function renderLoreEntryList(container, type, folderId) {
+        const list = document.createElement('div');
+        list.className = 'lore-entry-list';
+        loreEntries.filter(entry => entry.type === type && ((loreFolders[type] || []).some(folder => folder.id === entry.folderId) ? entry.folderId : '') === folderId).forEach(entry => {
+          const card = document.createElement('button');
+          card.type = 'button'; card.className = 'lore-entry-card';
+          const name = document.createElement('strong'); name.textContent = entry.name;
+          const description = document.createElement('p'); description.textContent = entry.description;
+          card.append(name, description);
+          card.addEventListener('click', () => openLoreEditor(entry));
+          list.append(card);
+        });
+        container.append(list);
+      }
+      function refreshLoreEntryFolders(preferred = '') {
+        const select = document.getElementById('lore-entry-folder');
+        const folders = loreFolders[document.getElementById('lore-entry-type').value] || [];
+        select.replaceChildren(new Option(folders.length ? '선택 안 함' : '생성된 폴더가 없어요', ''));
+        folders.forEach(folder => select.add(new Option(folder.name, folder.id)));
+        select.disabled = !folders.length;
+        select.value = folders.some(folder => folder.id === preferred) ? preferred : '';
+      }
+      function openLoreEditor(entry) {
+        closeFolderMenu();
+        const type = loreTabs.find(tab => tab.getAttribute('aria-selected') === 'true').id;
+        loreDraft = entry ? structuredClone(entry) : { id: crypto.randomUUID(), type, folderId: selectedFolders[type] || '', name: '', description: '', sections: [{ id: crypto.randomUUID(), name: '새 섹션', description: '' }] };
+        openLoreSectionId = loreDraft.sections[0]?.id || null;
+        document.getElementById('lore-entry-type').value = loreDraft.type;
+        refreshLoreEntryFolders(loreDraft.folderId);
+        document.getElementById('lore-entry-name').value = loreDraft.name;
+        document.getElementById('lore-entry-description').value = loreDraft.description;
+        document.getElementById('lore-save-status').textContent = '';
+        document.getElementById('lore-list-view').hidden = true;
+        document.getElementById('lore-editor').hidden = false;
+        document.getElementById('lore-editor-footer').hidden = false;
+        renderLoreSections();
+        document.getElementById('lorebook').scrollTop = 0;
+        document.getElementById('lore-entry-name').focus();
+      }
+      function closeLoreEditor() {
+        document.getElementById('lore-list-view').hidden = false;
+        document.getElementById('lore-editor').hidden = true;
+        document.getElementById('lore-editor-footer').hidden = true;
+        document.getElementById('add-lore-entry').focus();
+      }
+      function moveLoreSection(sourceId, targetId, after = false) {
+        if (sourceId === targetId) return;
+        const source = loreDraft.sections.find(section => section.id === sourceId);
+        if (!source) return;
+        const reordered = loreDraft.sections.filter(section => section.id !== sourceId);
+        const target = reordered.findIndex(section => section.id === targetId);
+        if (target < 0) return;
+        reordered.splice(target + Number(after), 0, source);
+        loreDraft.sections = reordered;
+        renderLoreSections();
+        document.getElementById('section-handle-' + sourceId)?.focus();
+      }
+      function renderLoreSections() {
+        const list = document.getElementById('lore-sections');
+        list.replaceChildren();
+        loreDraft.sections.forEach((section, index) => {
+          const card = document.createElement('section'); card.className = 'lore-section';
+          const bar = document.createElement('div'); bar.className = 'lore-section-bar';
+          const handle = document.createElement('button');
+          handle.type = 'button'; handle.className = 'section-handle'; handle.id = 'section-handle-' + section.id;
+          handle.textContent = '⠿'; handle.draggable = true;
+          handle.title = '드래그하여 순서 변경 · Alt + 위/아래 방향키';
+          handle.setAttribute('aria-label', (section.name || '새 섹션') + ' 순서 변경');
+          const toggle = document.createElement('button'); toggle.type = 'button'; toggle.className = 'section-toggle';
+          toggle.textContent = section.name || '새 섹션';
+          toggle.id = 'section-toggle-' + section.id;
+          toggle.setAttribute('aria-expanded', String(openLoreSectionId === section.id));
+          toggle.setAttribute('aria-controls', 'section-body-' + section.id);
+          const remove = document.createElement('button'); remove.type = 'button'; remove.className = 'section-delete';
+          remove.textContent = '×'; remove.title = '섹션 삭제'; remove.setAttribute('aria-label', (section.name || '새 섹션') + ' 삭제');
+          const body = document.createElement('div'); body.className = 'lore-section-body'; body.id = 'section-body-' + section.id;
+          body.hidden = openLoreSectionId !== section.id;
+          for (const [key, label, multiline] of [['name', '이름', false], ['description', '설명', true]]) {
+            const field = document.createElement('div'); field.className = 'connection-field';
+            const caption = document.createElement('label'); caption.htmlFor = 'section-' + key + '-' + section.id; caption.textContent = label;
+            const control = document.createElement(multiline ? 'textarea' : 'input'); control.className = 'connection-input'; control.id = caption.htmlFor; control.value = section[key];
+            if (!multiline) control.maxLength = 120;
+            control.addEventListener('input', () => {
+              section[key] = control.value;
+              if (key === 'name') {
+                toggle.textContent = control.value || '새 섹션';
+                handle.setAttribute('aria-label', (control.value || '새 섹션') + ' 순서 변경');
+                remove.setAttribute('aria-label', (control.value || '새 섹션') + ' 삭제');
+              }
+            });
+            field.append(caption, control); body.append(field);
+          }
+          toggle.addEventListener('click', () => {
+            openLoreSectionId = openLoreSectionId === section.id ? null : section.id;
+            renderLoreSections(); document.getElementById(toggle.id)?.focus();
+          });
+          remove.addEventListener('click', () => {
+            loreDraft.sections = loreDraft.sections.filter(item => item.id !== section.id);
+            if (openLoreSectionId === section.id) openLoreSectionId = null;
+            renderLoreSections(); document.getElementById('add-lore-section').focus();
+          });
+          handle.addEventListener('keydown', event => {
+            if (!event.altKey || !['ArrowUp','ArrowDown'].includes(event.key)) return;
+            const next = index + (event.key === 'ArrowUp' ? -1 : 1);
+            event.preventDefault();
+            if (loreDraft.sections[next]) moveLoreSection(section.id, loreDraft.sections[next].id, next > index);
+          });
+          handle.addEventListener('dragstart', event => {
+            draggedLoreSectionId = section.id; card.dataset.dragging = 'true';
+            event.dataTransfer.effectAllowed = 'move'; event.dataTransfer.setData('text/plain', section.id);
+          });
+          handle.addEventListener('dragend', () => {
+            draggedLoreSectionId = null;
+            document.querySelectorAll('.lore-section').forEach(item => { delete item.dataset.dragging; delete item.dataset.drop; });
+          });
+          card.addEventListener('dragover', event => {
+            if (!draggedLoreSectionId || draggedLoreSectionId === section.id) return;
+            event.preventDefault(); event.dataTransfer.dropEffect = 'move'; card.dataset.drop = 'true';
+          });
+          card.addEventListener('dragleave', event => { if (!card.contains(event.relatedTarget)) delete card.dataset.drop; });
+          card.addEventListener('drop', event => {
+            if (!draggedLoreSectionId) return;
+            event.preventDefault();
+            const rect = card.getBoundingClientRect();
+            moveLoreSection(draggedLoreSectionId, section.id, event.clientY > rect.top + rect.height / 2);
+            draggedLoreSectionId = null;
+          });
+          bar.append(handle, toggle, remove); card.append(bar, body); list.append(card);
+        });
+      }
+      document.getElementById('add-lore-entry').addEventListener('click', () => openLoreEditor());
+      document.getElementById('lore-back').addEventListener('click', closeLoreEditor);
+      document.getElementById('lore-entry-type').addEventListener('change', () => refreshLoreEntryFolders());
+      document.getElementById('add-lore-section').addEventListener('click', () => {
+        const section = { id: crypto.randomUUID(), name: '새 섹션', description: '' };
+        loreDraft.sections.push(section); openLoreSectionId = section.id; renderLoreSections();
+        document.getElementById('section-name-' + section.id).focus();
+      });
+      document.getElementById('lore-entry-form').addEventListener('submit', event => {
+        event.preventDefault();
+        const status = document.getElementById('lore-save-status');
+        const name = document.getElementById('lore-entry-name').value.trim();
+        if (!name) { status.textContent = '로어북 이름을 입력해 주세요.'; document.getElementById('lore-entry-name').focus(); return; }
+        const entry = { ...loreDraft, name, type: document.getElementById('lore-entry-type').value, folderId: document.getElementById('lore-entry-folder').value, description: document.getElementById('lore-entry-description').value, sections: loreDraft.sections.map(section => ({ ...section, name: section.name.trim() || '새 섹션' })) };
+        const updated = [...loreEntries.filter(item => item.id !== entry.id), entry];
+        try { localStorage.setItem(loreEntryStorageKey, JSON.stringify(updated)); }
+        catch { status.textContent = '저장하지 못했어요. 브라우저의 저장 공간을 확인해 주세요.'; return; }
+        loreEntries = updated; selectedFolders[entry.type] = entry.folderId;
+        selectLoreTab(document.getElementById(entry.type)); closeLoreEditor();
+      });
+
     </script>
   </body>
 </html>
