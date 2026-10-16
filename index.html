@@ -683,8 +683,13 @@
       .character-skill-type { color: var(--text-secondary); font-size: 12px; font-weight: 400; white-space: nowrap; }
       .character-skill-cooldown { flex-basis: 100%; color: var(--text-secondary); font-size: 12px; }
       .character-skill-cooldown[data-reduced="true"] { color: var(--accent); }
-      .character-skill-description { margin: 24px 0; color: var(--text-primary); font-size: 15px; line-height: 1.9; word-break: keep-all; overflow-wrap: anywhere; }
-      .character-skill-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border); }
+      .character-skill-heading, .character-skill-description { flex-shrink: 0; }
+      .character-skill-description { margin: 20px 0; color: var(--text-primary); font-size: 15px; line-height: 1.9; word-break: keep-all; overflow-wrap: anywhere; }
+      .character-skill-upgrades { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; list-style: none; }
+      .character-skill-upgrade { flex-shrink: 0; display: grid; grid-template-columns: 44px minmax(0, 1fr); align-items: baseline; gap: 12px; padding: 8px 12px; border-radius: 5px; background: var(--surface-sidebar); color: var(--text-secondary); font-size: 13px; line-height: 1.6; }
+      .character-skill-upgrade[data-applied="true"] { background: var(--surface-active); color: var(--accent); }
+      .character-skill-upgrade-level { font-size: 12px; font-weight: 600; white-space: nowrap; }
+      .character-skill-footer { flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
       .character-skill-level { color: var(--accent); font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; }
       .character-skill .character-growth-button:disabled { border-color: var(--border); background: var(--surface-active); color: var(--text-secondary); cursor: default; }
       .character-awakening { display: grid; gap: 20px; padding: 2px 12px 12px 0; }
@@ -1079,21 +1084,25 @@
                     <article class="character-skill" id="skill-detail-basic" data-skill="basic" role="tabpanel" aria-labelledby="skill-select-basic" tabindex="0">
                       <div class="character-skill-heading"><div class="character-skill-title"><h3>검의 궤적</h3><span class="character-skill-type">기본 스킬</span></div><span class="character-skill-cooldown">쿨타임 없음</span></div>
                       <p class="character-skill-description">적 하나를 공격하는 기본 스킬입니다.</p>
+                      <ol class="character-skill-upgrades" start="2" aria-label="기본 스킬 레벨별 강화 효과"></ol>
                       <div class="character-skill-footer"><span class="character-skill-level" aria-live="polite">Lv. 1 / 10</span><button class="character-growth-button" type="button" aria-label="기본 스킬 레벨업">레벨업</button></div>
                     </article>
                     <article class="character-skill" id="skill-detail-active" data-skill="active" role="tabpanel" aria-labelledby="skill-select-active" tabindex="0" hidden>
                       <div class="character-skill-heading"><div class="character-skill-title"><h3>돌파의 일격</h3><span class="character-skill-type">액티브</span></div><span class="character-skill-cooldown" id="character-active-cooldown"></span></div>
                       <p class="character-skill-description">캐릭터 고유의 능력을 사용합니다.</p>
+                      <ol class="character-skill-upgrades" start="2" aria-label="액티브 스킬 레벨별 강화 효과"></ol>
                       <div class="character-skill-footer"><span class="character-skill-level" aria-live="polite">Lv. 1 / 10</span><button class="character-growth-button" type="button" aria-label="액티브 스킬 레벨업">레벨업</button></div>
                     </article>
                     <article class="character-skill" id="skill-detail-ultimate" data-skill="ultimate" role="tabpanel" aria-labelledby="skill-select-ultimate" tabindex="0" hidden>
                       <div class="character-skill-heading"><div class="character-skill-title"><h3>새벽을 가르는 빛</h3><span class="character-skill-type">궁극기</span></div><span class="character-skill-cooldown">전투 에너지 100%</span></div>
                       <p class="character-skill-description">캐릭터의 강력한 고유 능력을 사용하는 스킬입니다. 해당 캐릭터의 전투 에너지 게이지가 100%일 때 사용할 수 있습니다.</p>
+                      <ol class="character-skill-upgrades" start="2" aria-label="궁극기 레벨별 강화 효과"></ol>
                       <div class="character-skill-footer"><span class="character-skill-level" aria-live="polite">Lv. 1 / 10</span><button class="character-growth-button" type="button" aria-label="궁극기 레벨업">레벨업</button></div>
                     </article>
                     <article class="character-skill" id="skill-detail-passive" data-skill="passive" role="tabpanel" aria-labelledby="skill-select-passive" tabindex="0" hidden>
                       <div class="character-skill-heading"><div class="character-skill-title"><h3>불굴의 의지</h3><span class="character-skill-type">패시브</span></div><span class="character-skill-cooldown">자동 효과</span></div>
                       <p class="character-skill-description">전투 중 조건을 만족하면 자동으로 효과가 적용됩니다.</p>
+                      <ol class="character-skill-upgrades" start="2" aria-label="패시브 레벨별 강화 효과"></ol>
                       <div class="character-skill-footer"><span class="character-skill-level" aria-live="polite">Lv. 1 / 10</span><button class="character-growth-button" type="button" aria-label="패시브 레벨업">레벨업</button></div>
                     </article>
                     </div>
@@ -2818,6 +2827,7 @@
         renderCharacterInfo(card);
         renderCharacterSkills(card);
         selectCharacterSkill('basic');
+        document.querySelectorAll('.character-skill-upgrades').forEach(list => { list.scrollTop = 0; });
         renderCharacterAwakening(card);
         document.getElementById('character-panel-awakening').scrollTop = 0;
         const outfits = getCharacterOutfits(card);
@@ -2954,6 +2964,28 @@
         };
         return examples[card.dataset.rarity] || examples['3'];
       }
+      function getCharacterSkillUpgradeEffects(card, key) {
+        // 실제 AI 생성 스킬의 단계별 효과를 연결하기 전의 미리보기입니다.
+        const cooldown = getCharacterActiveCooldown(card);
+        return Array.from({ length: 9 }, (_, index) => {
+          const level = index + 2;
+          const cooldownReduction = key === 'active' && cooldown.base >= 4 && cooldown.reductionLevels.includes(level);
+          return { level, description: cooldownReduction ? '쿨타임 1턴 감소' : (key === 'passive' ? '패시브 효과 ' : '스킬 피해량 ') + (level === 10 ? 10 : 5) + '% 증가' };
+        });
+      }
+      function renderCharacterSkillUpgrades(card, skill, level) {
+        const list = skill.querySelector('.character-skill-upgrades');
+        const scrollTop = list.scrollTop;
+        list.replaceChildren();
+        getCharacterSkillUpgradeEffects(card, skill.dataset.skill).forEach(effect => {
+          const applied = level >= effect.level;
+          const row = document.createElement('li'); row.className = 'character-skill-upgrade'; row.dataset.applied = String(applied);
+          row.setAttribute('aria-label', '레벨 ' + effect.level + ' · ' + effect.description + ' · ' + (applied ? '적용됨' : '미도달'));
+          const label = document.createElement('span'); label.className = 'character-skill-upgrade-level'; label.textContent = 'Lv.' + effect.level;
+          const text = document.createElement('span'); text.textContent = effect.description; row.append(label, text); list.append(row);
+        });
+        list.scrollTop = scrollTop;
+      }
       function renderCharacterSkills(card) {
         const levels = getCharacterSkillLevels(card);
         const names = getCharacterSkillNames(card);
@@ -2970,6 +3002,7 @@
         document.querySelectorAll('.character-skill').forEach(skill => {
           const level = levels[skill.dataset.skill];
           skill.querySelector('h3').textContent = names[skill.dataset.skill];
+          renderCharacterSkillUpgrades(card, skill, level);
           skill.querySelector('.character-skill-level').textContent = 'Lv. ' + level + ' / 10';
           const button = skill.querySelector('button');
           button.disabled = level >= 10;
