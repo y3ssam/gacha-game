@@ -730,6 +730,26 @@
       .character-profile-field dd { margin: 0; color: var(--text-primary); font-size: 14px; line-height: 1.8; white-space: pre-wrap; overflow-wrap: anywhere; }
       .character-profile-background { display: grid; gap: 14px; padding-top: 6px; }
       #character-profile-background { display: grid; gap: 14px; }
+      .character-equipment { display: grid; gap: 20px; padding: 2px 12px 12px 0; }
+      .character-equipment h3 { margin: 0; font-size: 18px; font-weight: 600; }
+      .character-equipment-slots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+      .character-equipment-slot { display: grid; align-content: center; gap: 10px; min-height: 94px; min-width: 0; padding: 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-sidebar); color: var(--text-primary); font: inherit; text-align: left; cursor: pointer; }
+      .character-equipment-slot[aria-pressed="true"] { border-color: var(--accent); background: var(--surface-active); }
+      .character-equipment-slot strong { color: var(--accent); font-size: 13px; }
+      .character-equipment-slot span { color: var(--text-secondary); font-size: 12px; overflow-wrap: anywhere; }
+      .character-equipment-slot:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
+      .character-equipment-list-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+      .character-equipment-list-heading h4 { margin: 0; font-size: 16px; }
+      .character-equipment-remove { padding: 6px 0; border: 0; background: transparent; color: var(--text-secondary); font: inherit; font-size: 12px; cursor: pointer; }
+      .character-equipment-remove:hover { color: var(--accent); }
+      .character-equipment-remove:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
+      .character-equipment-list { display: grid; gap: 10px; }
+      .character-equipment-item { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-sidebar); }
+      .character-equipment-item[data-equipped="true"] { border-color: var(--accent); }
+      .character-equipment-item strong { font-size: 14px; overflow-wrap: anywhere; }
+      .character-equipment-item p { margin: 7px 0 0; color: var(--text-secondary); font-size: 12px; }
+      .character-equipment-item button:disabled { background: var(--surface-active); border-color: var(--border); color: var(--text-secondary); cursor: default; }
+      @container (max-width: 650px) { .character-equipment-slots { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
       .character-profile-background p { margin: 0; color: var(--text-primary); font-size: 14px; line-height: 1.9; white-space: pre-wrap; overflow-wrap: anywhere; }
       @container (max-width: 650px) { .character-profile-field { grid-template-columns: minmax(0, 1fr); gap: 5px; } }
       @container (max-width: 650px) { .character-awakening-track { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
@@ -897,6 +917,7 @@
                 <div class="character-detail-meta"><span class="character-detail-level" id="character-detail-level"></span><span class="character-detail-stars" id="character-detail-stars"></span></div>
                 <div class="character-detail-actions" role="tablist" aria-label="캐릭터 메뉴">
                   <button class="character-detail-action" id="character-tab-info" role="tab" aria-selected="true" aria-controls="character-panel-info" type="button">정보</button>
+                  <button class="character-detail-action" id="character-tab-equipment" role="tab" aria-selected="false" aria-controls="character-panel-equipment" tabindex="-1" type="button">장비</button>
                   <button class="character-detail-action" id="character-tab-skills" role="tab" aria-selected="false" aria-controls="character-panel-skills" tabindex="-1" type="button">스킬</button>
                   <button class="character-detail-action" id="character-tab-awakening" role="tab" aria-selected="false" aria-controls="character-panel-awakening" tabindex="-1" type="button">각성</button>
                   <button class="character-detail-action" id="character-tab-outfits" role="tab" aria-selected="false" aria-controls="character-panel-outfits" tabindex="-1" type="button">의상</button>
@@ -934,6 +955,16 @@
                       <div><dt>효과 적중</dt><dd id="character-stat-effect-hit"></dd></div>
                       <div><dt>효과 저항</dt><dd id="character-stat-effect-resist"></dd></div>
                     </dl>
+                  </div>
+                </div>
+                <div class="character-detail-panel" id="character-panel-equipment" role="tabpanel" aria-labelledby="character-tab-equipment" tabindex="0" hidden>
+                  <div class="character-equipment">
+                    <h3>착용 장비</h3>
+                    <div class="character-equipment-slots" id="character-equipment-slots" role="group" aria-label="장비 종류 선택"></div>
+                    <p class="character-awakening-note">종류별로 장비를 하나씩 착용할 수 있습니다. 슬롯을 선택하면 해당 종류의 보유 장비가 표시됩니다.</p>
+                    <div class="character-equipment-list-heading"><h4 id="character-equipment-list-title">보유 무기</h4><button class="character-equipment-remove" id="character-equipment-remove" type="button" hidden>장착 해제</button></div>
+                    <div class="character-equipment-list" id="character-equipment-list"></div>
+                    <p class="character-outfit-status" id="character-equipment-status" aria-live="polite"></p>
                   </div>
                 </div>
                 <div class="character-detail-panel" id="character-panel-skills" role="tabpanel" aria-labelledby="character-tab-skills" tabindex="0" hidden>
@@ -2628,6 +2659,7 @@
       const previewCharacterSkillLevels = new WeakMap();
       const previewCharacterOutfits = new WeakMap();
       const previewCharacterProfiles = new WeakMap();
+      const previewCharacterEquipment = new WeakMap();
       function openCharacterDetail(card) {
         selectedCharacterCard = card;
         selectCharacterTab(document.getElementById('character-tab-info'));
@@ -2643,6 +2675,9 @@
         document.getElementById('character-panel-affinity').scrollTop = 0;
         renderCharacterProfile(card);
         document.getElementById('character-panel-profile').scrollTop = 0;
+        getCharacterEquipment(card).selectedType = 'weapon';
+        renderCharacterEquipment(card);
+        document.getElementById('character-panel-equipment').scrollTop = 0;
         document.getElementById('character-panel-skills').scrollTop = 0;
         const name = card.querySelector('.character-card-name').textContent;
         document.getElementById('character-detail-name').textContent = name;
@@ -2917,6 +2952,78 @@
           ? profile.backgroundStory.split(/\n\s*\n/).filter(text => text.trim()) : ['아직 작성된 배경 이야기가 없습니다.'];
         paragraphs.forEach(text => { const paragraph = document.createElement('p'); paragraph.textContent = text; background.append(paragraph); });
       }
+      const characterEquipmentTypes = [
+        { id: 'weapon', name: '무기', examples: ['수련용 검', '여행자의 검'] },
+        { id: 'armor', name: '갑옷', examples: ['가죽 갑옷', '수호자의 갑옷'] },
+        { id: 'gloves', name: '장갑', examples: ['가죽 장갑', '정찰대 장갑'] },
+        { id: 'shoes', name: '신발', examples: ['여행자 신발', '탐험가 부츠'] },
+        { id: 'ring', name: '반지', examples: ['구리 반지', '은빛 반지'] },
+        { id: 'necklace', name: '목걸이', examples: ['작은 펜던트', '별빛 목걸이'] },
+      ];
+      function getCharacterEquipment(card) {
+        if (!previewCharacterEquipment.has(card)) {
+          // 실제 인벤토리·스탯·저장 연동 전의 캐릭터별 화면 확인용 장비입니다.
+          previewCharacterEquipment.set(card, {
+            selectedType: 'weapon', equipped: {},
+            items: characterEquipmentTypes.flatMap(type => type.examples.map((name, index) => ({ id: type.id + '-' + index, type: type.id, name }))),
+          });
+        }
+        return previewCharacterEquipment.get(card);
+      }
+      function renderCharacterEquipment(card) {
+        const state = getCharacterEquipment(card);
+        const slots = document.getElementById('character-equipment-slots'); slots.replaceChildren();
+        characterEquipmentTypes.forEach(type => {
+          const item = state.items.find(item => item.id === state.equipped[type.id]);
+          const button = document.createElement('button'); button.type = 'button'; button.className = 'character-equipment-slot'; button.dataset.equipmentType = type.id;
+          button.setAttribute('aria-pressed', String(state.selectedType === type.id));
+          const name = document.createElement('strong'); name.textContent = type.name;
+          const equipped = document.createElement('span'); equipped.textContent = item?.name || '미장착';
+          button.append(name, equipped); slots.append(button);
+        });
+        const type = characterEquipmentTypes.find(type => type.id === state.selectedType);
+        document.getElementById('character-equipment-list-title').textContent = '보유 ' + type.name;
+        const list = document.getElementById('character-equipment-list'); list.replaceChildren();
+        const items = state.items.filter(item => item.type === state.selectedType);
+        items.forEach(item => {
+          const equipped = state.equipped[item.type] === item.id;
+          const row = document.createElement('div'); row.className = 'character-equipment-item'; row.dataset.equipped = String(equipped);
+          const info = document.createElement('div');
+          const name = document.createElement('strong'); name.textContent = item.name;
+          const detail = document.createElement('p'); detail.textContent = type.name + ' · 미리보기 장비'; info.append(name, detail);
+          const button = document.createElement('button'); button.type = 'button'; button.className = 'character-growth-button'; button.dataset.equipmentId = item.id;
+          button.textContent = equipped ? '장착 중' : '장착'; button.disabled = equipped;
+          button.setAttribute('aria-label', item.name + (equipped ? ' 장착 중' : ' 장착'));
+          row.append(info, button); list.append(row);
+        });
+        if (!items.length) { const empty = document.createElement('p'); empty.className = 'character-awakening-note'; empty.textContent = '보유한 ' + type.name + ' 장비가 없습니다.'; list.append(empty); }
+        document.getElementById('character-equipment-remove').hidden = !state.equipped[state.selectedType];
+        const equipped = state.items.find(item => item.id === state.equipped[state.selectedType]);
+        document.getElementById('character-equipment-status').textContent = type.name + ' · ' + (equipped ? equipped.name + ' 장착 중' : '미장착');
+      }
+      function equipCharacterEquipment(card, itemId) {
+        if (!card) return false;
+        const state = getCharacterEquipment(card);
+        const item = state.items.find(item => item.id === itemId);
+        if (!item || !characterEquipmentTypes.some(type => type.id === item.type)) return false;
+        state.equipped[item.type] = item.id;
+        if (card === selectedCharacterCard) renderCharacterEquipment(card);
+        return true;
+      }
+      document.getElementById('character-equipment-slots').addEventListener('click', event => {
+        const button = event.target.closest('[data-equipment-type]'); if (!button || !selectedCharacterCard) return;
+        const state = getCharacterEquipment(selectedCharacterCard); state.selectedType = button.dataset.equipmentType;
+        renderCharacterEquipment(selectedCharacterCard);
+        document.querySelectorAll('[data-equipment-type]').forEach(slot => { if (slot.dataset.equipmentType === state.selectedType) slot.focus({ preventScroll: true }); });
+      });
+      document.getElementById('character-equipment-list').addEventListener('click', event => {
+        const button = event.target.closest('[data-equipment-id]');
+        if (button) equipCharacterEquipment(selectedCharacterCard, button.dataset.equipmentId);
+      });
+      document.getElementById('character-equipment-remove').addEventListener('click', () => {
+        if (!selectedCharacterCard) return;
+        const state = getCharacterEquipment(selectedCharacterCard); delete state.equipped[state.selectedType]; renderCharacterEquipment(selectedCharacterCard);
+      });
       function selectCharacterTab(selected) {
         document.querySelectorAll('.character-detail-action').forEach(tab => {
           const active = tab === selected;
