@@ -685,7 +685,8 @@
       .character-skill-cooldown[data-reduced="true"] { color: var(--accent); }
       .character-skill-heading, .character-skill-description { flex-shrink: 0; }
       .character-skill-description { margin: 20px 0; color: var(--text-primary); font-size: 15px; line-height: 1.9; word-break: keep-all; overflow-wrap: anywhere; }
-      .character-skill-upgrades { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; list-style: none; }
+      .character-skill-upgrades { position: relative; flex: 0 1 160px; height: 160px; max-height: 160px; min-height: 96px; display: flex; flex-direction: column; gap: 6px; margin: auto 0 0; padding: 8px 10px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-sidebar); overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; scrollbar-width: thin; list-style: none; }
+      .character-skill-upgrades::after { content: ''; flex: 0 0 var(--skill-upgrade-tail, 0px); }
       .character-skill-upgrade { flex-shrink: 0; display: grid; grid-template-columns: 44px minmax(0, 1fr); align-items: baseline; gap: 12px; padding: 8px 12px; border-radius: 5px; background: var(--surface-sidebar); color: var(--text-secondary); font-size: 13px; line-height: 1.6; }
       .character-skill-upgrade[data-applied="true"] { background: var(--surface-active); color: var(--accent); }
       .character-skill-upgrade-level { font-size: 12px; font-weight: 600; white-space: nowrap; }
@@ -2827,7 +2828,6 @@
         renderCharacterInfo(card);
         renderCharacterSkills(card);
         selectCharacterSkill('basic');
-        document.querySelectorAll('.character-skill-upgrades').forEach(list => { list.scrollTop = 0; });
         renderCharacterAwakening(card);
         document.getElementById('character-panel-awakening').scrollTop = 0;
         const outfits = getCharacterOutfits(card);
@@ -2927,6 +2927,7 @@
           document.getElementById(selector.getAttribute('aria-controls')).hidden = !selected;
         });
         document.querySelector('.character-skill-content').scrollTop = 0;
+        alignSkillUpgradeScroll(document.getElementById('skill-detail-' + key));
       }
       document.querySelectorAll('.character-skill-selector').forEach(selector => {
         selector.addEventListener('click', () => selectCharacterSkill(selector.dataset.skillTarget));
@@ -2975,16 +2976,30 @@
       }
       function renderCharacterSkillUpgrades(card, skill, level) {
         const list = skill.querySelector('.character-skill-upgrades');
-        const scrollTop = list.scrollTop;
+        list.dataset.currentLevel = String(level);
         list.replaceChildren();
         getCharacterSkillUpgradeEffects(card, skill.dataset.skill).forEach(effect => {
           const applied = level >= effect.level;
           const row = document.createElement('li'); row.className = 'character-skill-upgrade'; row.dataset.applied = String(applied);
+          row.dataset.level = String(effect.level);
           row.setAttribute('aria-label', '레벨 ' + effect.level + ' · ' + effect.description + ' · ' + (applied ? '적용됨' : '미도달'));
           const label = document.createElement('span'); label.className = 'character-skill-upgrade-level'; label.textContent = 'Lv.' + effect.level;
           const text = document.createElement('span'); text.textContent = effect.description; row.append(label, text); list.append(row);
         });
-        list.scrollTop = scrollTop;
+        alignSkillUpgradeScroll(skill);
+      }
+      function alignSkillUpgradeScroll(skill) {
+        if (!skill) return;
+        const list = skill.querySelector('.character-skill-upgrades');
+        if (!list || !list.clientHeight) return;
+        const rows = Array.from(list.querySelectorAll('.character-skill-upgrade'));
+        const level = Math.max(2, Math.min(10, Number(list.dataset.currentLevel) || 2));
+        const target = rows.find(row => Number(row.dataset.level) === level);
+        if (!target || !rows.length) return;
+        // 마지막 레벨도 박스 위쪽에서 시작할 수 있도록 아래쪽 여유를 확보합니다.
+        const padding = parseFloat(getComputedStyle(list).paddingTop) || 0;
+        list.style.setProperty('--skill-upgrade-tail', Math.max(0, list.clientHeight - padding * 2 - target.offsetHeight) + 'px');
+        list.scrollTop = target.offsetTop - rows[0].offsetTop;
       }
       function renderCharacterSkills(card) {
         const levels = getCharacterSkillLevels(card);
@@ -3600,7 +3615,9 @@
           tab.tabIndex = active ? 0 : -1;
           document.getElementById(tab.getAttribute('aria-controls')).hidden = !active;
         });
+        if (selected.id === 'character-tab-skills') alignSkillUpgradeScroll(document.querySelector('.character-skill:not([hidden])'));
       }
+      window.addEventListener('resize', () => alignSkillUpgradeScroll(document.querySelector('.character-skill:not([hidden])')));
       document.querySelectorAll('.character-detail-action').forEach(tab => {
         tab.addEventListener('click', () => selectCharacterTab(tab));
         tab.addEventListener('keydown', event => {
