@@ -497,7 +497,7 @@
         #game-preview .game-experience { grid-column: 1 / 3; }
         .game-home-button { grid-column: 3; grid-row: 1 / 3; margin-left: 0; }
       }
-      .battle-content { display: flex; align-items: stretch; height: 100%; min-height: 0; padding: 32px 5%; }
+      .battle-content { display: flex; align-items: stretch; gap: 24px; height: 100%; min-height: 0; padding: 32px 5%; overflow-x: auto; scrollbar-width: thin; }
       .story-entry-card { position: relative; display: block; width: 36%; min-width: 180px; height: 100%; min-height: 200px; padding: 0; border: 0; background: var(--border); color: var(--text-primary); font: inherit; text-align: left; cursor: pointer; clip-path: polygon(7% 0, 100% 0, 93% 100%, 0 100%); }
       #game-preview[data-view="battle"] .story-entry-card { animation: story-card-enter 650ms cubic-bezier(.22, 1, .36, 1) 100ms both, character-card-fade 650ms ease-in-out 100ms both; }
       @keyframes story-card-enter { from { transform: translateY(18px); } to { transform: translateY(0); } }
@@ -509,6 +509,9 @@
       .story-card-content { position: absolute; top: 0; left: 0; right: 0; display: flex; flex-direction: column; gap: 2.5px; padding: 38px 14%; }
       .story-card-heading { color: var(--accent); font-size: clamp(22px, 3vw, 38px); font-weight: 650; letter-spacing: .06em; line-height: 1.2; }
       .story-card-chapter { font-size: clamp(14px, 1.6vw, 20px); font-weight: 500; line-height: 1.6; overflow-wrap: anywhere; }
+      .materials-entry-card { container-type: inline-size; flex-shrink: 0; }
+      .materials-entry-card .story-card-heading { font-size: clamp(16px, 9cqw, 38px); }
+      .materials-entry-card .story-card-description { margin-top: 10px; font-size: clamp(12px, 1.3vw, 16px); color: var(--text-secondary); line-height: 1.8; word-break: keep-all; overflow-wrap: anywhere; }
       .story-entry-card:hover { background: var(--accent); }
       .story-entry-card:focus-visible { outline: none; background: var(--focus-ring); }
       .story-entry-card:focus-visible::before { inset: 3px; }
@@ -1496,6 +1499,12 @@
                 <span class="story-card-content">
                   <span class="story-card-heading">STORY</span>
                   <span class="story-card-chapter" id="story-current-chapter">챕터 이름 미정</span>
+                </span>
+              </button>
+              <button class="story-entry-card materials-entry-card" id="materials-entry-card" type="button" aria-label="MATERIALS · 캐릭터 강화에 필요한 재료를 얻어 아군을 성장 시키세요.">
+                <span class="story-card-content">
+                  <span class="story-card-heading">MATERIALS</span>
+                  <span class="story-card-description">캐릭터 강화에 필요한 재료를 얻어 아군을 성장 시키세요.</span>
                 </span>
               </button>
             </section>
