@@ -565,7 +565,11 @@
       #game-preview .scenario-list .scenario-card[data-state="locked"] { cursor: pointer; }
       .story-preview-screen { position: relative; height: 100%; background: var(--surface-main); }
       .story-preview-top { position: absolute; top: 0; left: 0; right: 0; height: 140px; padding: 24px 28px; background: linear-gradient(to bottom, rgb(0 0 0 / 80%), rgb(0 0 0 / 35%) 55%, transparent); pointer-events: none; }
-      .story-preview-back { display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 1px solid #ffffff30; border-radius: 10px; background: #00000030; color: #eef1f7; cursor: pointer; pointer-events: auto; }
+      .story-preview-top { display: flex; align-items: flex-start; gap: 16px; }
+      .story-preview-titles { min-width: 0; padding-top: 1px; }
+      .story-preview-titles h2 { margin: 0; color: #eef1f7; font-size: 18px; font-weight: 600; line-height: 1.4; overflow-wrap: anywhere; }
+      .story-preview-titles p { margin: 5px 0 0; color: #aab2bf; font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }
+      .story-preview-back { display: grid; place-items: center; flex-shrink: 0; width: 40px; height: 40px; padding: 0; border: 1px solid #ffffff30; border-radius: 10px; background: #00000030; color: #eef1f7; cursor: pointer; pointer-events: auto; }
       .story-preview-back svg { width: 20px; height: 20px; }
       .story-preview-back:hover { background: #ffffff18; }
       .story-preview-back:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
@@ -651,6 +655,10 @@
                 <button class="story-preview-back" id="story-preview-back" type="button" aria-label="시나리오 목록으로 돌아가기" title="시나리오 목록으로 돌아가기">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 6-6 6 6 6" /></svg>
                 </button>
+                <div class="story-preview-titles">
+                  <h2 id="story-preview-title"></h2>
+                  <p id="story-preview-chapter"></p>
+                </div>
               </div>
             </section>
             <section class="battle-content" id="battle-content" aria-label="전투 콘텐츠" hidden>
@@ -2023,6 +2031,10 @@
         const card = event.target.closest('.scenario-card');
         if (!card) return;
         previewScenarioCard = card;
+        const chapter = previewChapters.find(item => item.id === selectedPreviewChapter);
+        const chapterWords = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
+        document.getElementById('story-preview-title').textContent = card.querySelector('.scenario-name')?.textContent || '시나리오';
+        document.getElementById('story-preview-chapter').textContent = chapter ? 'Chapter ' + (chapterWords[Number(chapter.id)] || chapter.id) + ' · ' + chapter.name : '';
         showGameView('story-preview');
         document.getElementById('story-preview-back').focus({ preventScroll: true });
       });
