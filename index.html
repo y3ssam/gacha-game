@@ -640,7 +640,7 @@
       .character-detail-screen { height: 100%; min-height: 0; display: flex; flex-direction: column; gap: 24px; padding: 24px 28px; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; }
       .character-detail-heading { display: flex; align-items: center; gap: 18px; flex-shrink: 0; flex-wrap: wrap; }
       .character-detail-heading h2 { margin: 0; font-size: 28px; font-weight: 650; overflow-wrap: anywhere; }
-      .character-detail-meta { display: flex; align-items: center; gap: 16px; }
+      .character-detail-meta { display: flex; flex-direction: column; align-items: flex-start; gap: 5px; }
       .character-detail-stars { display: flex; gap: 2px; }
       .character-detail-stars svg { width: 18px; height: 18px; }
       .character-detail-level { color: var(--text-secondary); font-size: 15px; white-space: nowrap; }
@@ -792,7 +792,7 @@
               <div class="character-detail-heading">
                 <button class="connection-back" id="character-detail-back" type="button" aria-label="캐릭터 목록으로 돌아가기" title="캐릭터 목록으로 돌아가기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 6-6 6 6 6" /></svg></button>
                 <h2 id="character-detail-name"></h2>
-                <div class="character-detail-meta"><span class="character-detail-stars" id="character-detail-stars"></span><span class="character-detail-level" id="character-detail-level"></span></div>
+                <div class="character-detail-meta"><span class="character-detail-level" id="character-detail-level"></span><span class="character-detail-stars" id="character-detail-stars"></span></div>
               </div>
               <div class="character-detail-body">
                 <div class="character-detail-illustration" id="character-detail-illustration" role="img" aria-label="캐릭터 일러스트 영역"></div>
