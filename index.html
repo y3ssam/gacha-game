@@ -578,6 +578,11 @@
       .story-dialogue-speaker { display: block; margin-bottom: 12px; color: var(--accent); font-size: 19px; font-weight: 600; }
       .story-dialogue-text { margin: 0; font-size: 18px; line-height: 1.9; white-space: pre-wrap; overflow-wrap: anywhere; }
       @media (max-width: 640px) { .story-dialogue-box { bottom: 20px; padding: 18px 20px; } .story-dialogue-speaker { font-size: 17px; margin-bottom: 10px; } .story-dialogue-text { font-size: 16px; line-height: 1.8; } }
+      .story-dialogue-box { cursor: pointer; padding-bottom: 44px; }
+      .story-dialogue-box:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 4px; }
+      .story-dialogue-next { position: absolute; right: 24px; bottom: 15px; color: var(--accent); font-size: 18px; line-height: 1; pointer-events: none; animation: dialogue-next-blink 1.1s ease-in-out infinite; }
+      @keyframes dialogue-next-blink { 0%, 100% { opacity: 1; } 50% { opacity: .2; } }
+      @media (prefers-reduced-motion: reduce) { .story-dialogue-next { animation: none; } }
     </style>
   </head>
   <body>
@@ -666,9 +671,10 @@
                 </div>
                 </div>
               </div>
-              <div class="story-dialogue-box" role="region" aria-label="시나리오 텍스트">
+              <div class="story-dialogue-box" id="story-dialogue-box" role="button" tabindex="0" aria-label="시나리오 텍스트 · 클릭하여 문장 완성 또는 다음 문장">
                 <span class="story-dialogue-speaker" id="story-dialogue-speaker">내레이션</span>
                 <p class="story-dialogue-text" id="story-dialogue-text">낯선 바람이 조용히 스쳐 지나간다. 눈앞에 펼쳐진 풍경 너머로, 아직 알지 못하는 이야기가 기다리고 있었다.</p>
+                <span class="story-dialogue-next" id="story-dialogue-next" aria-hidden="true" hidden>▼</span>
               </div>
             </section>
             <section class="battle-content" id="battle-content" aria-label="전투 콘텐츠" hidden>
@@ -1935,6 +1941,7 @@
         }
         const isSubscreen = isBattle || isScenarios || isChapters || isStoryPreview;
         const game = document.getElementById('game-preview');
+        if (game.dataset.view === 'story-preview' && !isStoryPreview) stopDialogueTyping();
         game.dataset.view = isStoryPreview ? 'story-preview' : isChapters ? 'chapters' : isScenarios ? 'scenarios' : isBattle ? 'battle' : 'home';
         game.setAttribute('aria-label', isStoryPreview ? '시나리오 미리보기' : isChapters ? '챕터 목록 화면' : isScenarios ? '시나리오 목록 화면' : isBattle ? '전투 화면' : '게임 메인 화면');
         const menu = document.querySelector('.game-bottom-menu');
@@ -2046,11 +2053,72 @@
         document.getElementById('story-preview-title').textContent = card.querySelector('.scenario-name')?.textContent || '시나리오';
         document.getElementById('story-preview-chapter').textContent = chapter ? 'Chapter ' + (chapterWords[Number(chapter.id)] || chapter.id) + ' · ' + chapter.name : '';
         showGameView('story-preview');
+        startDialoguePreview();
         document.getElementById('story-preview-back').focus({ preventScroll: true });
       });
       document.getElementById('story-preview-back').addEventListener('click', () => {
         showGameView('scenarios');
         previewScenarioCard?.focus({ preventScroll: true });
+      });
+      const dialoguePreviewLines = [
+        '낯선 바람이 조용히 스쳐 지나간다.',
+        '눈앞에 펼쳐진 풍경 너머로, 아직 알지 못하는 이야기가 기다리고 있었다.',
+        '멀리서 누군가의 발소리가 들려왔다. 나는 천천히 고개를 돌렸다.',
+      ];
+      let dialogueLineIndex = 0;
+      let dialogueCharacters = [];
+      let dialogueCharacterIndex = 0;
+      let dialogueTypingTimer = null;
+      let dialogueIsTyping = false;
+      function stopDialogueTyping() {
+        clearInterval(dialogueTypingTimer);
+        dialogueTypingTimer = null;
+        dialogueIsTyping = false;
+      }
+      function finishDialogueLine() {
+        stopDialogueTyping();
+        document.getElementById('story-dialogue-text').textContent = dialogueCharacters.join('');
+        document.getElementById('story-dialogue-next').hidden = false;
+      }
+      function typeDialogueLine() {
+        stopDialogueTyping();
+        const text = dialoguePreviewLines[dialogueLineIndex];
+        dialogueCharacters = typeof Intl.Segmenter === 'function'
+          ? Array.from(new Intl.Segmenter('ko', { granularity: 'grapheme' }).segment(text), part => part.segment)
+          : Array.from(text);
+        dialogueCharacterIndex = 0;
+        const body = document.getElementById('story-dialogue-text');
+        body.textContent = '';
+        document.getElementById('story-dialogue-next').hidden = true;
+        document.getElementById('story-dialogue-box').scrollTop = 0;
+        dialogueIsTyping = true;
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) { finishDialogueLine(); return; }
+        dialogueTypingTimer = setInterval(() => {
+          dialogueCharacterIndex++;
+          body.textContent = dialogueCharacters.slice(0, dialogueCharacterIndex).join('');
+          if (dialogueCharacterIndex >= dialogueCharacters.length) finishDialogueLine();
+        }, 40);
+      }
+      function startDialoguePreview() {
+        dialogueLineIndex = 0;
+        typeDialogueLine();
+      }
+      function advanceDialogue() {
+        if (dialogueIsTyping) { finishDialogueLine(); return; }
+        if (dialogueLineIndex < dialoguePreviewLines.length - 1) {
+          dialogueLineIndex++;
+          typeDialogueLine();
+        } else {
+          showGameView('scenarios');
+          previewScenarioCard?.focus({ preventScroll: true });
+        }
+      }
+      document.getElementById('story-dialogue-box').addEventListener('click', advanceDialogue);
+      document.getElementById('story-dialogue-box').addEventListener('keydown', event => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          if (!event.repeat) advanceDialogue();
+        }
       });
     </script>
   </body>
