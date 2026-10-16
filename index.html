@@ -963,6 +963,17 @@
       .character-equipment-stat-bonus { margin-left: 5px; color: var(--accent); font-size: 14px; white-space: nowrap; }
       .equipment-sheet { display: grid; gap: 14px; }
       .equipment-sheet-name { margin: 0; font-size: 16px; font-weight: 600; line-height: 1.5; overflow-wrap: anywhere; }
+      .equipment-rarity-stars { display: flex; justify-content: center; flex: none; gap: 1px; color: var(--equipment-rarity-color); line-height: 1; }
+      .equipment-rarity-stars svg { width: 10px; height: 10px; flex: none; }
+      .inventory-item[data-rarity], .character-equipment-choice[data-rarity] { border-top: 3px solid var(--equipment-rarity-color); }
+      button.inventory-item[data-rarity]:hover, .inventory-item[data-rarity][aria-pressed="true"], .character-equipment-choice[data-rarity][aria-pressed="true"] { border-top-color: var(--equipment-rarity-color); }
+      .inventory-item .equipment-rarity-stars { height: 10px; }
+      .character-equipment-choice .equipment-rarity-stars { position: absolute; top: 10px; left: 10px; }
+      .character-equipment-slot[data-rarity] { border-top: 3px solid var(--equipment-rarity-color); }
+      .character-equipment-slot .equipment-rarity-stars { position: absolute; inset: auto; top: 12px; right: 10px; display: flex; padding: 0; color: var(--equipment-rarity-color); }
+      .character-equipment-slot .equipment-rarity-stars svg { width: 9px; height: 9px; }
+      .equipment-sheet-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px 12px; }
+      .equipment-sheet[data-rarity] .equipment-sheet-icon { border-color: var(--equipment-rarity-color); }
       .equipment-sheet-main { display: grid; grid-template-columns: 72px minmax(0, 1fr); align-items: center; gap: 16px; }
       .equipment-sheet-icon { position: relative; display: grid; place-items: center; width: 72px; aspect-ratio: 1; padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-active); }
       .equipment-sheet-icon .character-equipment-icon svg { width: 40px; height: 40px; }
@@ -3361,10 +3372,11 @@
           const tile = document.createElement(equipment ? 'button' : 'div'); tile.className = 'inventory-item';
           const name = document.createElement('span'); name.className = 'inventory-item-name'; name.textContent = equipment ? entry.item.name : entry.name;
           if (equipment) {
+            applyEquipmentRarity(tile, entry.item);
             tile.type = 'button'; tile.dataset.inventoryItem = entry.key; tile.setAttribute('aria-pressed', String(inventoryState.selectedEquipment === entry.key));
-            tile.setAttribute('aria-label', equipmentDisplayName(entry.item) + (entry.equipped ? ' · 착용 중' : '') + ' · 옵션 보기');
+            tile.setAttribute('aria-label', equipmentDisplayName(entry.item) + ' · ' + getEquipmentRarity(entry.item) + '성' + (entry.equipped ? ' · 착용 중' : '') + ' · 옵션 보기');
             const stage = document.createElement('span'); stage.className = 'inventory-item-stage'; stage.textContent = '+' + entry.item.enhancement;
-            tile.append(stage, createEquipmentIcon(entry.item.type));
+            tile.append(stage, createEquipmentIcon(entry.item.type), createEquipmentStars(entry.item));
             if (entry.equipped) { const badge = document.createElement('span'); badge.className = 'inventory-item-equipped'; badge.textContent = '착용'; tile.append(badge); }
             tile.addEventListener('click', () => {
               inventoryState.selectedEquipment = entry.key;
@@ -3889,6 +3901,20 @@
         return item;
       }
       function equipmentDisplayName(item) { return item.name + ' +' + item.enhancement; }
+      function getEquipmentRarity(item) { return [3, 4, 5].includes(Number(item.rarity)) ? Number(item.rarity) : 3; }
+      function applyEquipmentRarity(element, item) {
+        const rarity = getEquipmentRarity(item);
+        element.dataset.rarity = rarity;
+        element.style.setProperty('--equipment-rarity-color', { 3: '#858b95', 4: '#b18ae5', 5: '#e8c56c' }[rarity]);
+      }
+      function createEquipmentStars(item) {
+        const stars = document.createElement('span'); stars.className = 'equipment-rarity-stars'; stars.setAttribute('role', 'img'); stars.setAttribute('aria-label', getEquipmentRarity(item) + '성');
+        for (let index = 0; index < getEquipmentRarity(item); index++) {
+          const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('fill', 'currentColor'); svg.setAttribute('aria-hidden', 'true');
+          const path = document.createElementNS('http://www.w3.org/2000/svg', 'path'); path.setAttribute('d', 'm12 2 3.1 6.3L22 9.3l-5 4.9 1.2 6.8-6.2-3.2L5.8 21 7 14.2 2 9.3l6.9-1Z'); svg.append(path); stars.append(svg);
+        }
+        return stars;
+      }
       function describeEquipmentOptions(item) {
         return '주 옵션: ' + describeEquipmentStats({ [item.mainOption.key]: item.mainOption.value }) + '\n서브 옵션 (' + item.subOptions.length + '/4)\n' + item.subOptions.map(option => describeEquipmentStats({ [option.key]: option.value })).join('\n');
       }
@@ -3897,7 +3923,9 @@
       }
       function createEquipmentSheet(item, enhancement = false) {
         const sheet = document.createElement('div'); sheet.className = 'equipment-sheet';
-        const name = document.createElement('h3'); name.className = 'equipment-sheet-name'; name.textContent = item.name; sheet.append(name);
+        applyEquipmentRarity(sheet, item);
+        const heading = document.createElement('div'); heading.className = 'equipment-sheet-heading';
+        const name = document.createElement('h3'); name.className = 'equipment-sheet-name'; name.textContent = item.name; heading.append(name, createEquipmentStars(item)); sheet.append(heading);
         const maxed = item.enhancement >= equipmentEnhancementRules.maxLevel;
         if (enhancement) {
           const level = document.createElement('div'); level.className = 'equipment-sheet-level';
@@ -3979,11 +4007,11 @@
           // 실제 인벤토리·저장 연동 전의 캐릭터별 화면 확인용 장비입니다.
           previewCharacterEquipment.set(card, {
             selectedType: 'weapon', equipped: {},
-            items: characterEquipmentTypes.flatMap(type => type.examples.map((name, index) => {
+            items: characterEquipmentTypes.flatMap((type, typeIndex) => type.examples.map((name, index) => {
               const base = { weapon: { attack: 40 }, armor: { hp: 300 }, gloves: { attack: 20 }, shoes: { speed: 5 }, ring: { defense: 20 }, necklace: { hp: 150 } }[type.id];
               const [key, value] = Object.entries(base)[0];
               const subKeys = Object.keys(equipmentEnhancementRules.gains).filter(option => option !== key).slice(0, index === 0 ? 1 : 4);
-              return refreshEquipmentOptionStats({ id: type.id + '-' + index, type: type.id, name, setId: index === 0 ? 'guard' : 'assault', enhancement: 0,
+              return refreshEquipmentOptionStats({ id: type.id + '-' + index, type: type.id, name, rarity: 3 + (typeIndex + index) % 3, setId: index === 0 ? 'guard' : 'assault', enhancement: 0,
                 mainOption: { key, value: value * (index + 1) }, subOptions: subKeys.map(key => ({ key, value: equipmentEnhancementRules.gains[key] })) });
             })),
           });
@@ -4051,11 +4079,13 @@
         characterEquipmentTypes.forEach(type => {
           const item = state.items.find(item => item.id === state.equipped[type.id]);
           const button = document.createElement('button'); button.type = 'button'; button.className = 'character-equipment-slot'; button.dataset.equipmentType = type.id;
-          button.setAttribute('aria-label', type.name + ' · ' + (item ? equipmentDisplayName(item) : '미장착') + (item ? ' · 우클릭으로 강화, 교체 또는 해제' : ' · 클릭하여 장착'));
+          button.setAttribute('aria-label', type.name + ' · ' + (item ? equipmentDisplayName(item) + ' · ' + getEquipmentRarity(item) + '성' : '미장착') + (item ? ' · 우클릭으로 강화, 교체 또는 해제' : ' · 클릭하여 장착'));
           if (item) button.setAttribute('aria-haspopup', 'menu');
           const name = document.createElement('strong'); name.textContent = type.name;
           const equipped = document.createElement('span'); equipped.textContent = item ? equipmentDisplayName(item) : '미장착';
-          button.append(name, equipped); slots.append(button);
+          button.append(name, equipped);
+          if (item) { applyEquipmentRarity(button, item); button.append(createEquipmentStars(item)); }
+          slots.append(button);
         });
         const stats = document.getElementById('character-equipment-stats'); stats.replaceChildren();
         const total = getCharacterEquipmentTotalStats(card);
@@ -4109,10 +4139,11 @@
         items.forEach(item => {
           const equipped = state.equipped[item.type] === item.id;
           const row = document.createElement('button'); row.type = 'button'; row.className = 'character-equipment-item character-equipment-choice'; row.dataset.equipmentId = item.id; row.dataset.equipped = String(equipped);
+          applyEquipmentRarity(row, item);
           row.setAttribute('aria-pressed', String(state.selectedItemId === item.id));
-          row.setAttribute('aria-label', item.name + (equipped ? ' · 장착 중' : ''));
+          row.setAttribute('aria-label', item.name + ' · ' + getEquipmentRarity(item) + '성' + (equipped ? ' · 장착 중' : ''));
           const name = document.createElement('strong'); name.textContent = equipmentDisplayName(item);
-          row.append(createEquipmentIcon(item.type), name); list.append(row);
+          row.append(createEquipmentIcon(item.type), name, createEquipmentStars(item)); list.append(row);
         });
         if (!items.length) { const empty = document.createElement('p'); empty.className = 'character-awakening-note'; empty.textContent = '보유한 ' + type.name + ' 장비가 없습니다.'; list.append(empty); }
         renderSelectedEquipment(card);
