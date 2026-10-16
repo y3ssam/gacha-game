@@ -453,7 +453,7 @@
       .game-stage { flex: 1; min-height: 0; }
       #game-preview { position: relative; }
       .game-bottom-menu { position: absolute; bottom: 0; left: 0; right: 0; z-index: 2; display: flex; justify-content: center; gap: 12px; min-height: 72px; padding: 12px 28px; border-top: 1px solid var(--border); background: var(--surface-sidebar); transform: translateY(0); visibility: visible; transition: transform 280ms ease, visibility 0s; }
-      #game-preview[data-view="battle"] .game-bottom-menu { transform: translateY(100%); visibility: hidden; pointer-events: none; transition: transform 280ms ease, visibility 0s 280ms; }
+      #game-preview:is([data-view="battle"], [data-view="scenarios"]) .game-bottom-menu { transform: translateY(100%); visibility: hidden; pointer-events: none; transition: transform 280ms ease, visibility 0s 280ms; }
       #game-preview[data-view="home"] .game-stage { padding-bottom: 72px; }
       @media (max-width: 640px) { #game-preview[data-view="home"] .game-stage { padding-bottom: 84px; } }
       @media (prefers-reduced-motion: reduce) { .game-bottom-menu, #game-preview[data-view="battle"] .game-bottom-menu { transition: none; } }
@@ -513,6 +513,27 @@
       .story-entry-card:focus-visible { outline: none; background: var(--focus-ring); }
       .story-entry-card:focus-visible::before { inset: 3px; }
       @media (max-width: 640px) { .battle-content { padding: 24px 5%; } .story-entry-card { width: 36%; min-width: 150px; } .story-card-content { padding-top: 28px; gap: 2.5px; } }
+      .game-frame[data-screen="game"] .content, #game-preview { overflow: clip; }
+      .game-stage { overflow: clip; }
+      .scenario-screen { height: 100%; min-height: 0; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: var(--border) transparent; padding: 28px 5% 32px; }
+      .scenario-heading { display: flex; align-items: center; gap: 16px; margin: 0 auto 24px; max-width: 960px; }
+      .scenario-heading h2 { margin: 0; font-size: 20px; font-weight: 600; overflow-wrap: anywhere; }
+      .scenario-heading p { margin: 6px 0 0; color: var(--text-secondary); font-size: 12px; }
+      .scenario-list { display: grid; gap: 14px; max-width: 960px; margin-inline: auto; }
+      .scenario-card { --scenario-accent: var(--accent); display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; align-items: center; gap: 22px; width: 100%; min-height: 100px; padding: 20px 24px; border: 1px solid var(--border); border-left: 3px solid var(--scenario-accent); border-radius: 10px; background: var(--surface-hover); color: var(--text-primary); font: inherit; text-align: left; }
+      .scenario-number { color: var(--scenario-accent); font-size: 28px; font-weight: 600; font-variant-numeric: tabular-nums; text-align: center; }
+      .scenario-info { min-width: 0; }
+      .scenario-name { display: block; font-size: 15px; font-weight: 600; overflow-wrap: anywhere; }
+      .scenario-description { display: block; margin-top: 8px; color: var(--text-secondary); font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; }
+      .scenario-status { color: var(--scenario-accent); font-size: 12px; font-weight: 600; white-space: nowrap; }
+      .scenario-card[data-state="completed"] { --scenario-accent: #9bd8a9; }
+      .scenario-card[data-state="new"] { --scenario-accent: #ffb477; }
+      .scenario-card[data-state="locked"] { --scenario-accent: #737985; background: #1b1e24; border-color: #30333b; color: #858a94; cursor: not-allowed; }
+      .scenario-card[data-state="locked"] .scenario-description { color: #757b85; }
+      .scenario-card:enabled { cursor: pointer; }
+      .scenario-card:enabled:hover { border-color: var(--scenario-accent); }
+      .scenario-card:focus-visible { outline: 2px solid var(--scenario-accent); outline-offset: 3px; }
+      @media (max-width: 640px) { .scenario-screen { padding-block: 20px; } .scenario-card { grid-template-columns: 36px minmax(0, 1fr); gap: 12px; padding: 16px 14px; } .scenario-number { font-size: 22px; } .scenario-status { grid-column: 2; } .scenario-heading h2 { font-size: 17px; } }
     </style>
   </head>
   <body>
@@ -596,6 +617,19 @@
                   <span class="story-card-chapter" id="story-current-chapter">챕터 이름 미정</span>
                 </span>
               </button>
+            </section>
+            <section class="scenario-screen" id="scenario-screen" aria-labelledby="scenario-chapter-title" hidden>
+              <div class="scenario-heading">
+                <button class="connection-back" id="scenario-back" type="button" aria-label="챕터 카드로 돌아가기" title="챕터 카드로 돌아가기">◀</button>
+                <div><h2 id="scenario-chapter-title" tabindex="-1">챕터 이름 미정</h2><p>시나리오 목록 · 미리보기</p></div>
+              </div>
+              <div class="scenario-list" aria-label="시나리오 목록">
+                <button class="scenario-card" data-state="completed" type="button"><span class="scenario-number">01</span><span class="scenario-info"><span class="scenario-name">낯선 세계의 시작</span><span class="scenario-description">눈앞에 펼쳐진 풍경을 살피며 첫 발걸음을 내딛습니다.</span></span><span class="scenario-status">✓ 클리어</span></button>
+                <button class="scenario-card" data-state="completed" type="button"><span class="scenario-number">02</span><span class="scenario-info"><span class="scenario-name">첫 번째 만남</span><span class="scenario-description">길 위에서 만난 인물과 함께 새로운 단서를 찾습니다.</span></span><span class="scenario-status">✓ 클리어</span></button>
+                <button class="scenario-card" data-state="new" type="button"><span class="scenario-number">03</span><span class="scenario-info"><span class="scenario-name">갈림길의 약속</span><span class="scenario-description">서로 다른 길 앞에서 앞으로의 여정을 결정합니다.</span></span><span class="scenario-status">NEW · 새로 열림</span></button>
+                <button class="scenario-card" data-state="locked" type="button" disabled><span class="scenario-number">04</span><span class="scenario-info"><span class="scenario-name">경계 너머의 흔적</span><span class="scenario-description">이전 시나리오를 완료하면 열립니다.</span></span><span class="scenario-status">잠김</span></button>
+                <button class="scenario-card" data-state="locked" type="button" disabled><span class="scenario-number">05</span><span class="scenario-info"><span class="scenario-name">이야기의 다음 장</span><span class="scenario-description">이전 시나리오를 완료하면 열립니다.</span></span><span class="scenario-status">잠김</span></button>
+              </div>
             </section>
           </div>
           <nav class="game-bottom-menu" aria-label="게임 메뉴">
@@ -1821,18 +1855,21 @@
       document.addEventListener('visibilitychange', () => { if (!document.hidden) updateGameEnergy(); });
       function showGameView(view) {
         const isBattle = view === 'battle';
+        const isScenarios = view === 'scenarios';
+        const isSubscreen = isBattle || isScenarios;
         const game = document.getElementById('game-preview');
-        game.dataset.view = isBattle ? 'battle' : 'home';
-        game.setAttribute('aria-label', isBattle ? '전투 화면' : '게임 메인 화면');
+        game.dataset.view = isScenarios ? 'scenarios' : isBattle ? 'battle' : 'home';
+        game.setAttribute('aria-label', isScenarios ? '시나리오 목록 화면' : isBattle ? '전투 화면' : '게임 메인 화면');
         const menu = document.querySelector('.game-bottom-menu');
-        menu.inert = isBattle;
-        menu.setAttribute('aria-hidden', String(isBattle));
+        menu.inert = isSubscreen;
+        menu.setAttribute('aria-hidden', String(isSubscreen));
         const homeButton = document.getElementById('game-home');
         homeButton.hidden = false;
-        homeButton.disabled = !isBattle;
-        homeButton.setAttribute('aria-hidden', String(!isBattle));
-        document.getElementById('game-stage').setAttribute('aria-label', isBattle ? '전투 화면' : '메인 화면');
+        homeButton.disabled = !isSubscreen;
+        homeButton.setAttribute('aria-hidden', String(!isSubscreen));
+        document.getElementById('game-stage').setAttribute('aria-label', isScenarios ? '시나리오 목록 화면' : isBattle ? '전투 화면' : '메인 화면');
         document.getElementById('battle-content').hidden = !isBattle;
+        document.getElementById('scenario-screen').hidden = !isScenarios;
       }
       document.getElementById('game-battle').addEventListener('click', () => {
         showGameView('battle');
@@ -1841,6 +1878,16 @@
       document.getElementById('game-home').addEventListener('click', () => {
         showGameView('home');
         document.getElementById('game-battle').focus({ preventScroll: true });
+      });
+      document.getElementById('story-entry-card').addEventListener('click', () => {
+        document.getElementById('scenario-chapter-title').textContent = document.getElementById('story-current-chapter').textContent;
+        showGameView('scenarios');
+        document.getElementById('scenario-screen').scrollTop = 0;
+        document.getElementById('scenario-back').focus({ preventScroll: true });
+      });
+      document.getElementById('scenario-back').addEventListener('click', () => {
+        showGameView('battle');
+        document.getElementById('story-entry-card').focus({ preventScroll: true });
       });
     </script>
   </body>
