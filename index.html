@@ -3098,7 +3098,7 @@
         const levels = getCharacterSkillLevels(card); const names = getCharacterSkillNames(card);
         const types = { basic: '기본 스킬', active: '액티브', ultimate: '궁극기', passive: '패시브' };
         const eligible = Object.keys(types).filter(key => levels[key] < skillUpgradeRules.maxLevel);
-        document.getElementById('skill-upgrade-note').textContent = card.querySelector('.character-card-name').textContent + ' · ' + element + ' 속성\n강화 가능한 스킬 중 하나가 무작위로 1레벨 오릅니다. 최대 레벨인 스킬은 제외됩니다.';
+        document.getElementById('skill-upgrade-note').textContent = card.querySelector('.character-card-name').textContent + ' · ' + element + ' 속성';
         const targets = document.getElementById('skill-upgrade-targets'); targets.replaceChildren();
         Object.entries(types).forEach(([key, type]) => {
           const row = document.createElement('div'); row.className = 'skill-upgrade-target'; row.dataset.eligible = String(levels[key] < skillUpgradeRules.maxLevel);
