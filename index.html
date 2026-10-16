@@ -542,6 +542,18 @@
       .chapter-progress progress::-webkit-progress-bar { background: var(--border); border-radius: 999px; }
       .chapter-progress progress::-webkit-progress-value { background: var(--scenario-accent); border-radius: 999px; }
       .chapter-progress progress::-moz-progress-bar { background: var(--scenario-accent); border-radius: 999px; }
+      #game-preview[data-view="chapters"] .chapter-card,
+      #game-preview[data-view="scenarios"] .scenario-list .scenario-card {
+        animation: list-card-enter 500ms cubic-bezier(.22, 1, .36, 1) both;
+      }
+      @keyframes list-card-enter {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #game-preview[data-view="chapters"] .chapter-card,
+        #game-preview[data-view="scenarios"] .scenario-list .scenario-card { animation: none; }
+      }
     </style>
   </head>
   <body>
