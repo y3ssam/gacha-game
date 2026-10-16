@@ -672,6 +672,20 @@
       .character-skill-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
       .character-skill-level { color: var(--accent); font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; }
       .character-skill .character-growth-button:disabled { border-color: var(--border); background: var(--surface-active); color: var(--text-secondary); cursor: default; }
+      .character-awakening { display: grid; gap: 20px; padding: 2px 12px 12px 0; }
+      .character-awakening-heading { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+      .character-awakening-heading h3 { margin: 0; font-size: 18px; font-weight: 600; }
+      .character-awakening-stage { color: var(--accent); font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+      .character-awakening-note { margin: 0; color: var(--text-secondary); font-size: 13px; line-height: 1.8; word-break: keep-all; overflow-wrap: anywhere; }
+      .character-awakening-track { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 6px; margin: 0; padding: 0; list-style: none; }
+      .character-awakening-track li { display: grid; place-items: center; min-height: 42px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-sidebar); color: var(--text-secondary); font-size: 13px; font-variant-numeric: tabular-nums; }
+      .character-awakening-track li[data-unlocked="true"] { color: var(--accent); border-color: var(--accent); background: var(--surface-active); }
+      .character-awakening-effects-heading { margin: 0; font-size: 16px; font-weight: 600; }
+      .character-awakening-effects { display: grid; margin: -8px 0 0; }
+      .character-awakening-effects > div { padding: 16px 0; border-bottom: 1px solid var(--border); }
+      .character-awakening-effects dt { margin-bottom: 8px; font-size: 14px; font-weight: 600; }
+      .character-awakening-effects dd { margin: 0; color: var(--text-secondary); font-size: 13px; line-height: 1.7; }
+      @container (max-width: 650px) { .character-awakening-track { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
       .character-info-exp { display: grid; gap: 8px; }
       .character-info-exp-label { display: flex; justify-content: space-between; gap: 12px; color: var(--text-secondary); font-size: 12px; }
       .character-info-exp progress { display: block; width: 100%; height: 6px; border: 0; border-radius: 999px; overflow: hidden; background: var(--border); accent-color: var(--accent); }
@@ -894,7 +908,20 @@
                     </article>
                   </div>
                 </div>
-                <div class="character-detail-panel" id="character-panel-awakening" role="tabpanel" aria-labelledby="character-tab-awakening" tabindex="0" hidden></div>
+                <div class="character-detail-panel" id="character-panel-awakening" role="tabpanel" aria-labelledby="character-tab-awakening" tabindex="0" hidden>
+                  <div class="character-awakening">
+                    <div class="character-awakening-heading"><h3>각성 단계</h3><span class="character-awakening-stage" id="character-awakening-stage" aria-live="polite">0 / 10</span></div>
+                    <p class="character-awakening-note">소환에서 동일한 캐릭터를 다시 획득하면 자동으로 각성이 1단계 올라갑니다. 최초 획득 시 0단계이며, 최대 10단계까지 각성할 수 있습니다.</p>
+                    <ol class="character-awakening-track" id="character-awakening-track" aria-label="각성 단계 진행 현황"></ol>
+                    <p class="character-awakening-note" id="character-awakening-status"></p>
+                    <h3 class="character-awakening-effects-heading">스킬 강화 효과</h3>
+                    <dl class="character-awakening-effects">
+                      <div><dt>기본 스킬</dt><dd>각성에 따른 기본 스킬 강화 효과가 여기에 표시됩니다.</dd></div>
+                      <div><dt>패시브 스킬</dt><dd>각성에 따른 패시브 스킬 강화 효과가 여기에 표시됩니다.</dd></div>
+                      <div><dt>궁극기</dt><dd>각성에 따른 궁극기 강화 효과가 여기에 표시됩니다.</dd></div>
+                    </dl>
+                  </div>
+                </div>
                 <div class="character-detail-panel" id="character-panel-outfits" role="tabpanel" aria-labelledby="character-tab-outfits" tabindex="0" hidden></div>
                 <div class="character-detail-panel" id="character-panel-affinity" role="tabpanel" aria-labelledby="character-tab-affinity" tabindex="0" hidden></div>
                 <div class="character-detail-panel" id="character-panel-profile" role="tabpanel" aria-labelledby="character-tab-profile" tabindex="0" hidden></div>
@@ -2529,6 +2556,8 @@
         selectCharacterTab(document.getElementById('character-tab-info'));
         renderCharacterInfo(card);
         renderCharacterSkills(card);
+        renderCharacterAwakening(card);
+        document.getElementById('character-panel-awakening').scrollTop = 0;
         document.getElementById('character-panel-skills').scrollTop = 0;
         const name = card.querySelector('.character-card-name').textContent;
         document.getElementById('character-detail-name').textContent = name;
@@ -2620,6 +2649,35 @@
       document.querySelectorAll('.character-skill').forEach(skill => {
         skill.querySelector('button').addEventListener('click', () => upgradeCharacterSkill(selectedCharacterCard, skill.dataset.skill));
       });
+      function getCharacterAwakeningStage(card) {
+        return Math.min(10, Math.max(0, Math.floor(Number(card.dataset.awakeningStage) || 0)));
+      }
+      function renderCharacterAwakening(card) {
+        const stage = getCharacterAwakeningStage(card);
+        document.getElementById('character-awakening-stage').textContent = stage + ' / 10';
+        document.getElementById('character-awakening-status').textContent = stage >= 10
+          ? '최대 각성 단계에 도달했습니다.'
+          : '다음 각성: ' + (stage + 1) + '단계 · 동일 캐릭터 1회 추가 획득';
+        const track = document.getElementById('character-awakening-track');
+        track.replaceChildren();
+        for (let index = 1; index <= 10; index++) {
+          const step = document.createElement('li');
+          step.textContent = String(index);
+          step.dataset.unlocked = String(index <= stage);
+          step.setAttribute('aria-label', index + '단계 · ' + (index <= stage ? '각성 완료' : '미해금'));
+          if (index === stage) step.setAttribute('aria-current', 'step');
+          track.append(step);
+        }
+      }
+      // 향후 소환의 중복 캐릭터 판정 후 호출할 연결 지점입니다.
+      // 스킬 강화 수치 및 실제 소환·저장 데이터는 추후 연결합니다.
+      function applyCharacterDuplicate(card) {
+        if (!card) return;
+        const stage = Math.min(10, getCharacterAwakeningStage(card) + 1);
+        card.dataset.awakeningStage = String(stage);
+        if (card === selectedCharacterCard) renderCharacterAwakening(card);
+        return stage;
+      }
       function selectCharacterTab(selected) {
         document.querySelectorAll('.character-detail-action').forEach(tab => {
           const active = tab === selected;
