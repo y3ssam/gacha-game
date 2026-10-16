@@ -6,9 +6,9 @@
 
 - 밝은 바깥 배경과 중앙의 다크 게임 프레임
 - 이미지 모델 연결 화면: API KEY, 이름, NovelAI 모델 선택 (V5·V4.5·V4 Full/Curated, Anime V3, Furry V3)
-- 이미지 모델의 프롬프트 접두사·접미사·네거티브 접두사 입력, 단계·가이던스·리스케일의 슬라이더/숫자 연동, UC 프리셋·퀄리티 태그 선택과 이미지 테스트 버튼을 배치했습니다. 이미지 설정 저장과 실제 이미지 테스트 요청은 아직 구현하지 않았습니다.
-- 이미지 옵션의 현재 UI 범위/기본값: 단계 1~50/28, 가이던스 0~10/5, 리스케일 0~1/0, UC None, 퀄리티 Standard입니다. 실제 API 연동 시 모델별 지원 범위와 프리셋을 검증해야 합니다.
-- 이미지 모델 목록은 [NovelAI 공식 모델 문서](https://docs.novelai.net/en/image/models/)의 현재 모델 섹션 기준입니다. 선택 값은 화면용 식별자이며 실제 생성 API 연결·모델 ID 매핑은 아직 구현하지 않았습니다. 공식 이미지 생성 주소를 사용할 예정이므로 URL 입력 칸은 없습니다.
+- 이미지 모델의 프롬프트 접두사·접미사·네거티브 접두사 입력, 단계·가이던스·리스케일의 슬라이더/숫자 연동, UC 프리셋·퀄리티 태그 선택과 이미지 테스트 버튼을 배치했습니다. 실제 이미지 테스트 요청, 썸네일과 원본 크기 오버레이를 연결했습니다. 이미지 설정 저장은 아직 구현하지 않았습니다.
+- 이미지 옵션의 현재 UI 범위/기본값: 단계 1~50/28, 가이던스 0~10/5, 리스케일 0~1/0, UC None, 퀄리티 Standard입니다. 모델별 미지원 UC·퀄리티 옵션은 선택할 수 없으며 서버에서도 검증합니다.
+- 이미지 모델 목록은 [NovelAI 공식 모델 문서](https://docs.novelai.net/en/image/models/)의 현재 모델 섹션 기준입니다. 선택 값을 실제 API 모델 ID로 매핑합니다. `https://image.novelai.net/ai/generate-image` 공식 주소만 사용하므로 URL 입력 칸은 없습니다.
 - 왼쪽 설정 메뉴, 텍스트·이미지 모델 탭, 연결 입력 화면과 뒤로가기
 - 텍스트 모델의 Vertex AI 서비스 계정 JSON 키, 이름, 리전, 모델 ID 입력
 - JSON 키의 프로젝트 ID와 선택한 리전·모델로 Gemini 요청 주소 자동 구성
@@ -19,7 +19,7 @@
 - 이름·리전·모델 ID와 JSON 키를 Windows 계정 암호화(DPAPI)로 PC에 저장
 - 저장한 연결을 다시 열어 키를 다시 입력하지 않고 연결 테스트
 
-이미지 모델 연결, 게임 생성, 게임 데이터 저장·내보내기·불러오기는 아직 구현하지 않았습니다. 이름은 연결 목록과 이후 게임 생성 화면에서 사용할 표시 이름이며, Google 인증에 사용하지 않습니다.
+이미지 모델 설정 저장, 게임 생성, 게임 데이터 저장·내보내기·불러오기는 아직 구현하지 않았습니다. 이름은 연결 목록과 이후 게임 생성 화면에서 사용할 표시 이름이며, Google 인증에 사용하지 않습니다.
 
 ## 로컬 실행 (Windows)
 
@@ -32,7 +32,22 @@
 
 추가 패키지 설치나 빌드가 필요하지 않습니다. 실행 창을 닫거나 Ctrl+C를 누르면 서버가 종료됩니다. 포트가 사용 중이면 기존 서버를 종료하거나 `PORT` 환경 변수로 다른 포트를 지정합니다.
 
-## 인증과 키 처리
+## NovelAI 이미지 테스트
++
++이미지 생성 모델을 선택한 뒤 NovelAI Persistent API Token과 모델·생성 옵션을 입력하고 **이미지 테스트**를 누릅니다.
++
++- 사용자 프롬프트 접두사 → `Spaghetti, eating spaghetti` → 접미사 순서로 합치고, 모델별 퀄리티 태그를 반영합니다.
++- 네거티브 접두사와 선택한 모델의 UC 프리셋을 함께 적용합니다.
++- 선택한 단계·가이던스·리스케일로 1024×1024 이미지 한 장을 요청합니다. 샘플러는 현재 `k_euler_ancestral`, 노이즈 스케줄은 `karras`로 고정입니다.
++- 생성 중 중복 클릭을 막고 자동 재시도하지 않습니다. 네트워크 중단·시간 초과가 발생해도 제공자 쪽에서 이미 생성 처리가 진행됐을 수 있으므로 확인 후 직접 다시 실행합니다.
++- 실제 모델 생성이므로 구독·Anlas 사용 조건이 적용됩니다.
++- 성공 시 썸네일을 표시합니다. 클릭하면 원본 1024×1024 CSS 픽셀로 오버레이를 열며, 작은 화면에서는 스크롤할 수 있습니다. 닫기 버튼 또는 Esc로 닫습니다.
++- 생성 실패 시 오류를 표시하고 이전 성공 이미지는 유지합니다. 뒤로가기·새 연결 추가 시 이미지를 비웁니다.
++- 이미지 토큰과 생성 결과는 현재 메모리에서만 사용하며 저장하지 않습니다. 이미지 연결 설정의 영구 저장은 아직 없습니다.
++- `novelai-presets.json`은 공식 공개 클라이언트의 모델 ID·UC/퀄리티 설정을 2026-10-16에 확인한 스냅샷입니다. 프리셋 문자열을 프롬프트에 직접 적용해 중복 자동 태그 적용을 피합니다.
++- 이미지 응답의 JSON·PNG·ZIP 형식을 처리하며 ZIP 파일을 디스크에 풀지 않습니다.
++
++## 인증과 키 처리
 
 - 지원 대상: Google Vertex AI의 Google Gemini `generateContent` API와 `service_account` 형식의 JSON 키.
 - Google Cloud 프로젝트의 결제 설정, Vertex AI API 활성화, 서비스 계정의 적절한 Vertex AI 권한이 필요합니다.
@@ -67,3 +82,5 @@ GitHub Pages에서는 화면을 확인할 수 있지만 서버 코드는 실행�
 - [Google 서비스 계정 OAuth 인증](https://developers.google.com/identity/protocols/oauth2/service-account)
 - [Vertex AI Gemini 시작하기](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/start/quickstart)
 - [모델별 리전과 엔드포인트](https://docs.cloud.google.com/gemini-enterprise-agent-platform/resources/locations)
+
+NovelAI 참고: [공식 이미지 API](https://image.novelai.net/docs/doc.json), [모델](https://docs.novelai.net/en/image/models/), [UC 프리셋](https://docs.novelai.net/en/image/undesiredcontent/), [퀄리티 태그](https://docs.novelai.net/en/image/qualitytags/). 이미지 API 검증은 모의 응답으로 실행하며 실계정 생성 검증과 구분합니다.

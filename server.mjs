@@ -1,4 +1,5 @@
 import http from 'node:http';
+import { testNovelAI, ImageTestError } from './novelai.mjs';
 import { createConnectionStore, StoreError } from './connection-store.mjs';
 import { readFile } from 'node:fs/promises';
 import { createPrivateKey, sign } from 'node:crypto';
@@ -161,7 +162,7 @@ async function readJson(req) {
   catch { throw new ConnectionError('올바른 JSON 요청이 필요합니다.', 'INVALID_JSON'); }
 }
 
-export function createAppServer({ testConnection = testVertexConnection, store = createConnectionStore() } = {}) {
+export function createAppServer({ testConnection = testVertexConnection, store = createConnectionStore(), testImage = testNovelAI } = {}) {
   let activeTests = 0;
   return http.createServer(async (req, res) => {
     try {
@@ -169,7 +170,7 @@ export function createAppServer({ testConnection = testVertexConnection, store =
       const hosts = new Set([`127.0.0.1:${port}`, `localhost:${port}`]);
       if (!hosts.has(req.headers.host)) return sendJson(res, 403, { ok: false, error: { code: 'FORBIDDEN_HOST', message: '로컬 주소로 접속해 주세요.' } });
       const route = new URL(req.url, `http://${req.headers.host}`).pathname;
-      if (route === '/api/connections' || route === '/api/connections/test') {
+      if (route === '/api/connections' || route === '/api/connections/test' || route === '/api/images/test') {
         const origin = req.headers.origin;
         if (origin && !new Set([`http://127.0.0.1:${port}`, `http://localhost:${port}`]).has(origin)) {
           return sendJson(res, 403, { ok: false, error: { code: 'FORBIDDEN_ORIGIN', message: '로컬 게임 화면에서만 테스트할 수 있습니다.' } });
@@ -196,8 +197,9 @@ export function createAppServer({ testConnection = testVertexConnection, store =
         res.on('close', onClose);
         try {
           const input = await readJson(req);
-          if (!input.credentials && input.id) input.credentials = (await store.get(input.id)).credentials;
-          const result = await testConnection(input, { signal: AbortSignal.any([controller.signal, AbortSignal.timeout(60000)]) });
+          const isImage = route === '/api/images/test';
+          if (!isImage && !input.credentials && input.id) input.credentials = (await store.get(input.id)).credentials;
+          const result = await (isImage ? testImage : testConnection)(input, { signal: AbortSignal.any([controller.signal, AbortSignal.timeout(isImage ? 180000 : 60000)]) });
           if (!res.destroyed) sendJson(res, 200, result);
         } finally {
           activeTests--;
@@ -212,14 +214,14 @@ export function createAppServer({ testConnection = testVertexConnection, store =
         res.writeHead(200, {
           'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store',
           'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer',
-          'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'self'",
+          'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data: blob:; base-uri 'none'; form-action 'none'; frame-ancestors 'self'",
         });
         res.end(req.method === 'HEAD' ? undefined : page);
         return;
       }
       sendJson(res, 404, { ok: false, error: { code: 'NOT_FOUND', message: '요청한 경로를 찾을 수 없습니다.' } });
     } catch (error) {
-      const known = error instanceof ConnectionError || error instanceof StoreError;
+      const known = error instanceof ConnectionError || error instanceof StoreError || error instanceof ImageTestError;
       if (!res.destroyed && !res.headersSent) sendJson(res, known ? error.status : 500, { ok: false, error: { code: known ? error.code : 'INTERNAL_ERROR', message: known ? error.message : '연결 테스트를 처리하지 못했습니다. 다시 시도해 주세요.' } });
     }
   });

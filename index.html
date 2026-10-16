@@ -244,6 +244,17 @@
       }
       .text-model-fields, .image-model-fields { display: grid; gap: 30px; min-width: 0; }
       .image-model-fields textarea.image-prompt-input { height: 104px; }
+      .image-test-result { margin-top: 4px; }
+      .image-thumbnail { display: block; width: min(100%, 240px); padding: 0; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--surface-sidebar); cursor: zoom-in; }
+      .image-thumbnail img { display: block; width: 100%; height: auto; }
+      .image-thumbnail:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 4px; }
+      .image-preview { width: 100vw; max-width: none; height: 100dvh; max-height: none; padding: 0; border: 0; background: #090d14f5; color: var(--text-primary, #eef1f7); }
+      .image-preview::backdrop { background: #000b; }
+      .image-preview-bar { position: absolute; top: 0; left: 0; right: 0; height: 64px; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; background: #10141bf5; z-index: 1; }
+      .image-preview-bar h2 { margin: 0; font-size: 15px; }
+      .image-preview-close { border: 1px solid #566273; border-radius: 999px; background: #242d3d; color: #eef1f7; padding: 8px 18px; font: inherit; cursor: pointer; }
+      .image-preview-scroll { position: absolute; inset: 64px 0 0; overflow: auto; }
+      .image-preview-scroll img { display: block; width: 1024px; height: 1024px; max-width: none; margin: 24px auto; }
       .image-slider-row { display: grid; grid-template-columns: minmax(0, 1fr) 84px; align-items: center; gap: 18px; }
       .image-slider { width: 100%; min-width: 0; min-height: 32px; margin: 0; accent-color: var(--action-background); cursor: pointer; }
       .image-slider:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 4px; border-radius: 999px; }
@@ -488,7 +499,14 @@
               </div>
               <div class="connection-field">
                 <span class="connection-field-label" id="image-test-label">연결 테스트</span>
-                <button class="test-connection-button" id="test-image-connection" type="button" aria-describedby="image-test-label" disabled>이미지 테스트</button>
+                <button class="test-connection-button" id="test-image-connection" type="button" aria-describedby="image-test-label image-test-hint" disabled>이미지 테스트</button>
+                <p class="connection-field-hint" id="image-test-hint">1024 × 1024 이미지 1장을 생성합니다. 설정과 구독에 따라 Anlas가 사용될 수 있어요.</p>
+                <div class="connection-result image-test-result" id="image-test-status" role="status" aria-live="polite" aria-atomic="true" hidden>
+                  <strong id="image-test-title"></strong><p id="image-test-message"></p>
+                </div>
+                <button class="image-thumbnail" id="image-test-thumbnail" type="button" aria-label="생성된 테스트 이미지 원본 크기로 보기" hidden>
+                  <img id="image-test-image" alt="NovelAI로 생성한 스파게티 테스트 이미지" width="1024" height="1024" />
+                </button>
               </div>
             </div>
           </form>
@@ -500,6 +518,13 @@
         </footer>
       </main>
     </div>
+    <dialog class="image-preview" id="image-preview-dialog" aria-labelledby="image-preview-heading">
+      <div class="image-preview-bar">
+        <h2 id="image-preview-heading">테스트 이미지 · 1024 × 1024 원본 크기</h2>
+        <button class="image-preview-close" id="image-preview-close" type="button">닫기</button>
+      </div>
+      <div class="image-preview-scroll" id="image-preview-scroll"><img id="image-preview-original" alt="테스트 이미지 원본" width="1024" height="1024" /></div>
+    </dialog>
     <script>
       const connectionListView = document.getElementById('connection-list-view');
       const connectionEditor = document.getElementById('connection-editor-view');
@@ -525,6 +550,106 @@
         number.addEventListener('change', normalizeNumber);
         number.addEventListener('blur', normalizeNumber);
       });
+      const imageCapabilities = {"v5-full":{"uc":["heavy","light","furry-focus","human-focus","none"],"quality":["standard","light","none"]},"v5-curated":{"uc":["heavy","light","furry-focus","human-focus","none"],"quality":["standard","light","none"]},"v4-5-full":{"uc":["heavy","light","furry-focus","human-focus","none"],"quality":["standard","none"]},"v4-5-curated":{"uc":["heavy","light","human-focus","none"],"quality":["standard","none"]},"v4-full":{"uc":["heavy","light","none"],"quality":["standard","none"]},"v4-curated":{"uc":["heavy","light","none"],"quality":["standard","none"]},"anime-v3":{"uc":["heavy","light","human-focus","none"],"quality":["standard","none"]},"furry-v3":{"uc":["heavy","light","none"],"quality":["standard","none"]}};
+      function updateImagePresets() {
+        const capabilities = imageCapabilities[document.getElementById('connection-image-model').value];
+        for (const [id, supported] of [['image-uc-preset', capabilities.uc], ['image-quality-tags', capabilities.quality]]) {
+          const select = document.getElementById(id);
+          for (const option of select.options) option.disabled = !supported.includes(option.value);
+          if (!supported.includes(select.value)) select.value = id === 'image-uc-preset' ? 'none' : 'standard';
+        }
+      }
+      document.getElementById('connection-image-model').addEventListener('change', updateImagePresets);
+      const imageTestButton = document.getElementById('test-image-connection');
+      const imageStatus = document.getElementById('image-test-status');
+      const imageThumbnail = document.getElementById('image-test-thumbnail');
+      const imageResult = document.getElementById('image-test-image');
+      const imageDialog = document.getElementById('image-preview-dialog');
+      let pendingImageTest = null;
+      let imageTestVersion = 0;
+      function resetImageTest(clearImage = false) {
+        imageTestVersion++;
+        pendingImageTest?.abort();
+        pendingImageTest = null;
+        imageTestButton.disabled = modelType.value !== 'image';
+        imageTestButton.textContent = '이미지 테스트';
+        imageTestButton.setAttribute('aria-busy', 'false');
+        imageStatus.hidden = true;
+        if (clearImage) {
+          imageThumbnail.hidden = true;
+          imageResult.removeAttribute('src');
+          document.getElementById('image-preview-original').removeAttribute('src');
+          if (imageDialog.open) imageDialog.close();
+        }
+      }
+      function imageStatusMessage(state, title, message) {
+        imageStatus.dataset.state = state;
+        document.getElementById('image-test-title').textContent = title;
+        document.getElementById('image-test-message').textContent = message;
+        imageStatus.hidden = false;
+        requestAnimationFrame(() => { if (!imageStatus.hidden) imageStatus.scrollIntoView({block:'nearest'}); });
+      }
+      modelType.addEventListener('change', () => resetImageTest());
+      imageThumbnail.addEventListener('click', () => {
+        document.getElementById('image-preview-original').src = imageResult.src;
+        imageDialog.showModal();
+        document.getElementById('image-preview-scroll').scrollTo(0, 0);
+      });
+      document.getElementById('image-preview-close').addEventListener('click', () => imageDialog.close());
+      imageTestButton.addEventListener('click', async () => {
+        if (pendingImageTest || modelType.value !== 'image') return;
+        const version = ++imageTestVersion;
+        const token = document.getElementById('connection-api-key').value.trim();
+        const body = {
+          token, model: document.getElementById('connection-image-model').value,
+          prefix: document.getElementById('connection-image-prefix').value,
+          suffix: document.getElementById('connection-image-suffix').value,
+          negativePrefix: document.getElementById('connection-image-negative-prefix').value,
+          steps: document.getElementById('image-steps-number').valueAsNumber,
+          guidance: document.getElementById('image-guidance-number').valueAsNumber,
+          rescale: document.getElementById('image-rescale-number').valueAsNumber,
+          ucPreset: document.getElementById('image-uc-preset').value,
+          qualityTags: document.getElementById('image-quality-tags').value,
+        };
+        try {
+          if (!token) throw new Error('API KEY에 NovelAI Persistent API Token을 입력해 주세요.');
+          if (location.protocol !== 'http:' || !['127.0.0.1','localhost'].includes(location.hostname)) throw new Error('이미지 테스트는 PC의 로컬 게임 주소에서 사용해 주세요.');
+          const controller = new AbortController();
+          pendingImageTest = controller;
+          imageTestButton.disabled = true;
+          imageTestButton.textContent = '이미지 생성 중…';
+          imageTestButton.setAttribute('aria-busy', 'true');
+          imageStatusMessage('pending','이미지 생성 중','선택한 설정으로 1024 × 1024 이미지 한 장을 요청하고 있어요.');
+          const response = await fetch('/api/images/test', {
+            method:'POST', cache:'no-store', headers:{'Content-Type':'application/json'},
+            signal:AbortSignal.any([controller.signal,AbortSignal.timeout(185000)]),
+            body:JSON.stringify(body),
+          });
+          let data;
+          try { data = await response.json(); } catch { throw new Error('이미지 테스트 서버의 응답을 읽지 못했습니다. 로컬 서버를 다시 실행해 주세요.'); }
+          if (version !== imageTestVersion) return;
+          if (!response.ok || !data.ok) throw new Error(data.error?.message || '이미지 생성에 실패했습니다.');
+          if (typeof data.image !== 'string' || !/^data:image\/png;base64,[A-Za-z0-9+/]+=*$/.test(data.image)) throw new Error('올바른 이미지 응답이 아닙니다.');
+          const loaded = new Image();
+          loaded.src = data.image;
+          await loaded.decode();
+          if (version !== imageTestVersion) return;
+          if (loaded.naturalWidth !== 1024 || loaded.naturalHeight !== 1024) throw new Error('이미지 크기가 1024 × 1024가 아닙니다.');
+          imageResult.src = data.image;
+          imageThumbnail.hidden = false;
+          imageStatusMessage('success','이미지 생성 성공','썸네일을 누르면 원본 크기로 볼 수 있어요.');
+          requestAnimationFrame(() => imageThumbnail.scrollIntoView({block:'nearest'}));
+        } catch (error) {
+          if (version === imageTestVersion) imageStatusMessage('error','이미지 생성 실패',error.name === 'TimeoutError' ? '이미지 생성 시간이 초과됐습니다. 처리 여부를 확인한 후 다시 시도해 주세요.' : error instanceof TypeError ? '로컬 서버 또는 NovelAI 연결을 확인해 주세요.' : error.message || '이미지를 생성하지 못했습니다.');
+        } finally {
+          if (version === imageTestVersion) {
+            pendingImageTest = null;
+            imageTestButton.disabled = modelType.value !== 'image';
+            imageTestButton.textContent = '이미지 테스트';
+            imageTestButton.setAttribute('aria-busy', 'false');
+          }
+        }
+      });
       let editingConnectionId = null;
       let savingConnection = false;
       let savedConnections = [];
@@ -538,6 +663,8 @@
         const imageModelFields = document.getElementById('image-model-fields');
         imageModelFields.hidden = isTextModel;
         imageModelFields.querySelectorAll('input, select, textarea, button').forEach(control => { control.disabled = isTextModel; });
+        if (!isTextModel) updateImagePresets();
+        imageTestButton.disabled = isTextModel || Boolean(pendingImageTest);
         editorFooter.hidden = connectionEditor.hidden || !isTextModel;
         const vertexKey = document.getElementById('connection-vertex-key');
         const imageKey = document.getElementById('connection-api-key');
@@ -553,6 +680,7 @@
       modelType.addEventListener('change', updateModelFields);
       const apiKey = document.getElementById('connection-api-key');
       document.querySelector('.add-ai-button').addEventListener('click', () => {
+        resetImageTest(true);
         editingConnectionId = null;
         connectionForm.reset();
         saveStatus.textContent = '';
@@ -740,6 +868,7 @@
       function returnToConnectionList() {
         if (connectionEditor.hidden || savingConnection) return;
         resetConnectionTest();
+        resetImageTest(true);
         connectionForm.reset();
         updateModelFields();
         apiKey.value = '';
