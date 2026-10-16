@@ -453,7 +453,7 @@
       .game-stage { flex: 1; min-height: 0; }
       #game-preview { position: relative; }
       .game-bottom-menu { position: absolute; bottom: 0; left: 0; right: 0; z-index: 2; display: flex; justify-content: center; gap: 12px; min-height: 72px; padding: 12px 28px; border-top: 1px solid var(--border); background: var(--surface-sidebar); transform: translateY(0); visibility: visible; transition: transform 280ms ease, visibility 0s; }
-      #game-preview:is([data-view="battle"], [data-view="chapters"], [data-view="scenarios"], [data-view="characters"], [data-view="character-detail"], [data-view="equipment-picker"]) .game-bottom-menu { transform: translateY(100%); visibility: hidden; pointer-events: none; transition: transform 280ms ease, visibility 0s 280ms; }
+      #game-preview:is([data-view="battle"], [data-view="chapters"], [data-view="scenarios"], [data-view="characters"], [data-view="character-detail"], [data-view="equipment-picker"], [data-view="equipment-enhancement"]) .game-bottom-menu { transform: translateY(100%); visibility: hidden; pointer-events: none; transition: transform 280ms ease, visibility 0s 280ms; }
       #game-preview[data-view="home"] .game-stage { padding-bottom: 72px; }
       @media (max-width: 640px) { #game-preview[data-view="home"] .game-stage { padding-bottom: 84px; } }
       @media (prefers-reduced-motion: reduce) { .game-bottom-menu, #game-preview[data-view="battle"] .game-bottom-menu { transition: none; } }
@@ -774,6 +774,7 @@
       .equipment-comparison-card p { margin: 8px 0 0; color: var(--text-secondary); white-space: pre-line; }
       .equipment-comparison-diff { margin: 0; color: var(--text-secondary); font-size: 12px; line-height: 1.8; white-space: pre-line; }
       .equipment-comparison > .character-growth-button { margin-top: auto; flex-shrink: 0; }
+      .equipment-comparison > #equipment-confirm { margin-top: 0; }
       .equipment-comparison > button:disabled { background: var(--surface-active); border-color: var(--border); color: var(--text-secondary); cursor: default; }
       .character-equipment-choice { width: 100%; aspect-ratio: 1; min-width: 0; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 14px; color: var(--text-primary); font: inherit; text-align: center; cursor: pointer; }
       .character-equipment-choice strong { display: block; width: 100%; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
@@ -783,6 +784,13 @@
       .character-equipment-choice:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -3px; }
       .equipment-hover { position: fixed; z-index: 110; width: 260px; max-width: calc(100vw - 24px); max-height: calc(100dvh - 24px); overflow-y: auto; padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-sidebar); color: var(--text-primary); box-shadow: var(--frame-shadow); pointer-events: none; font-size: 13px; line-height: 1.8; white-space: pre-line; }
       .equipment-context-menu { z-index: 120; }
+      .equipment-enhancement-body { min-height: 0; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; display: grid; align-content: start; gap: 20px; }
+      .equipment-enhancement-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+      .equipment-enhancement-options h3 { margin: 0 0 12px; font-size: 16px; }
+      .equipment-enhancement-cost { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+      .equipment-enhancement-message { margin: 0; color: var(--text-secondary); font-size: 14px; line-height: 1.8; white-space: pre-line; }
+      .equipment-enhancement-message[data-state="error"] { color: #ff9fb2; }
+      #equipment-enhancement-confirm:disabled { background: var(--surface-active); border-color: var(--border); color: var(--text-secondary); cursor: default; }
       .character-equipment-overview > .character-equipment-box { grid-template-rows: auto minmax(0, 1fr); }
       .character-equipment-overview .character-equipment-box h4 { font-size: 17px; }
       .character-equipment-overview .character-equipment-stat-grid { grid-template-columns: minmax(0, 1fr); grid-template-rows: repeat(8, minmax(24px, 1fr)); gap: 8px; align-items: center; }
@@ -1082,12 +1090,22 @@
                   <h3>현재 장비</h3><div class="equipment-comparison-card" id="equipment-compare-current" aria-label="현재 장비 없음"></div>
                   <h3>선택한 장비</h3><div class="equipment-comparison-card" id="equipment-compare-selected"></div>
                   <p class="equipment-comparison-diff" id="equipment-compare-diff"></p>
+                  <button class="character-growth-button" id="equipment-enhance-selected" type="button" disabled>강화</button>
                   <button class="character-growth-button" id="equipment-confirm" type="button" disabled>장착</button>
                 </aside>
               </div>
             </section>
+            <section class="equipment-picker-screen" id="equipment-enhancement-screen" aria-label="장비 강화 화면" hidden>
+              <div class="equipment-picker-heading"><button class="connection-back" id="equipment-enhancement-back" type="button" aria-label="강화 화면에서 돌아가기">◀</button><h2 id="equipment-enhancement-title">장비 강화</h2></div>
+              <div class="equipment-enhancement-body">
+                <div class="equipment-enhancement-options"><section><h3>현재 옵션</h3><div class="equipment-comparison-card" id="equipment-enhancement-current"></div></section><section><h3>다음 강화</h3><div class="equipment-comparison-card" id="equipment-enhancement-next"></div></section></div>
+                <p class="equipment-enhancement-message">매 강화마다 주 옵션이 증가합니다. +3·6·9·12·15에서는 서브 옵션이 4개 미만이면 1개 추가되고, 4개라면 기존 서브 옵션 중 1개가 강화됩니다.</p>
+                <div class="equipment-enhancement-cost"><p class="equipment-enhancement-message" id="equipment-enhancement-cost"></p><button class="character-growth-button" id="equipment-enhancement-confirm" type="button">강화</button></div>
+                <p class="equipment-enhancement-message" id="equipment-enhancement-status" aria-live="polite"></p>
+              </div>
+            </section>
             <div class="equipment-hover" id="equipment-hover" role="tooltip" hidden></div>
-            <div class="folder-menu equipment-context-menu" id="equipment-context-menu" role="menu" aria-label="장비 관리" hidden><button type="button" role="menuitem" data-equipment-action="replace">교체</button><button type="button" role="menuitem" data-equipment-action="remove">해제</button></div>
+            <div class="folder-menu equipment-context-menu" id="equipment-context-menu" role="menu" aria-label="장비 관리" hidden><button type="button" role="menuitem" data-equipment-action="enhance">강화</button><button type="button" role="menuitem" data-equipment-action="replace">교체</button><button type="button" role="menuitem" data-equipment-action="remove">해제</button></div>
             <section class="story-preview-screen" id="combat-preview-screen" aria-label="전투 미리보기" hidden>
               <div class="story-preview-top">
                 <div class="story-preview-heading-row">
@@ -2380,6 +2398,7 @@
       function showGameView(view) {
         hideEquipmentOverlays();
         const isEquipmentPicker = view === 'equipment-picker';
+        const isEquipmentEnhancement = view === 'equipment-enhancement';
         const isCharacterDetail = view === 'character-detail';
         const isCharacters = view === 'characters';
         if (isCharacters) {
@@ -2399,13 +2418,13 @@
             card.style.setProperty('--card-enter-delay', 100 + index * 100 + 'ms');
           });
         }
-        const isSubscreen = isBattle || isScenarios || isChapters || isStoryPreview || isCombatPreview || isCharacters || isCharacterDetail || isEquipmentPicker;
+        const isSubscreen = isBattle || isScenarios || isChapters || isStoryPreview || isCombatPreview || isCharacters || isCharacterDetail || isEquipmentPicker || isEquipmentEnhancement;
         const game = document.getElementById('game-preview');
         if (game.dataset.view === 'story-preview' && !isStoryPreview) {
           stopDialogueTyping();
           setDialogueAuto(false);
         }
-        game.dataset.view = isEquipmentPicker ? 'equipment-picker' : isCharacterDetail ? 'character-detail' : isCharacters ? 'characters' : isCombatPreview ? 'combat-preview' : isStoryPreview ? 'story-preview' : isChapters ? 'chapters' : isScenarios ? 'scenarios' : isBattle ? 'battle' : 'home';
+        game.dataset.view = isEquipmentEnhancement ? 'equipment-enhancement' : isEquipmentPicker ? 'equipment-picker' : isCharacterDetail ? 'character-detail' : isCharacters ? 'characters' : isCombatPreview ? 'combat-preview' : isStoryPreview ? 'story-preview' : isChapters ? 'chapters' : isScenarios ? 'scenarios' : isBattle ? 'battle' : 'home';
         game.setAttribute('aria-label', isCharacters ? '캐릭터 화면' : isCombatPreview ? '전투 미리보기' : isStoryPreview ? '시나리오 미리보기' : isChapters ? '챕터 목록 화면' : isScenarios ? '시나리오 목록 화면' : isBattle ? '전투 화면' : '게임 메인 화면');
         const menu = document.querySelector('.game-bottom-menu');
         menu.inert = isSubscreen;
@@ -2418,6 +2437,11 @@
         document.getElementById('characters-screen').hidden = !isCharacters;
         document.getElementById('character-detail-screen').hidden = !isCharacterDetail;
         document.getElementById('equipment-picker-screen').hidden = !isEquipmentPicker;
+        document.getElementById('equipment-enhancement-screen').hidden = !isEquipmentEnhancement;
+        if (isEquipmentEnhancement) {
+          game.setAttribute('aria-label', '장비 강화 화면');
+          document.getElementById('game-stage').setAttribute('aria-label', '장비 강화 화면');
+        }
         if (isEquipmentPicker) {
           game.setAttribute('aria-label', '장비 선택 화면');
           document.getElementById('game-stage').setAttribute('aria-label', '장비 선택 화면');
@@ -2437,7 +2461,7 @@
         document.getElementById('game-home').focus({ preventScroll: true });
       });
       document.getElementById('game-home').addEventListener('click', () => {
-        const fromCharacters = ['characters', 'character-detail', 'equipment-picker'].includes(document.getElementById('game-preview').dataset.view);
+        const fromCharacters = ['characters', 'character-detail', 'equipment-picker', 'equipment-enhancement'].includes(document.getElementById('game-preview').dataset.view);
         showGameView('home');
         document.getElementById(fromCharacters ? 'game-characters' : 'game-battle').focus({ preventScroll: true });
       });
@@ -2722,6 +2746,8 @@
       const previewCharacterOutfits = new WeakMap();
       const previewCharacterProfiles = new WeakMap();
       const previewCharacterEquipment = new WeakMap();
+      const previewGameWallet = { gold: 0 };
+      let equipmentEnhancementTarget = null;
       function openCharacterDetail(card) {
         selectedCharacterCard = card;
         selectCharacterTab(document.getElementById('character-tab-info'));
@@ -3034,6 +3060,47 @@
       function describeEquipmentStats(stats) {
         return Object.entries(stats).map(([key, value]) => characterEquipmentStatLabels[key] + ' +' + value.toLocaleString('ko-KR') + (['critRate', 'critDamage', 'effectHit', 'effectResist'].includes(key) ? '%' : '')).join(' · ');
       }
+      // 화면 확인용 비용·증가량입니다. 최대 단계와 3단계 주기는 사용자 규칙입니다.
+      const equipmentEnhancementRules = {
+        maxLevel: 15, milestone: 3, maxSubOptions: 4,
+        goldCost: nextLevel => nextLevel * 100,
+        gains: { hp: 50, attack: 5, defense: 5, speed: 1, critRate: 1, critDamage: 2, effectHit: 2, effectResist: 2 },
+      };
+      function refreshEquipmentOptionStats(item) {
+        const stats = { [item.mainOption.key]: item.mainOption.value };
+        item.subOptions.forEach(option => { stats[option.key] = (stats[option.key] || 0) + option.value; });
+        item.stats = stats;
+        return item;
+      }
+      function equipmentDisplayName(item) { return item.name + ' +' + item.enhancement; }
+      function describeEquipmentOptions(item) {
+        return '주 옵션: ' + describeEquipmentStats({ [item.mainOption.key]: item.mainOption.value }) + '\n서브 옵션 (' + item.subOptions.length + '/4)\n' + item.subOptions.map(option => describeEquipmentStats({ [option.key]: option.value })).join('\n');
+      }
+      function calculateEquipmentEnhancement(item, gold, rules = equipmentEnhancementRules, random = Math.random) {
+        if (item.enhancement >= rules.maxLevel) return { ok: false, message: '최대 강화 단계입니다.' };
+        const nextLevel = item.enhancement + 1;
+        const cost = rules.goldCost(nextLevel);
+        if (!Number.isFinite(cost) || cost < 0) return { ok: false, message: '강화 비용을 확인해 주세요.' };
+        if (gold < cost) return { ok: false, message: '골드가 부족합니다.' };
+        const next = { ...item, enhancement: nextLevel, mainOption: { ...item.mainOption }, subOptions: item.subOptions.map(option => ({ ...option })) };
+        next.mainOption.value += rules.gains[next.mainOption.key];
+        let event = '주 옵션이 증가했습니다.';
+        const choose = length => Math.min(length - 1, Math.max(0, Math.floor(random() * length)));
+        if (nextLevel % rules.milestone === 0) {
+          if (next.subOptions.length < rules.maxSubOptions) {
+            const pool = Object.keys(rules.gains).filter(key => key !== next.mainOption.key && !next.subOptions.some(option => option.key === key));
+            const key = pool[choose(pool.length)];
+            next.subOptions.push({ key, value: rules.gains[key] });
+            event += '\n서브 옵션 추가: ' + characterEquipmentStatLabels[key];
+          } else {
+            const option = next.subOptions[choose(next.subOptions.length)];
+            option.value += rules.gains[option.key];
+            event += '\n서브 옵션 강화: ' + characterEquipmentStatLabels[option.key];
+          }
+        }
+        refreshEquipmentOptionStats(next);
+        return { ok: true, item: next, gold: gold - cost, cost, message: event };
+      }
       function getCharacterEquipmentSetCounts(state) {
         const counts = {};
         Object.values(state.equipped).forEach(id => { const item = state.items.find(item => item.id === id); if (item?.setId) counts[item.setId] = (counts[item.setId] || 0) + 1; });
@@ -3055,22 +3122,85 @@
             selectedType: 'weapon', equipped: {},
             items: characterEquipmentTypes.flatMap(type => type.examples.map((name, index) => {
               const base = { weapon: { attack: 40 }, armor: { hp: 300 }, gloves: { attack: 20 }, shoes: { speed: 5 }, ring: { defense: 20 }, necklace: { hp: 150 } }[type.id];
-              return { id: type.id + '-' + index, type: type.id, name, setId: index === 0 ? 'guard' : 'assault', stats: Object.fromEntries(Object.entries(base).map(([key, value]) => [key, value * (index + 1)])) };
+              const [key, value] = Object.entries(base)[0];
+              const subKeys = Object.keys(equipmentEnhancementRules.gains).filter(option => option !== key).slice(0, index === 0 ? 1 : 4);
+              return refreshEquipmentOptionStats({ id: type.id + '-' + index, type: type.id, name, setId: index === 0 ? 'guard' : 'assault', enhancement: 0,
+                mainOption: { key, value: value * (index + 1) }, subOptions: subKeys.map(key => ({ key, value: equipmentEnhancementRules.gains[key] })) });
             })),
           });
         }
         return previewCharacterEquipment.get(card);
       }
+      function openEquipmentEnhancement(itemId, returnView) {
+        if (!selectedCharacterCard) return;
+        const state = getCharacterEquipment(selectedCharacterCard);
+        const item = state.items.find(item => item.id === itemId);
+        if (!item) return;
+        equipmentEnhancementTarget = { card: selectedCharacterCard, itemId, returnView };
+        renderEquipmentEnhancement();
+        showGameView('equipment-enhancement');
+        document.querySelector('.equipment-enhancement-body').scrollTop = 0;
+        document.getElementById('equipment-enhancement-back').focus({ preventScroll: true });
+      }
+      function renderEquipmentEnhancement(message = '') {
+        if (!equipmentEnhancementTarget) return;
+        const { card, itemId } = equipmentEnhancementTarget;
+        const item = getCharacterEquipment(card).items.find(item => item.id === itemId);
+        const maxed = item.enhancement >= equipmentEnhancementRules.maxLevel;
+        const nextLevel = item.enhancement + 1;
+        const cost = maxed ? 0 : equipmentEnhancementRules.goldCost(nextLevel);
+        document.getElementById('equipment-enhancement-title').textContent = equipmentDisplayName(item) + ' · 강화';
+        const current = document.getElementById('equipment-enhancement-current'); current.replaceChildren();
+        const currentText = document.createElement('p'); currentText.textContent = describeEquipmentOptions(item); current.append(currentText);
+        const next = document.getElementById('equipment-enhancement-next'); next.replaceChildren();
+        const nextText = document.createElement('p');
+        nextText.textContent = maxed ? '최대 강화 +15에 도달했습니다.'
+          : '+' + item.enhancement + ' → +' + nextLevel + '\n주 옵션: ' + describeEquipmentStats({ [item.mainOption.key]: item.mainOption.value }) + ' → ' + (item.mainOption.value + equipmentEnhancementRules.gains[item.mainOption.key]).toLocaleString('ko-KR') + (['critRate', 'critDamage', 'effectHit', 'effectResist'].includes(item.mainOption.key) ? '%' : '')
+            + (nextLevel % equipmentEnhancementRules.milestone === 0 ? '\n' + (item.subOptions.length < equipmentEnhancementRules.maxSubOptions ? '새 서브 옵션 1개 추가' : '기존 서브 옵션 중 1개 무작위 강화') : '\n서브 옵션 유지');
+        next.append(nextText);
+        document.getElementById('equipment-enhancement-cost').textContent = '보유 골드 ' + previewGameWallet.gold.toLocaleString('ko-KR') + (maxed ? '' : '\n강화 비용 ' + cost.toLocaleString('ko-KR') + ' 골드');
+        const button = document.getElementById('equipment-enhancement-confirm');
+        button.disabled = maxed || previewGameWallet.gold < cost;
+        button.textContent = maxed ? '최대 강화' : '강화';
+        const status = document.getElementById('equipment-enhancement-status');
+        status.dataset.state = !maxed && previewGameWallet.gold < cost ? 'error' : 'normal';
+        status.textContent = message || (maxed ? '최대 강화 단계입니다.' : previewGameWallet.gold < cost ? '골드가 부족합니다.' : '비용과 옵션 증가량은 현재 임시 수치입니다.');
+      }
+      document.getElementById('equipment-enhance-selected').addEventListener('click', () => {
+        if (selectedCharacterCard) openEquipmentEnhancement(getCharacterEquipment(selectedCharacterCard).selectedItemId, 'equipment-picker');
+      });
+      document.getElementById('equipment-enhancement-confirm').addEventListener('click', () => {
+        if (!equipmentEnhancementTarget) return;
+        const { card, itemId } = equipmentEnhancementTarget;
+        const state = getCharacterEquipment(card);
+        const index = state.items.findIndex(item => item.id === itemId);
+        if (index < 0) return;
+        const result = calculateEquipmentEnhancement(state.items[index], previewGameWallet.gold);
+        if (!result.ok) { renderEquipmentEnhancement(result.message); return; }
+        state.items[index] = result.item;
+        previewGameWallet.gold = result.gold;
+        const gold = document.getElementById('game-gold'); gold.textContent = result.gold.toLocaleString('ko-KR'); gold.parentElement.setAttribute('aria-label', '골드 ' + result.gold.toLocaleString('ko-KR'));
+        renderCharacterEquipment(card); renderCharacterInfo(card); renderEquipmentEnhancement('+' + result.item.enhancement + ' 강화 완료\n' + result.message);
+      });
+      document.getElementById('equipment-enhancement-back').addEventListener('click', () => {
+        if (!equipmentEnhancementTarget) return;
+        const { card, returnView } = equipmentEnhancementTarget;
+        equipmentEnhancementTarget = null;
+        if (returnView === 'equipment-picker') {
+          renderCharacterEquipmentPicker(card); showGameView('equipment-picker');
+          document.getElementById('character-equipment-back').focus({ preventScroll: true });
+        } else returnFromEquipmentPicker();
+      });
       function renderCharacterEquipment(card) {
         const state = getCharacterEquipment(card);
         const slots = document.getElementById('character-equipment-slots'); slots.replaceChildren();
         characterEquipmentTypes.forEach(type => {
           const item = state.items.find(item => item.id === state.equipped[type.id]);
           const button = document.createElement('button'); button.type = 'button'; button.className = 'character-equipment-slot'; button.dataset.equipmentType = type.id;
-          button.setAttribute('aria-label', type.name + ' · ' + (item?.name || '미장착') + (item ? ' · 우클릭으로 교체 또는 해제' : ' · 클릭하여 장착'));
+          button.setAttribute('aria-label', type.name + ' · ' + (item ? equipmentDisplayName(item) : '미장착') + (item ? ' · 우클릭으로 강화, 교체 또는 해제' : ' · 클릭하여 장착'));
           if (item) button.setAttribute('aria-haspopup', 'menu');
           const name = document.createElement('strong'); name.textContent = type.name;
-          const equipped = document.createElement('span'); equipped.textContent = item?.name || '미장착';
+          const equipped = document.createElement('span'); equipped.textContent = item ? equipmentDisplayName(item) : '미장착';
           button.append(name, equipped); slots.append(button);
         });
         const stats = document.getElementById('character-equipment-stats'); stats.replaceChildren();
@@ -3127,7 +3257,7 @@
           const row = document.createElement('button'); row.type = 'button'; row.className = 'character-equipment-item character-equipment-choice'; row.dataset.equipmentId = item.id; row.dataset.equipped = String(equipped);
           row.setAttribute('aria-pressed', String(state.selectedItemId === item.id));
           row.setAttribute('aria-label', item.name + (equipped ? ' · 장착 중' : ''));
-          const name = document.createElement('strong'); name.textContent = item.name;
+          const name = document.createElement('strong'); name.textContent = equipmentDisplayName(item);
           row.append(createEquipmentIcon(item.type), name); list.append(row);
         });
         if (!items.length) { const empty = document.createElement('p'); empty.className = 'character-awakening-note'; empty.textContent = '보유한 ' + type.name + ' 장비가 없습니다.'; list.append(empty); }
@@ -3188,8 +3318,8 @@
           const box = document.getElementById(id); box.replaceChildren();
           box.setAttribute('aria-label', item ? item.name : id === 'equipment-compare-current' ? '현재 장비 없음' : '선택한 장비 없음');
           if (!item) return;
-          const name = document.createElement('strong'); name.textContent = item.name;
-          const stats = document.createElement('p'); stats.textContent = describeEquipmentStats(item.stats);
+          const name = document.createElement('strong'); name.textContent = equipmentDisplayName(item);
+          const stats = document.createElement('p'); stats.textContent = describeEquipmentOptions(item);
           const set = document.createElement('p'); set.textContent = characterEquipmentSets[item.setId].name + ' 세트\n' + characterEquipmentSets[item.setId].bonuses.map(bonus => bonus.pieces + '세트: ' + describeEquipmentStats(bonus.stats)).join('\n');
           box.append(name, stats, set);
         };
@@ -3202,6 +3332,7 @@
           diff.textContent = changes.length ? '장착 후 변화 · 세트 효과 포함\n' + changes.join('\n') : '현재 장비와 스탯 차이가 없습니다.';
         } else diff.textContent = '목록에서 장비를 선택하면 장착 후 스탯을 비교할 수 있습니다.';
         const confirm = document.getElementById('equipment-confirm');
+        document.getElementById('equipment-enhance-selected').disabled = !selected || selected.enhancement >= equipmentEnhancementRules.maxLevel;
         confirm.disabled = !selected || selected.id === current?.id;
         confirm.textContent = selected && selected.id === current?.id ? '장착 중' : current ? '교체' : '장착';
       }
@@ -3222,7 +3353,7 @@
         const item = state.items.find(item => item.id === state.equipped[slot.dataset.equipmentType]);
         if (!item) return;
         const set = characterEquipmentSets[item.setId]; const box = document.getElementById('equipment-hover');
-        box.textContent = item.name + '\n' + describeEquipmentStats(item.stats) + '\n' + set.name + ' 세트\n' + set.bonuses.map(bonus => bonus.pieces + '세트: ' + describeEquipmentStats(bonus.stats)).join('\n');
+        box.textContent = equipmentDisplayName(item) + '\n' + describeEquipmentOptions(item) + '\n' + set.name + ' 세트\n' + set.bonuses.map(bonus => bonus.pieces + '세트: ' + describeEquipmentStats(bonus.stats)).join('\n');
         const rect = slot.getBoundingClientRect(); placeEquipmentOverlay(box, rect.right + 10, rect.top);
         slot.setAttribute('aria-describedby', 'equipment-hover');
       }
@@ -3254,6 +3385,9 @@
         const action = event.target.closest('[data-equipment-action]'); if (!action || !selectedCharacterCard) return;
         const type = event.currentTarget.dataset.type; hideEquipmentOverlays();
         if (action.dataset.equipmentAction === 'replace') openEquipmentPicker(type);
+        else if (action.dataset.equipmentAction === 'enhance') {
+          const state = getCharacterEquipment(selectedCharacterCard); openEquipmentEnhancement(state.equipped[type], 'character-detail');
+        }
         else {
           const state = getCharacterEquipment(selectedCharacterCard); delete state.equipped[type]; renderCharacterEquipment(selectedCharacterCard); renderCharacterInfo(selectedCharacterCard);
           document.querySelectorAll('[data-equipment-type]').forEach(slot => { if (slot.dataset.equipmentType === type) slot.focus({ preventScroll: true }); });
@@ -3266,7 +3400,7 @@
           event.preventDefault(); const type = menu.dataset.type; hideEquipmentOverlays();
           document.querySelectorAll('[data-equipment-type]').forEach(slot => { if (slot.dataset.equipmentType === type) slot.focus({ preventScroll: true }); });
         } else if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-          event.preventDefault(); const buttons = Array.from(menu.querySelectorAll('button')); buttons[(buttons.indexOf(document.activeElement) + 1) % buttons.length].focus();
+          event.preventDefault(); const buttons = Array.from(menu.querySelectorAll('button')); buttons[(buttons.indexOf(document.activeElement) + (event.key === 'ArrowDown' ? 1 : -1) + buttons.length) % buttons.length].focus();
         } else if (event.key === 'Tab') hideEquipmentOverlays();
       });
       window.addEventListener('resize', hideEquipmentOverlays);
