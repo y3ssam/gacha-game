@@ -243,6 +243,11 @@
         text-align: center;
       }
       .text-model-fields, .image-model-fields { display: grid; gap: 30px; min-width: 0; }
+      .image-model-fields textarea.image-prompt-input { height: 104px; }
+      .image-slider-row { display: grid; grid-template-columns: minmax(0, 1fr) 84px; align-items: center; gap: 18px; }
+      .image-slider { width: 100%; min-width: 0; min-height: 32px; margin: 0; accent-color: var(--action-background); cursor: pointer; }
+      .image-slider:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 4px; border-radius: 999px; }
+      .image-slider-number { padding-inline: 8px; }
       .test-connection-button {
         width: 100%;
         min-height: 48px;
@@ -430,6 +435,61 @@
                   </optgroup>
                 </select>
               </div>
+              <div class="connection-field">
+                <label for="connection-image-prefix">프롬프트 접두사</label>
+                <textarea class="connection-input image-prompt-input" id="connection-image-prefix" rows="3" spellcheck="false" disabled></textarea>
+              </div>
+              <div class="connection-field">
+                <label for="connection-image-suffix">프롬프트 접미사</label>
+                <textarea class="connection-input image-prompt-input" id="connection-image-suffix" rows="3" spellcheck="false" disabled></textarea>
+              </div>
+              <div class="connection-field">
+                <label for="connection-image-negative-prefix">네거티브 접두사</label>
+                <textarea class="connection-input image-prompt-input" id="connection-image-negative-prefix" rows="3" spellcheck="false" disabled></textarea>
+              </div>
+              <div class="connection-field">
+                <label id="image-steps-label" for="image-steps-number">단계</label>
+                <div class="image-slider-row" data-slider-pair>
+                  <input class="image-slider" type="range" id="image-steps-range" min="1" max="50" step="1" value="28" aria-labelledby="image-steps-label" disabled />
+                  <input class="connection-input image-slider-number" type="number" id="image-steps-number" min="1" max="50" step="1" value="28" aria-labelledby="image-steps-label" inputmode="numeric" disabled />
+                </div>
+              </div>
+              <div class="connection-field">
+                <label id="image-guidance-label" for="image-guidance-number">프롬프트 가이던스</label>
+                <div class="image-slider-row" data-slider-pair>
+                  <input class="image-slider" type="range" id="image-guidance-range" min="0" max="10" step="0.1" value="5" aria-labelledby="image-guidance-label" disabled />
+                  <input class="connection-input image-slider-number" type="number" id="image-guidance-number" min="0" max="10" step="0.1" value="5" aria-labelledby="image-guidance-label" inputmode="decimal" disabled />
+                </div>
+              </div>
+              <div class="connection-field">
+                <label id="image-rescale-label" for="image-rescale-number">가이던스 리스케일</label>
+                <div class="image-slider-row" data-slider-pair>
+                  <input class="image-slider" type="range" id="image-rescale-range" min="0" max="1" step="0.01" value="0" aria-labelledby="image-rescale-label" disabled />
+                  <input class="connection-input image-slider-number" type="number" id="image-rescale-number" min="0" max="1" step="0.01" value="0" aria-labelledby="image-rescale-label" inputmode="decimal" disabled />
+                </div>
+              </div>
+              <div class="connection-field">
+                <label for="image-uc-preset">UC 프리셋</label>
+                <select class="connection-input" id="image-uc-preset" disabled>
+                  <option value="none" selected>None</option>
+                  <option value="human-focus">Human Focus</option>
+                  <option value="furry-focus">Furry Focus</option>
+                  <option value="light">Light</option>
+                  <option value="heavy">Heavy</option>
+                </select>
+              </div>
+              <div class="connection-field">
+                <label for="image-quality-tags">퀄리티 태그</label>
+                <select class="connection-input" id="image-quality-tags" disabled>
+                  <option value="none">None</option>
+                  <option value="light">Light</option>
+                  <option value="standard" selected>Standard</option>
+                </select>
+              </div>
+              <div class="connection-field">
+                <span class="connection-field-label" id="image-test-label">연결 테스트</span>
+                <button class="test-connection-button" id="test-image-connection" type="button" aria-describedby="image-test-label" disabled>이미지 테스트</button>
+              </div>
             </div>
           </form>
           </div>
@@ -445,6 +505,26 @@
       const connectionEditor = document.getElementById('connection-editor-view');
       const connectionForm = document.getElementById('connection-form');
       const modelType = document.getElementById('connection-model-type');
+      document.querySelectorAll('[data-slider-pair]').forEach(pair => {
+        const slider = pair.querySelector('input[type="range"]');
+        const number = pair.querySelector('input[type="number"]');
+        slider.addEventListener('input', () => { number.value = slider.value; });
+        number.addEventListener('input', () => {
+          if (number.value !== '' && number.validity.valid) slider.value = number.value;
+        });
+        const normalizeNumber = () => {
+          const min = Number(number.min);
+          const max = Number(number.max);
+          const step = Number(number.step);
+          const parsed = number.valueAsNumber;
+          const bounded = Number.isFinite(parsed) ? Math.max(min, Math.min(max, parsed)) : Number(slider.value);
+          const rounded = Math.max(min, Math.min(max, Number((min + Math.round((bounded - min) / step) * step).toFixed(4))));
+          slider.value = String(rounded);
+          number.value = slider.value;
+        };
+        number.addEventListener('change', normalizeNumber);
+        number.addEventListener('blur', normalizeNumber);
+      });
       let editingConnectionId = null;
       let savingConnection = false;
       let savedConnections = [];
@@ -457,7 +537,7 @@
         textModelFields.hidden = !isTextModel;
         const imageModelFields = document.getElementById('image-model-fields');
         imageModelFields.hidden = isTextModel;
-        imageModelFields.querySelectorAll('input, select').forEach(control => { control.disabled = isTextModel; });
+        imageModelFields.querySelectorAll('input, select, textarea, button').forEach(control => { control.disabled = isTextModel; });
         editorFooter.hidden = connectionEditor.hidden || !isTextModel;
         const vertexKey = document.getElementById('connection-vertex-key');
         const imageKey = document.getElementById('connection-api-key');
