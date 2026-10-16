@@ -1,0 +1,921 @@
+{
+  "version": 1,
+  "format": "PNG",
+  "width": 1254,
+  "height": 1254,
+  "aspectRatio": "1:1",
+  "transparent": true,
+  "style": "2D anime item illustration, clean outlines and cel shading",
+  "balanceStatus": "draft",
+  "slots": [
+    {
+      "id": "weapon",
+      "name": "무기"
+    },
+    {
+      "id": "armor",
+      "name": "갑옷"
+    },
+    {
+      "id": "gloves",
+      "name": "장갑"
+    },
+    {
+      "id": "shoes",
+      "name": "신발"
+    },
+    {
+      "id": "ring",
+      "name": "반지"
+    },
+    {
+      "id": "necklace",
+      "name": "목걸이"
+    }
+  ],
+  "sets": [
+    {
+      "id": "silver-oath",
+      "name": "백은의 맹세",
+      "classId": "knight",
+      "className": "기사",
+      "role": "탱커",
+      "concept": "silver-white plate metal, deep sapphire-blue gemstones, blue fabric, shield crest, broad protective shapes",
+      "bonuses": [
+        {
+          "pieces": 2,
+          "stats": [
+            {
+              "stat": "defense",
+              "value": 15,
+              "mode": "percent"
+            }
+          ]
+        },
+        {
+          "pieces": 4,
+          "stats": [
+            {
+              "stat": "hp",
+              "value": 20,
+              "mode": "percent"
+            }
+          ],
+          "special": {
+            "trigger": "afterBasicAttack",
+            "chance": 0.8,
+            "type": "shield",
+            "target": "self",
+            "scaleStat": "defense",
+            "scale": 1,
+            "duration": 1,
+            "description": "기본 공격 후 80% 확률로 자신에게 방어력 100%만큼 보호막, 1턴"
+          }
+        }
+      ]
+    },
+    {
+      "id": "unyielding",
+      "name": "불굴의 투지",
+      "classId": "warrior",
+      "className": "전사",
+      "role": "탱커",
+      "concept": "dark charcoal iron, muted crimson cloth, thick metal bands, rugged heavy blocky shapes, angular iron crest",
+      "bonuses": [
+        {
+          "pieces": 2,
+          "stats": [
+            {
+              "stat": "hp",
+              "value": 15,
+              "mode": "percent"
+            }
+          ]
+        },
+        {
+          "pieces": 4,
+          "stats": [
+            {
+              "stat": "defense",
+              "value": 20,
+              "mode": "percent"
+            }
+          ],
+          "special": {
+            "trigger": "onBasicAttackHit",
+            "chance": 0.6,
+            "type": "taunt",
+            "target": "primaryEnemy",
+            "duration": 1,
+            "description": "기본 공격 적중 시 60% 확률로 대상 도발, 1턴"
+          }
+        }
+      ]
+    },
+    {
+      "id": "shadow-fang",
+      "name": "그림자 송곳니",
+      "classId": "assassin",
+      "className": "암살자",
+      "role": "근접 딜러",
+      "concept": "black leather, dark violet steel, plum-magenta gems, fang-shaped hooks, slim sharp forms",
+      "bonuses": [
+        {
+          "pieces": 2,
+          "stats": [
+            {
+              "stat": "critRate",
+              "value": 10,
+              "mode": "percentagePoints"
+            }
+          ]
+        },
+        {
+          "pieces": 4,
+          "stats": [
+            {
+              "stat": "attack",
+              "value": 20,
+              "mode": "percent"
+            }
+          ],
+          "special": {
+            "trigger": "onBasicAttackHit",
+            "chance": 0.8,
+            "type": "bleed",
+            "target": "primaryEnemy",
+            "scaleStat": "attack",
+            "scale": 0.15,
+            "duration": 2,
+            "tick": "targetTurnStart",
+            "description": "기본 공격 적중 시 80% 확률로 출혈, 2턴. 대상 턴 시작마다 착용자 공격력 15% 피해"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dawn-blade",
+      "name": "여명의 검로",
+      "classId": "swordsman",
+      "className": "검사",
+      "role": "근접 딜러",
+      "concept": "bright silver light armor, teal cord knots, elongated flowing lines, slender elegant forms",
+      "bonuses": [
+        {
+          "pieces": 2,
+          "stats": [
+            {
+              "stat": "attack",
+              "value": 15,
+              "mode": "percent"
+            }
+          ]
+        },
+        {
+          "pieces": 4,
+          "stats": [
+            {
+              "stat": "critDamage",
+              "value": 20,
+              "mode": "percentagePoints"
+            }
+          ],
+          "special": {
+            "trigger": "afterBasicAttack",
+            "chance": 0.8,
+            "type": "bonusDamage",
+            "target": "primaryEnemy",
+            "scaleStat": "attack",
+            "scale": 0.3,
+            "description": "기본 공격 후 80% 확률로 같은 대상에게 공격력 30%의 추가 피해"
+          }
+        }
+      ]
+    },
+    {
+      "id": "trackers-eye",
+      "name": "추적자의 눈",
+      "classId": "hunter",
+      "className": "사냥꾼",
+      "role": "원거리 딜러",
+      "concept": "warm brown leather and wood, dark forest-green cloth, small feathers, eye/aiming crest, practical travel gear",
+      "bonuses": [
+        {
+          "pieces": 2,
+          "stats": [
+            {
+              "stat": "attack",
+              "value": 15,
+              "mode": "percent"
+            }
+          ]
+        },
+        {
+          "pieces": 4,
+          "stats": [
+            {
+              "stat": "critRate",
+              "value": 10,
+              "mode": "percentagePoints"
+            }
+          ],
+          "special": {
+            "trigger": "onBasicAttackHit",
+            "chance": 0.8,
+            "type": "defenseDown",
+            "target": "primaryEnemy",
+            "value": 0.15,
+            "duration": 1,
+            "description": "기본 공격 적중 시 80% 확률로 대상 방어력 15% 감소, 1턴"
+          }
+        }
+      ]
+    },
+    {
+      "id": "star-record",
+      "name": "별의 기록",
+      "classId": "mage",
+      "className": "마법사",
+      "role": "원거리 딜러",
+      "concept": "midnight navy cloth, silver trim, angular blue crystals, star and constellation motifs, graceful curved metalwork",
+      "bonuses": [
+        {
+          "pieces": 2,
+          "stats": [
+            {
+              "stat": "attack",
+              "value": 15,
+              "mode": "percent"
+            }
+          ]
+        },
+        {
+          "pieces": 4,
+          "stats": [
+            {
+              "stat": "effectHit",
+              "value": 15,
+              "mode": "percentagePoints"
+            }
+          ],
+          "special": {
+            "trigger": "onActiveSkillDamage",
+            "chance": 0.8,
+            "type": "speedDown",
+            "target": "eachDamagedEnemy",
+            "value": 0.15,
+            "duration": 1,
+            "description": "액티브 스킬로 피해를 준 대상마다 80% 확률로 속도 15% 감소, 1턴"
+          }
+        }
+      ]
+    },
+    {
+      "id": "victory-plan",
+      "name": "승리의 수순",
+      "classId": "tactician",
+      "className": "전술가",
+      "role": "서포터",
+      "concept": "navy-and-white uniform fabric, matte brass fittings, compass rose and precise geometric motifs, orderly angular forms",
+      "bonuses": [
+        {
+          "pieces": 2,
+          "stats": [
+            {
+              "stat": "speed",
+              "value": 10,
+              "mode": "percent"
+            }
+          ]
+        },
+        {
+          "pieces": 4,
+          "stats": [
+            {
+              "stat": "effectResist",
+              "value": 20,
+              "mode": "percentagePoints"
+            }
+          ],
+          "special": {
+            "trigger": "afterBasicAttack",
+            "chance": 0.8,
+            "type": "energyRecovery",
+            "target": "allAlliesIncludingSelf",
+            "value": 15,
+            "unit": "percentagePoints",
+            "roll": "onceForWholeTeam",
+            "cap": 100,
+            "description": "기본 공격 후 80% 확률로 자신을 포함한 모든 아군의 에너지 15%p 회복"
+          }
+        }
+      ]
+    },
+    {
+      "id": "daybreak-prayer",
+      "name": "새벽의 기도",
+      "classId": "healer",
+      "className": "치유사",
+      "role": "서포터",
+      "concept": "ivory cloth, pale warm gold, pale aqua teardrop gemstones, rounded gentle shapes and small droplet motifs",
+      "bonuses": [
+        {
+          "pieces": 2,
+          "stats": [
+            {
+              "stat": "hp",
+              "value": 15,
+              "mode": "percent"
+            }
+          ]
+        },
+        {
+          "pieces": 4,
+          "stats": [
+            {
+              "stat": "effectResist",
+              "value": 20,
+              "mode": "percentagePoints"
+            }
+          ],
+          "special": {
+            "trigger": "ownTurnEnd",
+            "chance": 0.8,
+            "type": "heal",
+            "target": "allyWithLowestHpRatio",
+            "scaleStat": "hp",
+            "scale": 0.05,
+            "description": "자신의 턴 종료 시 80% 확률로 체력 비율이 가장 낮은 아군을 착용자 최대 체력의 5%만큼 회복"
+          }
+        }
+      ]
+    },
+    {
+      "id": "pathfinder",
+      "name": "개척자의 발걸음",
+      "classId": null,
+      "className": "공용",
+      "role": "공용",
+      "concept": "simple bronze metal, tan traveling leather, turquoise stones, practical diamond-shaped travel crest, modest adventurer gear",
+      "bonuses": [
+        {
+          "pieces": 2,
+          "stats": [
+            {
+              "stat": "hp",
+              "value": 15,
+              "mode": "percent"
+            }
+          ]
+        },
+        {
+          "pieces": 4,
+          "stats": [
+            {
+              "stat": "attack",
+              "value": 20,
+              "mode": "percent"
+            }
+          ],
+          "special": null
+        }
+      ]
+    },
+    {
+      "id": "ancient-legacy",
+      "name": "고대의 유산",
+      "classId": null,
+      "className": "공용",
+      "role": "공용",
+      "concept": "pale gray carved stone, matte silver, violet crystal, simple ancient geometric motifs, weathered shapes drawn with flat color planes not realistic texture",
+      "bonuses": [
+        {
+          "pieces": 2,
+          "stats": [
+            {
+              "stat": "defense",
+              "value": 15,
+              "mode": "percent"
+            }
+          ]
+        },
+        {
+          "pieces": 4,
+          "stats": [
+            {
+              "stat": "effectResist",
+              "value": 20,
+              "mode": "percentagePoints"
+            }
+          ],
+          "special": null
+        }
+      ]
+    }
+  ],
+  "rules": {
+    "equipmentSlots": 6,
+    "setThresholds": [
+      2,
+      4
+    ],
+    "cumulativeBonuses": true,
+    "rarities": [
+      3,
+      4,
+      5
+    ],
+    "sameSetAcrossRarities": true,
+    "specialOnlyAtFourPieces": true,
+    "noWeaponUniqueEffect": true,
+    "independentSkillAndEquipmentRolls": true,
+    "sameStatusDuration": "maximum, not sum",
+    "differentStrengthAndDuration": "pending design",
+    "extraEffectsCanTriggerEquipment": false,
+    "basicAttackRolls": "once per action, primary target only",
+    "activeSkillRolls": "once per damaged target",
+    "energyRecovery": "additive; capped at 100"
+  },
+  "assets": [
+    {
+      "id": "silver-oath-weapon",
+      "name": "백은의 맹세 · 무기",
+      "setId": "silver-oath",
+      "classId": "knight",
+      "slot": "weapon",
+      "file": "silver-oath-weapon.png"
+    },
+    {
+      "id": "silver-oath-armor",
+      "name": "백은의 맹세 · 갑옷",
+      "setId": "silver-oath",
+      "classId": "knight",
+      "slot": "armor",
+      "file": "silver-oath-armor.png"
+    },
+    {
+      "id": "silver-oath-gloves",
+      "name": "백은의 맹세 · 장갑",
+      "setId": "silver-oath",
+      "classId": "knight",
+      "slot": "gloves",
+      "file": "silver-oath-gloves.png"
+    },
+    {
+      "id": "silver-oath-shoes",
+      "name": "백은의 맹세 · 신발",
+      "setId": "silver-oath",
+      "classId": "knight",
+      "slot": "shoes",
+      "file": "silver-oath-shoes.png"
+    },
+    {
+      "id": "silver-oath-ring",
+      "name": "백은의 맹세 · 반지",
+      "setId": "silver-oath",
+      "classId": "knight",
+      "slot": "ring",
+      "file": "silver-oath-ring.png"
+    },
+    {
+      "id": "silver-oath-necklace",
+      "name": "백은의 맹세 · 목걸이",
+      "setId": "silver-oath",
+      "classId": "knight",
+      "slot": "necklace",
+      "file": "silver-oath-necklace.png"
+    },
+    {
+      "id": "unyielding-weapon",
+      "name": "불굴의 투지 · 무기",
+      "setId": "unyielding",
+      "classId": "warrior",
+      "slot": "weapon",
+      "file": "unyielding-weapon.png"
+    },
+    {
+      "id": "unyielding-armor",
+      "name": "불굴의 투지 · 갑옷",
+      "setId": "unyielding",
+      "classId": "warrior",
+      "slot": "armor",
+      "file": "unyielding-armor.png"
+    },
+    {
+      "id": "unyielding-gloves",
+      "name": "불굴의 투지 · 장갑",
+      "setId": "unyielding",
+      "classId": "warrior",
+      "slot": "gloves",
+      "file": "unyielding-gloves.png"
+    },
+    {
+      "id": "unyielding-shoes",
+      "name": "불굴의 투지 · 신발",
+      "setId": "unyielding",
+      "classId": "warrior",
+      "slot": "shoes",
+      "file": "unyielding-shoes.png"
+    },
+    {
+      "id": "unyielding-ring",
+      "name": "불굴의 투지 · 반지",
+      "setId": "unyielding",
+      "classId": "warrior",
+      "slot": "ring",
+      "file": "unyielding-ring.png"
+    },
+    {
+      "id": "unyielding-necklace",
+      "name": "불굴의 투지 · 목걸이",
+      "setId": "unyielding",
+      "classId": "warrior",
+      "slot": "necklace",
+      "file": "unyielding-necklace.png"
+    },
+    {
+      "id": "shadow-fang-weapon",
+      "name": "그림자 송곳니 · 무기",
+      "setId": "shadow-fang",
+      "classId": "assassin",
+      "slot": "weapon",
+      "file": "shadow-fang-weapon.png"
+    },
+    {
+      "id": "shadow-fang-armor",
+      "name": "그림자 송곳니 · 갑옷",
+      "setId": "shadow-fang",
+      "classId": "assassin",
+      "slot": "armor",
+      "file": "shadow-fang-armor.png"
+    },
+    {
+      "id": "shadow-fang-gloves",
+      "name": "그림자 송곳니 · 장갑",
+      "setId": "shadow-fang",
+      "classId": "assassin",
+      "slot": "gloves",
+      "file": "shadow-fang-gloves.png"
+    },
+    {
+      "id": "shadow-fang-shoes",
+      "name": "그림자 송곳니 · 신발",
+      "setId": "shadow-fang",
+      "classId": "assassin",
+      "slot": "shoes",
+      "file": "shadow-fang-shoes.png"
+    },
+    {
+      "id": "shadow-fang-ring",
+      "name": "그림자 송곳니 · 반지",
+      "setId": "shadow-fang",
+      "classId": "assassin",
+      "slot": "ring",
+      "file": "shadow-fang-ring.png"
+    },
+    {
+      "id": "shadow-fang-necklace",
+      "name": "그림자 송곳니 · 목걸이",
+      "setId": "shadow-fang",
+      "classId": "assassin",
+      "slot": "necklace",
+      "file": "shadow-fang-necklace.png"
+    },
+    {
+      "id": "dawn-blade-weapon",
+      "name": "여명의 검로 · 무기",
+      "setId": "dawn-blade",
+      "classId": "swordsman",
+      "slot": "weapon",
+      "file": "dawn-blade-weapon.png"
+    },
+    {
+      "id": "dawn-blade-armor",
+      "name": "여명의 검로 · 갑옷",
+      "setId": "dawn-blade",
+      "classId": "swordsman",
+      "slot": "armor",
+      "file": "dawn-blade-armor.png"
+    },
+    {
+      "id": "dawn-blade-gloves",
+      "name": "여명의 검로 · 장갑",
+      "setId": "dawn-blade",
+      "classId": "swordsman",
+      "slot": "gloves",
+      "file": "dawn-blade-gloves.png"
+    },
+    {
+      "id": "dawn-blade-shoes",
+      "name": "여명의 검로 · 신발",
+      "setId": "dawn-blade",
+      "classId": "swordsman",
+      "slot": "shoes",
+      "file": "dawn-blade-shoes.png"
+    },
+    {
+      "id": "dawn-blade-ring",
+      "name": "여명의 검로 · 반지",
+      "setId": "dawn-blade",
+      "classId": "swordsman",
+      "slot": "ring",
+      "file": "dawn-blade-ring.png"
+    },
+    {
+      "id": "dawn-blade-necklace",
+      "name": "여명의 검로 · 목걸이",
+      "setId": "dawn-blade",
+      "classId": "swordsman",
+      "slot": "necklace",
+      "file": "dawn-blade-necklace.png"
+    },
+    {
+      "id": "trackers-eye-weapon",
+      "name": "추적자의 눈 · 무기",
+      "setId": "trackers-eye",
+      "classId": "hunter",
+      "slot": "weapon",
+      "file": "trackers-eye-weapon.png"
+    },
+    {
+      "id": "trackers-eye-armor",
+      "name": "추적자의 눈 · 갑옷",
+      "setId": "trackers-eye",
+      "classId": "hunter",
+      "slot": "armor",
+      "file": "trackers-eye-armor.png"
+    },
+    {
+      "id": "trackers-eye-gloves",
+      "name": "추적자의 눈 · 장갑",
+      "setId": "trackers-eye",
+      "classId": "hunter",
+      "slot": "gloves",
+      "file": "trackers-eye-gloves.png"
+    },
+    {
+      "id": "trackers-eye-shoes",
+      "name": "추적자의 눈 · 신발",
+      "setId": "trackers-eye",
+      "classId": "hunter",
+      "slot": "shoes",
+      "file": "trackers-eye-shoes.png"
+    },
+    {
+      "id": "trackers-eye-ring",
+      "name": "추적자의 눈 · 반지",
+      "setId": "trackers-eye",
+      "classId": "hunter",
+      "slot": "ring",
+      "file": "trackers-eye-ring.png"
+    },
+    {
+      "id": "trackers-eye-necklace",
+      "name": "추적자의 눈 · 목걸이",
+      "setId": "trackers-eye",
+      "classId": "hunter",
+      "slot": "necklace",
+      "file": "trackers-eye-necklace.png"
+    },
+    {
+      "id": "star-record-weapon",
+      "name": "별의 기록 · 무기",
+      "setId": "star-record",
+      "classId": "mage",
+      "slot": "weapon",
+      "file": "star-record-weapon.png"
+    },
+    {
+      "id": "star-record-armor",
+      "name": "별의 기록 · 갑옷",
+      "setId": "star-record",
+      "classId": "mage",
+      "slot": "armor",
+      "file": "star-record-armor.png"
+    },
+    {
+      "id": "star-record-gloves",
+      "name": "별의 기록 · 장갑",
+      "setId": "star-record",
+      "classId": "mage",
+      "slot": "gloves",
+      "file": "star-record-gloves.png"
+    },
+    {
+      "id": "star-record-shoes",
+      "name": "별의 기록 · 신발",
+      "setId": "star-record",
+      "classId": "mage",
+      "slot": "shoes",
+      "file": "star-record-shoes.png"
+    },
+    {
+      "id": "star-record-ring",
+      "name": "별의 기록 · 반지",
+      "setId": "star-record",
+      "classId": "mage",
+      "slot": "ring",
+      "file": "star-record-ring.png"
+    },
+    {
+      "id": "star-record-necklace",
+      "name": "별의 기록 · 목걸이",
+      "setId": "star-record",
+      "classId": "mage",
+      "slot": "necklace",
+      "file": "star-record-necklace.png"
+    },
+    {
+      "id": "victory-plan-weapon",
+      "name": "승리의 수순 · 무기",
+      "setId": "victory-plan",
+      "classId": "tactician",
+      "slot": "weapon",
+      "file": "victory-plan-weapon.png"
+    },
+    {
+      "id": "victory-plan-armor",
+      "name": "승리의 수순 · 갑옷",
+      "setId": "victory-plan",
+      "classId": "tactician",
+      "slot": "armor",
+      "file": "victory-plan-armor.png"
+    },
+    {
+      "id": "victory-plan-gloves",
+      "name": "승리의 수순 · 장갑",
+      "setId": "victory-plan",
+      "classId": "tactician",
+      "slot": "gloves",
+      "file": "victory-plan-gloves.png"
+    },
+    {
+      "id": "victory-plan-shoes",
+      "name": "승리의 수순 · 신발",
+      "setId": "victory-plan",
+      "classId": "tactician",
+      "slot": "shoes",
+      "file": "victory-plan-shoes.png"
+    },
+    {
+      "id": "victory-plan-ring",
+      "name": "승리의 수순 · 반지",
+      "setId": "victory-plan",
+      "classId": "tactician",
+      "slot": "ring",
+      "file": "victory-plan-ring.png"
+    },
+    {
+      "id": "victory-plan-necklace",
+      "name": "승리의 수순 · 목걸이",
+      "setId": "victory-plan",
+      "classId": "tactician",
+      "slot": "necklace",
+      "file": "victory-plan-necklace.png"
+    },
+    {
+      "id": "daybreak-prayer-weapon",
+      "name": "새벽의 기도 · 무기",
+      "setId": "daybreak-prayer",
+      "classId": "healer",
+      "slot": "weapon",
+      "file": "daybreak-prayer-weapon.png"
+    },
+    {
+      "id": "daybreak-prayer-armor",
+      "name": "새벽의 기도 · 갑옷",
+      "setId": "daybreak-prayer",
+      "classId": "healer",
+      "slot": "armor",
+      "file": "daybreak-prayer-armor.png"
+    },
+    {
+      "id": "daybreak-prayer-gloves",
+      "name": "새벽의 기도 · 장갑",
+      "setId": "daybreak-prayer",
+      "classId": "healer",
+      "slot": "gloves",
+      "file": "daybreak-prayer-gloves.png"
+    },
+    {
+      "id": "daybreak-prayer-shoes",
+      "name": "새벽의 기도 · 신발",
+      "setId": "daybreak-prayer",
+      "classId": "healer",
+      "slot": "shoes",
+      "file": "daybreak-prayer-shoes.png"
+    },
+    {
+      "id": "daybreak-prayer-ring",
+      "name": "새벽의 기도 · 반지",
+      "setId": "daybreak-prayer",
+      "classId": "healer",
+      "slot": "ring",
+      "file": "daybreak-prayer-ring.png"
+    },
+    {
+      "id": "daybreak-prayer-necklace",
+      "name": "새벽의 기도 · 목걸이",
+      "setId": "daybreak-prayer",
+      "classId": "healer",
+      "slot": "necklace",
+      "file": "daybreak-prayer-necklace.png"
+    },
+    {
+      "id": "pathfinder-weapon",
+      "name": "개척자의 발걸음 · 무기",
+      "setId": "pathfinder",
+      "classId": null,
+      "slot": "weapon",
+      "file": "pathfinder-weapon.png"
+    },
+    {
+      "id": "pathfinder-armor",
+      "name": "개척자의 발걸음 · 갑옷",
+      "setId": "pathfinder",
+      "classId": null,
+      "slot": "armor",
+      "file": "pathfinder-armor.png"
+    },
+    {
+      "id": "pathfinder-gloves",
+      "name": "개척자의 발걸음 · 장갑",
+      "setId": "pathfinder",
+      "classId": null,
+      "slot": "gloves",
+      "file": "pathfinder-gloves.png"
+    },
+    {
+      "id": "pathfinder-shoes",
+      "name": "개척자의 발걸음 · 신발",
+      "setId": "pathfinder",
+      "classId": null,
+      "slot": "shoes",
+      "file": "pathfinder-shoes.png"
+    },
+    {
+      "id": "pathfinder-ring",
+      "name": "개척자의 발걸음 · 반지",
+      "setId": "pathfinder",
+      "classId": null,
+      "slot": "ring",
+      "file": "pathfinder-ring.png"
+    },
+    {
+      "id": "pathfinder-necklace",
+      "name": "개척자의 발걸음 · 목걸이",
+      "setId": "pathfinder",
+      "classId": null,
+      "slot": "necklace",
+      "file": "pathfinder-necklace.png"
+    },
+    {
+      "id": "ancient-legacy-weapon",
+      "name": "고대의 유산 · 무기",
+      "setId": "ancient-legacy",
+      "classId": null,
+      "slot": "weapon",
+      "file": "ancient-legacy-weapon.png"
+    },
+    {
+      "id": "ancient-legacy-armor",
+      "name": "고대의 유산 · 갑옷",
+      "setId": "ancient-legacy",
+      "classId": null,
+      "slot": "armor",
+      "file": "ancient-legacy-armor.png"
+    },
+    {
+      "id": "ancient-legacy-gloves",
+      "name": "고대의 유산 · 장갑",
+      "setId": "ancient-legacy",
+      "classId": null,
+      "slot": "gloves",
+      "file": "ancient-legacy-gloves.png"
+    },
+    {
+      "id": "ancient-legacy-shoes",
+      "name": "고대의 유산 · 신발",
+      "setId": "ancient-legacy",
+      "classId": null,
+      "slot": "shoes",
+      "file": "ancient-legacy-shoes.png"
+    },
+    {
+      "id": "ancient-legacy-ring",
+      "name": "고대의 유산 · 반지",
+      "setId": "ancient-legacy",
+      "classId": null,
+      "slot": "ring",
+      "file": "ancient-legacy-ring.png"
+    },
+    {
+      "id": "ancient-legacy-necklace",
+      "name": "고대의 유산 · 목걸이",
+      "setId": "ancient-legacy",
+      "classId": null,
+      "slot": "necklace",
+      "file": "ancient-legacy-necklace.png"
+    }
+  ]
+}

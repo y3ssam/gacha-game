@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>장비 아이콘 · 세트 도감</title>
+<style>
+:root{color-scheme:dark;--accent:#b9dfff;--line:#303a48;--icon-size:132px}
+*{box-sizing:border-box}body{margin:0;padding:40px 32px;background:#10151d;color:#eef1f7;font:14px/1.6 system-ui,"Malgun Gothic",sans-serif}
+main{max-width:1280px;margin:auto}h1{margin:0;font-size:28px}header>p{margin:8px 0 24px;color:#a6b1c1}
+.tools{display:flex;align-items:end;gap:12px;flex-wrap:wrap;padding:20px;background:#171e28;border:1px solid var(--line);border-radius:14px}
+label{display:grid;gap:6px;color:#a6b1c1;font-size:12px}select,button{font:inherit}select,button.control{min-height:40px;padding:8px 14px;border:1px solid var(--line);border-radius:9px;background:#10151d;color:#eef1f7;cursor:pointer}
+#parts{display:flex;gap:6px;flex-wrap:wrap;margin:18px 0 26px}#parts button{padding:7px 16px;border:1px solid var(--line);border-radius:999px;background:transparent;color:#a6b1c1;cursor:pointer}
+#parts button[aria-pressed=true]{background:#b9dfff;color:#10151d;border-color:#b9dfff}
+.tools .size{margin-left:auto;min-width:150px}.size span{display:flex;gap:12px;align-items:center}input{accent-color:var(--accent)}output{min-width:40px;color:#eef1f7}
+.set{margin-bottom:34px;padding:24px;border:1px solid var(--line);border-radius:16px;background:#141b25}
+.set-heading{display:flex;gap:12px;align-items:center;margin-bottom:14px;flex-wrap:wrap}.set h2{font-size:20px;margin:0}.badge{padding:3px 10px;border:1px solid #52647c;border-radius:6px;font-size:12px;color:var(--accent)}
+.effects{display:flex;gap:12px;margin-bottom:20px}.effect{flex:1;padding:10px 14px;border-left:2px solid #52647c;background:#1a2330;font-size:13px;color:#c8d1dd}.effect strong{display:block;color:var(--accent);font-size:12px;margin-bottom:3px}.special{display:block;margin-top:5px;color:#e4d39a}
+.grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}.item{display:grid;justify-items:center;align-content:center;gap:10px;min-width:0;padding:14px 8px;border:1px solid var(--line);border-radius:12px;background:#10151d;color:#eef1f7;cursor:pointer}
+.art{width:min(var(--icon-size),100%);aspect-ratio:1;display:block}.art img{display:block;width:100%;height:100%;object-fit:contain}.item:hover{border-color:var(--accent)}.item-name{font-size:12px}
+body.light .art{background:#f1f3f7;border-radius:8px}body.checker .art{background:repeating-conic-gradient(#e2e6ec 0 25%,#fff 0 50%) 0/16px 16px;border-radius:8px}
+[hidden]{display:none!important}button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+#status{color:#a6b1c1}footer{display:flex;gap:18px;flex-wrap:wrap;margin:24px 0;color:#a6b1c1;font-size:12px}a{color:var(--accent)}
+dialog{width:min(980px,90vw);max-height:90dvh;padding:24px;border:1px solid #52647c;border-radius:16px;background:#141b25;color:#eef1f7;overflow:auto}dialog::backdrop{background:#000a;backdrop-filter:none}
+.dialog-header{display:flex;align-items:center;justify-content:space-between;gap:16px}dialog h2{font-size:20px;margin:0}dialog .large-art{width:100%;height:min(65dvh,600px);object-fit:contain;display:block;margin:12px 0}dialog p{margin:8px 0;color:#c8d1dd}
+@media(max-width:900px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.effects{flex-direction:column}}
+@media(max-width:540px){body{padding:24px 14px}.set{padding:16px}.grid{gap:8px}.item{padding:10px 4px}.tools{padding:14px}.tools .size{margin-left:0}h1{font-size:24px}}
+</style>
+</head>
+<body>
+<main>
+<header><h1>장비 아이콘 · 세트 도감</h1><p>클래스 전용 8세트 · 공용 2세트 · 6부위 60종<br>2D 애니메이션풍 · 1254 × 1254 · 투명 PNG</p></header>
+<div class="tools">
+<label>세트<select id="set-filter" aria-label="세트 선택"><option value="all">전체 세트</option></select></label>
+<button class="control" id="background" type="button">배경: 다크</button>
+<label class="size">표시 크기<span><input id="size" type="range" min="48" max="160" step="16" value="128"><output id="size-value">128px</output></span></label>
+</div>
+<nav id="parts" aria-label="장비 부위"></nav>
+<p id="status" role="status">장비를 불러오는 중입니다.</p>
+<div id="sets"></div>
+<footer><span>아이콘을 누르면 크게 볼 수 있습니다.</span><a href="manifest.json">장비·세트 목록</a><a href="generation-prompts.json">생성 프롬프트</a></footer>
+</main>
+<dialog id="viewer" aria-labelledby="viewer-title">
+<div class="dialog-header"><h2 id="viewer-title"></h2><button class="control" id="close" type="button">닫기</button></div>
+<img class="large-art" id="viewer-image" alt="">
+<p id="viewer-class"></p><div id="viewer-effects"></div>
+</dialog>
+<script>
+const labels={hp:"체력",attack:"공격력",defense:"방어력",speed:"속도",critRate:"치명타 확률",critDamage:"치명타 피해",effectHit:"효과 적중",effectResist:"효과 저항"};
+let catalog,part="all",background=0,lastTrigger;
+const make=(tag,className,text)=>{const e=document.createElement(tag);if(className)e.className=className;if(text!==undefined)e.textContent=text;return e};
+const describe=stats=>stats.map(s=>labels[s.stat]+" +"+s.value+(s.mode==="percentagePoints"?"%p":"%")).join(" · ");
+function effects(set){const group=make("div","effects");set.bonuses.forEach(b=>{const box=make("div","effect");box.append(make("strong","",b.pieces+"세트"),make("span","",describe(b.stats)));if(b.special)box.append(make("span","special",b.special.description));group.append(box)});return group}
+function render(){
+ const chosen=document.getElementById("set-filter").value,container=document.getElementById("sets");container.replaceChildren();let count=0;
+ catalog.sets.filter(s=>chosen==="all"||s.id===chosen).forEach(set=>{
+  const assets=catalog.assets.filter(a=>a.setId===set.id&&(part==="all"||a.slot===part));if(!assets.length)return;
+  const section=make("section","set"),heading=make("div","set-heading");heading.append(make("h2","",set.name),make("span","badge",set.classId?set.className+" 전용":"모든 클래스"));section.append(heading,effects(set));
+  const grid=make("div","grid");assets.forEach(a=>{const button=make("button","item");button.type="button";button.setAttribute("aria-label",a.name+" 크게 보기");const art=make("span","art"),img=make("img");img.src=a.file;img.alt=a.name;img.width=catalog.width;img.height=catalog.height;img.loading="lazy";art.append(img);button.append(art,make("span","item-name",catalog.slots.find(s=>s.id===a.slot).name));button.addEventListener("click",()=>openItem(a,set,button));grid.append(button);count++});
+  section.append(grid);container.append(section);
+ });document.getElementById("status").textContent=count+"개 장비";
+}
+function openItem(item,set,trigger){
+ lastTrigger=trigger;document.getElementById("viewer-title").textContent=item.name;
+ const image=document.getElementById("viewer-image");image.src=item.file;image.alt=item.name;
+ document.getElementById("viewer-class").textContent=set.classId?set.className+" 전용 장비":"모든 클래스가 착용할 수 있는 공용 장비";
+ document.getElementById("viewer-effects").replaceChildren(effects(set));document.getElementById("viewer").showModal();
+}
+document.getElementById("close").addEventListener("click",()=>document.getElementById("viewer").close());
+document.getElementById("viewer").addEventListener("close",()=>lastTrigger?.focus({preventScroll:true}));
+document.getElementById("background").addEventListener("click",e=>{background=(background+1)%3;document.body.className=["","light","checker"][background];e.currentTarget.textContent="배경: "+["다크","라이트","투명 확인"][background]});
+document.getElementById("size").addEventListener("input",e=>{document.documentElement.style.setProperty("--icon-size",e.target.value+"px");document.getElementById("size-value").textContent=e.target.value+"px"});
+document.getElementById("set-filter").addEventListener("change",render);
+async function init(){
+ const response=await fetch("manifest.json");if(!response.ok)throw Error("manifest");catalog=await response.json();
+ const filter=document.getElementById("set-filter");catalog.sets.forEach(s=>{const option=make("option","",s.name+" · "+(s.classId?s.className:"공용"));option.value=s.id;filter.append(option)});
+ const parts=document.getElementById("parts");[{id:"all",name:"전체"},...catalog.slots].forEach(s=>{const button=make("button","",s.name);button.type="button";button.dataset.part=s.id;button.setAttribute("aria-pressed",String(s.id===part));button.addEventListener("click",()=>{part=s.id;parts.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.part===part)));render()});parts.append(button)});
+ document.documentElement.style.setProperty("--icon-size",document.getElementById("size").value+"px");render();
+}
+init().catch(()=>{document.getElementById("status").textContent="장비 목록을 불러오지 못했습니다. 새로고침해 주세요."});
+</script>
+</body>
+</html>

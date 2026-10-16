@@ -223,8 +223,8 @@ export function createAppServer({ testConnection = testVertexConnection, store =
         }
         return;
       }
-      // 생성된 재료·던전 이미지 폴더만 허용하며 키 파일과 서버 소스는 제공하지 않습니다.
-      const materialAsset = route.match(/^\/assets\/(materials|dungeons)\/(?:([a-z0-9-]+\.png|manifest\.json|generation-prompts(?:-elemental)?\.json|index\.html))?$/);
+      // 생성된 재료·던전·장비 이미지 폴더만 허용하며 키 파일과 서버 소스는 제공하지 않습니다.
+      const materialAsset = route.match(/^\/assets\/(materials|dungeons|equipment)\/(?:([a-z0-9-]+\.png|manifest\.json|generation-prompts(?:-elemental)?\.json|index\.html))?$/);
       if (materialAsset) {
         if (req.method !== 'GET' && req.method !== 'HEAD') return sendJson(res, 405, { ok: false });
         const filename = materialAsset[2] || 'index.html';

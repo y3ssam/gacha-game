@@ -1,0 +1,549 @@
+{
+  "tool": "built-in image_gen",
+  "requestedSize": "1024x1024",
+  "savedSize": "1254x1254",
+  "transparent": true,
+  "assets": [
+    {
+      "id": "silver-oath-weapon",
+      "setId": "silver-oath",
+      "slot": "weapon",
+      "name": "백은의 맹세 · 무기",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. SET DESIGN: silver-white plate metal, deep sapphire-blue gemstones, blue fabric, shield crest, broad protective shapes. SUBJECT: ONE long knight spear with a broad silver leaf-shaped point, sapphire beneath the blade, a small shield-shaped guard, dark blue wrapped shaft. Long straight shaft from bottom-left to top-right, entire spear fits canvas.",
+      "reference": "../materials/catalyst-fire.png",
+      "referenceRole": "style only"
+    },
+    {
+      "id": "unyielding-weapon",
+      "setId": "unyielding",
+      "slot": "weapon",
+      "name": "불굴의 투지 · 무기",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. SET DESIGN: dark charcoal iron, muted crimson cloth, thick metal bands, rugged heavy blocky shapes, angular iron crest. SUBJECT: ONE heavy war hammer with a massive dark iron rectangular head, thick metal bands, a small crimson gem, crimson cloth tied to a sturdy handle. Full head and handle, diagonal bottom-left to top-right.",
+      "reference": "../materials/catalyst-fire.png",
+      "referenceRole": "style only"
+    },
+    {
+      "id": "shadow-fang-weapon",
+      "setId": "shadow-fang",
+      "slot": "weapon",
+      "name": "그림자 송곳니 · 무기",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. SET DESIGN: black leather, dark violet steel, plum-magenta gems, fang-shaped hooks, slim sharp forms. SUBJECT: ONE paired-dagger equipment icon: exactly TWO matching short daggers arranged crossed, black leather grips and slim dark steel blades, plum gems in the pommels, fang-shaped guards. Both daggers entirely visible.",
+      "reference": "../materials/catalyst-fire.png",
+      "referenceRole": "style only"
+    },
+    {
+      "id": "dawn-blade-weapon",
+      "setId": "dawn-blade",
+      "slot": "weapon",
+      "name": "여명의 검로 · 무기",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. SET DESIGN: bright silver light armor, teal cord knots, elongated flowing lines, slender elegant forms. SUBJECT: ONE elegant straight longsword with a slender silver blade, restrained teal inlay along its fuller, silver guard and teal cord knot at the grip. Full sword diagonal bottom-left to top-right.",
+      "reference": "../materials/catalyst-fire.png",
+      "referenceRole": "style only"
+    },
+    {
+      "id": "trackers-eye-weapon",
+      "setId": "trackers-eye",
+      "slot": "weapon",
+      "name": "추적자의 눈 · 무기",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. SET DESIGN: warm brown leather and wood, dark forest-green cloth, small feathers, eye/aiming crest, practical travel gear. SUBJECT: ONE recurved hunter bow of warm brown wood with dark forest-green wrapping and small feather ornaments near the grip, clear taut bowstring. Full bow and string, no arrows.",
+      "reference": "../materials/catalyst-fire.png",
+      "referenceRole": "style only"
+    },
+    {
+      "id": "star-record-weapon",
+      "setId": "star-record",
+      "slot": "weapon",
+      "name": "별의 기록 · 무기",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. SET DESIGN: midnight navy cloth, silver trim, angular blue crystals, star and constellation motifs, graceful curved metalwork. SUBJECT: ONE mage staff, slender dark navy shaft with silver fittings, a large angular azure crystal in an open silver crescent head with a small four-point star. Full staff diagonal bottom-left to top-right.",
+      "reference": "../materials/catalyst-fire.png",
+      "referenceRole": "style only"
+    },
+    {
+      "id": "victory-plan-weapon",
+      "setId": "victory-plan",
+      "slot": "weapon",
+      "name": "승리의 수순 · 무기",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. SET DESIGN: navy-and-white uniform fabric, matte brass fittings, compass rose and precise geometric motifs, orderly angular forms. SUBJECT: ONE closed command grimoire, thick navy cover with clean white panels, brass corner fittings, a large simple compass rose relief on the cover and a brass clasp, three-quarter view. No writing or letters.",
+      "reference": "../materials/catalyst-fire.png",
+      "referenceRole": "style only"
+    },
+    {
+      "id": "daybreak-prayer-weapon",
+      "setId": "daybreak-prayer",
+      "slot": "weapon",
+      "name": "새벽의 기도 · 무기",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. SET DESIGN: ivory cloth, pale warm gold, pale aqua teardrop gemstones, rounded gentle shapes and small droplet motifs. SUBJECT: ONE healer ritual handbell, warm pale-gold bell body, ivory handle wrapped in a ribbon, pale aqua teardrop gem set in the bell, small droplet ornament. The bell and handle fully visible.",
+      "reference": "../materials/catalyst-fire.png",
+      "referenceRole": "style only"
+    },
+    {
+      "id": "pathfinder-weapon",
+      "setId": "pathfinder",
+      "slot": "weapon",
+      "name": "개척자의 발걸음 · 무기",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. SET DESIGN: simple bronze metal, tan traveling leather, turquoise stones, practical diamond-shaped travel crest, modest adventurer gear. SUBJECT: ONE practical short sword, a compact bronze blade with a pale steel cutting edge, tan leather grip and tiny turquoise pommel stone. Entire short sword diagonal bottom-left to top-right.",
+      "reference": "../materials/catalyst-fire.png",
+      "referenceRole": "style only"
+    },
+    {
+      "id": "ancient-legacy-weapon",
+      "setId": "ancient-legacy",
+      "slot": "weapon",
+      "name": "고대의 유산 · 무기",
+      "prompt": "Use case: precise-object-edit. Edit target: attached ancient-legacy weapon icon. Keep its clean 2D anime linework and cel shading, pale gray stone, matte silver and violet colors, transparent alpha, square canvas and readable inventory-icon composition. CHANGE the object silhouette: a perfectly ROUND SPHERICAL VIOLET CRYSTAL BALL resting above a squat triangular pale-gray STONE PEDESTAL with three short feet and sparse matte-silver geometric trim. The sphere should be visibly circular, NOT an oval gemstone. Remove the entire enclosing ring, prongs and crescent frame. A small angular diamond relief on the pedestal only. This must clearly look like a crystal-ball weapon / divination focus, not a breakthrough catalyst or pendant. Full object within central 76% square with generous clear padding, actual transparent background. No text, letters, numbers, person, scenery, ground shadow, border, logo or UI. Single icon. Exactly 1024x1024 requested.",
+      "reference": "../materials/catalyst-fire.png",
+      "referenceRole": "edit of the initial ancient-legacy-weapon generation; previous composition replaced with round sphere and pedestal",
+      "initialPrompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. SET DESIGN: pale gray carved stone, matte silver, violet crystal, simple ancient geometric motifs, weathered shapes drawn with flat color planes not realistic texture. SUBJECT: ONE ancient violet crystal orb in a small open pale-gray stone and matte-silver cradle, large clean angular silver bands and a geometric diamond crest, suspended core, no glow cloud."
+    },
+    {
+      "id": "silver-oath-armor",
+      "setId": "silver-oath",
+      "slot": "armor",
+      "name": "백은의 맹세 · 갑옷",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: silver-white plate metal, deep sapphire-blue gemstones, blue fabric, shield crest, broad protective shapes. SUBJECT: a broad silver-white plate cuirass with protective pauldrons, a deep-blue fabric inset, sapphire and shield crest No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "silver-oath-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "silver-oath-gloves",
+      "setId": "silver-oath",
+      "slot": "gloves",
+      "name": "백은의 맹세 · 장갑",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: silver-white plate metal, deep sapphire-blue gemstones, blue fabric, shield crest, broad protective shapes. SUBJECT: a matching pair of broad silver plate gauntlets with sapphire shield plates No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "silver-oath-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "silver-oath-shoes",
+      "setId": "silver-oath",
+      "slot": "shoes",
+      "name": "백은의 맹세 · 신발",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: silver-white plate metal, deep sapphire-blue gemstones, blue fabric, shield crest, broad protective shapes. SUBJECT: a matching pair of broad armored silver sabatons and greaves with blue lining No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "silver-oath-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "silver-oath-ring",
+      "setId": "silver-oath",
+      "slot": "ring",
+      "name": "백은의 맹세 · 반지",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: silver-white plate metal, deep sapphire-blue gemstones, blue fabric, shield crest, broad protective shapes. SUBJECT: ONE wearable finger ring, three-quarter view, clear band opening, set metal and a single small set-colored gemstone mounted with the set crest. Small jewelry ring, NOT an orb, catalyst or floating core. No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "silver-oath-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "silver-oath-necklace",
+      "setId": "silver-oath",
+      "slot": "necklace",
+      "name": "백은의 맹세 · 목걸이",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: silver-white plate metal, deep sapphire-blue gemstones, blue fabric, shield crest, broad protective shapes. SUBJECT: ONE wearable necklace: a full fine chain in a loose oval loop and ONE small pendant with the set crest and set-colored gem. Show the entire chain and pendant, not just pendant; NOT an orb, catalyst or weapon. No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "silver-oath-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "unyielding-armor",
+      "setId": "unyielding",
+      "slot": "armor",
+      "name": "불굴의 투지 · 갑옷",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: dark charcoal iron, muted crimson cloth, thick metal bands, rugged heavy blocky shapes, angular iron crest. SUBJECT: a massive dark iron breastplate with thick angular bands and crimson cloth panels No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "unyielding-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "unyielding-gloves",
+      "setId": "unyielding",
+      "slot": "gloves",
+      "name": "불굴의 투지 · 장갑",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: dark charcoal iron, muted crimson cloth, thick metal bands, rugged heavy blocky shapes, angular iron crest. SUBJECT: a matching pair of bulky black iron gauntlets with thick bands and crimson wrist wraps No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "unyielding-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "unyielding-shoes",
+      "setId": "unyielding",
+      "slot": "shoes",
+      "name": "불굴의 투지 · 신발",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: dark charcoal iron, muted crimson cloth, thick metal bands, rugged heavy blocky shapes, angular iron crest. SUBJECT: a matching pair of heavy dark iron plated boots with crimson straps No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "unyielding-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "unyielding-ring",
+      "setId": "unyielding",
+      "slot": "ring",
+      "name": "불굴의 투지 · 반지",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: dark charcoal iron, muted crimson cloth, thick metal bands, rugged heavy blocky shapes, angular iron crest. SUBJECT: ONE wearable finger ring, three-quarter view, clear band opening, set metal and a single small set-colored gemstone mounted with the set crest. Small jewelry ring, NOT an orb, catalyst or floating core. No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "unyielding-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "unyielding-necklace",
+      "setId": "unyielding",
+      "slot": "necklace",
+      "name": "불굴의 투지 · 목걸이",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: dark charcoal iron, muted crimson cloth, thick metal bands, rugged heavy blocky shapes, angular iron crest. SUBJECT: ONE wearable necklace: a full fine chain in a loose oval loop and ONE small pendant with the set crest and set-colored gem. Show the entire chain and pendant, not just pendant; NOT an orb, catalyst or weapon. No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "unyielding-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "shadow-fang-armor",
+      "setId": "shadow-fang",
+      "slot": "armor",
+      "name": "그림자 송곳니 · 갑옷",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: black leather, dark violet steel, plum-magenta gems, fang-shaped hooks, slim sharp forms. SUBJECT: a slim fitted black leather chest armor with dark violet plates, plum gems and small fang buckles; no cape or hood No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "shadow-fang-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "shadow-fang-gloves",
+      "setId": "shadow-fang",
+      "slot": "gloves",
+      "name": "그림자 송곳니 · 장갑",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: black leather, dark violet steel, plum-magenta gems, fang-shaped hooks, slim sharp forms. SUBJECT: a matching pair of slim black leather fingerless gloves with violet finger guards and fang wrist plates No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "shadow-fang-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "shadow-fang-shoes",
+      "setId": "shadow-fang",
+      "slot": "shoes",
+      "name": "그림자 송곳니 · 신발",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: black leather, dark violet steel, plum-magenta gems, fang-shaped hooks, slim sharp forms. SUBJECT: a matching pair of light black leather ankle boots with violet fang-shaped clasps No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "shadow-fang-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "shadow-fang-ring",
+      "setId": "shadow-fang",
+      "slot": "ring",
+      "name": "그림자 송곳니 · 반지",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: black leather, dark violet steel, plum-magenta gems, fang-shaped hooks, slim sharp forms. SUBJECT: ONE wearable finger ring, three-quarter view, clear band opening, set metal and a single small set-colored gemstone mounted with the set crest. Small jewelry ring, NOT an orb, catalyst or floating core. No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "shadow-fang-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "shadow-fang-necklace",
+      "setId": "shadow-fang",
+      "slot": "necklace",
+      "name": "그림자 송곳니 · 목걸이",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: black leather, dark violet steel, plum-magenta gems, fang-shaped hooks, slim sharp forms. SUBJECT: ONE wearable necklace: a full fine chain in a loose oval loop and ONE small pendant with the set crest and set-colored gem. Show the entire chain and pendant, not just pendant; NOT an orb, catalyst or weapon. No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "shadow-fang-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "dawn-blade-armor",
+      "setId": "dawn-blade",
+      "slot": "armor",
+      "name": "여명의 검로 · 갑옷",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: bright silver light armor, teal cord knots, elongated flowing lines, slender elegant forms. SUBJECT: a sleek silver light cuirass with layered slim plates and a long teal cord knot at its waist No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "dawn-blade-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "dawn-blade-gloves",
+      "setId": "dawn-blade",
+      "slot": "gloves",
+      "name": "여명의 검로 · 장갑",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: bright silver light armor, teal cord knots, elongated flowing lines, slender elegant forms. SUBJECT: a matching pair of sleek silver light gauntlets with slender ridges and teal cord wrist knots No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "dawn-blade-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "dawn-blade-shoes",
+      "setId": "dawn-blade",
+      "slot": "shoes",
+      "name": "여명의 검로 · 신발",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: bright silver light armor, teal cord knots, elongated flowing lines, slender elegant forms. SUBJECT: a matching pair of slender silver light armored boots with flowing trim and teal cord knots No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "dawn-blade-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "dawn-blade-ring",
+      "setId": "dawn-blade",
+      "slot": "ring",
+      "name": "여명의 검로 · 반지",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: bright silver light armor, teal cord knots, elongated flowing lines, slender elegant forms. SUBJECT: ONE wearable finger ring, three-quarter view, clear band opening, set metal and a single small set-colored gemstone mounted with the set crest. Small jewelry ring, NOT an orb, catalyst or floating core. No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "dawn-blade-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "dawn-blade-necklace",
+      "setId": "dawn-blade",
+      "slot": "necklace",
+      "name": "여명의 검로 · 목걸이",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: bright silver light armor, teal cord knots, elongated flowing lines, slender elegant forms. SUBJECT: ONE wearable necklace: a full fine chain in a loose oval loop and ONE small pendant with the set crest and set-colored gem. Show the entire chain and pendant, not just pendant; NOT an orb, catalyst or weapon. No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "dawn-blade-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "trackers-eye-armor",
+      "setId": "trackers-eye",
+      "slot": "armor",
+      "name": "추적자의 눈 · 갑옷",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: warm brown leather and wood, dark forest-green cloth, small feathers, eye/aiming crest, practical travel gear. SUBJECT: a practical brown leather ranger vest over forest-green cloth, small feather and aiming-eye crest on chest No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "trackers-eye-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "trackers-eye-gloves",
+      "setId": "trackers-eye",
+      "slot": "gloves",
+      "name": "추적자의 눈 · 장갑",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: warm brown leather and wood, dark forest-green cloth, small feathers, eye/aiming crest, practical travel gear. SUBJECT: a matching pair of supple brown leather archery gloves with forest-green cuffs, small feather fittings No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "trackers-eye-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "trackers-eye-shoes",
+      "setId": "trackers-eye",
+      "slot": "shoes",
+      "name": "추적자의 눈 · 신발",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: warm brown leather and wood, dark forest-green cloth, small feathers, eye/aiming crest, practical travel gear. SUBJECT: a matching pair of practical brown leather travel boots with dark green cuffs and small feather laces No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "trackers-eye-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "trackers-eye-ring",
+      "setId": "trackers-eye",
+      "slot": "ring",
+      "name": "추적자의 눈 · 반지",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: warm brown leather and wood, dark forest-green cloth, small feathers, eye/aiming crest, practical travel gear. SUBJECT: ONE wearable finger ring, three-quarter view, clear band opening, set metal and a single small set-colored gemstone mounted with the set crest. Small jewelry ring, NOT an orb, catalyst or floating core. No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "trackers-eye-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "trackers-eye-necklace",
+      "setId": "trackers-eye",
+      "slot": "necklace",
+      "name": "추적자의 눈 · 목걸이",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: warm brown leather and wood, dark forest-green cloth, small feathers, eye/aiming crest, practical travel gear. SUBJECT: ONE wearable necklace: a full fine chain in a loose oval loop and ONE small pendant with the set crest and set-colored gem. Show the entire chain and pendant, not just pendant; NOT an orb, catalyst or weapon. No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "trackers-eye-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "star-record-armor",
+      "setId": "star-record",
+      "slot": "armor",
+      "name": "별의 기록 · 갑옷",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: midnight navy cloth, silver trim, angular blue crystals, star and constellation motifs, graceful curved metalwork. SUBJECT: a midnight navy mage robe torso with silver hems, angular blue crystals and simple star constellation ornament; no person or legs No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "star-record-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "star-record-gloves",
+      "setId": "star-record",
+      "slot": "gloves",
+      "name": "별의 기록 · 장갑",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: midnight navy cloth, silver trim, angular blue crystals, star and constellation motifs, graceful curved metalwork. SUBJECT: a matching pair of midnight navy cloth mage gloves with silver cuffs and angular blue crystal star badges No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "star-record-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "star-record-shoes",
+      "setId": "star-record",
+      "slot": "shoes",
+      "name": "별의 기록 · 신발",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: midnight navy cloth, silver trim, angular blue crystals, star and constellation motifs, graceful curved metalwork. SUBJECT: a matching pair of midnight navy cloth mage boots with silver trim and angular blue crystal star fittings No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "star-record-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "star-record-ring",
+      "setId": "star-record",
+      "slot": "ring",
+      "name": "별의 기록 · 반지",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: midnight navy cloth, silver trim, angular blue crystals, star and constellation motifs, graceful curved metalwork. SUBJECT: ONE wearable finger ring, three-quarter view, clear band opening, set metal and a single small set-colored gemstone mounted with the set crest. Small jewelry ring, NOT an orb, catalyst or floating core. No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "star-record-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "star-record-necklace",
+      "setId": "star-record",
+      "slot": "necklace",
+      "name": "별의 기록 · 목걸이",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: midnight navy cloth, silver trim, angular blue crystals, star and constellation motifs, graceful curved metalwork. SUBJECT: ONE wearable necklace: a full fine chain in a loose oval loop and ONE small pendant with the set crest and set-colored gem. Show the entire chain and pendant, not just pendant; NOT an orb, catalyst or weapon. No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "star-record-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "victory-plan-armor",
+      "setId": "victory-plan",
+      "slot": "armor",
+      "name": "승리의 수순 · 갑옷",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: navy-and-white uniform fabric, matte brass fittings, compass rose and precise geometric motifs, orderly angular forms. SUBJECT: a structured navy-and-white tactical uniform jacket torso, brass buttons and compass badge, precise geometric seams No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "victory-plan-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "victory-plan-gloves",
+      "setId": "victory-plan",
+      "slot": "gloves",
+      "name": "승리의 수순 · 장갑",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: navy-and-white uniform fabric, matte brass fittings, compass rose and precise geometric motifs, orderly angular forms. SUBJECT: a matching pair of white tactical gloves with navy cuffs and small brass compass fittings No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "victory-plan-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "victory-plan-shoes",
+      "setId": "victory-plan",
+      "slot": "shoes",
+      "name": "승리의 수순 · 신발",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: navy-and-white uniform fabric, matte brass fittings, compass rose and precise geometric motifs, orderly angular forms. SUBJECT: a matching pair of polished navy tactical boots with white panels and matte brass compass buckles No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "victory-plan-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "victory-plan-ring",
+      "setId": "victory-plan",
+      "slot": "ring",
+      "name": "승리의 수순 · 반지",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: navy-and-white uniform fabric, matte brass fittings, compass rose and precise geometric motifs, orderly angular forms. SUBJECT: ONE wearable finger ring, three-quarter view, clear band opening, set metal and a single small set-colored gemstone mounted with the set crest. Small jewelry ring, NOT an orb, catalyst or floating core. No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "victory-plan-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "victory-plan-necklace",
+      "setId": "victory-plan",
+      "slot": "necklace",
+      "name": "승리의 수순 · 목걸이",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: navy-and-white uniform fabric, matte brass fittings, compass rose and precise geometric motifs, orderly angular forms. SUBJECT: ONE wearable necklace: a full fine chain in a loose oval loop and ONE small pendant with the set crest and set-colored gem. Show the entire chain and pendant, not just pendant; NOT an orb, catalyst or weapon. No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "victory-plan-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "daybreak-prayer-armor",
+      "setId": "daybreak-prayer",
+      "slot": "armor",
+      "name": "새벽의 기도 · 갑옷",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: ivory cloth, pale warm gold, pale aqua teardrop gemstones, rounded gentle shapes and small droplet motifs. SUBJECT: an ivory healer vestment torso with soft rounded pale-gold hems, pale aqua teardrop jewel at the chest No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "daybreak-prayer-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "daybreak-prayer-gloves",
+      "setId": "daybreak-prayer",
+      "slot": "gloves",
+      "name": "새벽의 기도 · 장갑",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: ivory cloth, pale warm gold, pale aqua teardrop gemstones, rounded gentle shapes and small droplet motifs. SUBJECT: a matching pair of soft ivory healer gloves with pale-gold cuffs and pale aqua teardrop jewels No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "daybreak-prayer-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "daybreak-prayer-shoes",
+      "setId": "daybreak-prayer",
+      "slot": "shoes",
+      "name": "새벽의 기도 · 신발",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: ivory cloth, pale warm gold, pale aqua teardrop gemstones, rounded gentle shapes and small droplet motifs. SUBJECT: a matching pair of soft ivory healer boots with rounded pale-gold fittings and pale aqua teardrop clasps No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "daybreak-prayer-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "daybreak-prayer-ring",
+      "setId": "daybreak-prayer",
+      "slot": "ring",
+      "name": "새벽의 기도 · 반지",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: ivory cloth, pale warm gold, pale aqua teardrop gemstones, rounded gentle shapes and small droplet motifs. SUBJECT: ONE wearable finger ring, three-quarter view, clear band opening, set metal and a single small set-colored gemstone mounted with the set crest. Small jewelry ring, NOT an orb, catalyst or floating core. No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "daybreak-prayer-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "daybreak-prayer-necklace",
+      "setId": "daybreak-prayer",
+      "slot": "necklace",
+      "name": "새벽의 기도 · 목걸이",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: ivory cloth, pale warm gold, pale aqua teardrop gemstones, rounded gentle shapes and small droplet motifs. SUBJECT: ONE wearable necklace: a full fine chain in a loose oval loop and ONE small pendant with the set crest and set-colored gem. Show the entire chain and pendant, not just pendant; NOT an orb, catalyst or weapon. No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "daybreak-prayer-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "pathfinder-armor",
+      "setId": "pathfinder",
+      "slot": "armor",
+      "name": "개척자의 발걸음 · 갑옷",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: simple bronze metal, tan traveling leather, turquoise stones, practical diamond-shaped travel crest, modest adventurer gear. SUBJECT: a modest tan leather adventurer cuirass with simple bronze buckles and a small turquoise diamond crest No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "pathfinder-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "pathfinder-gloves",
+      "setId": "pathfinder",
+      "slot": "gloves",
+      "name": "개척자의 발걸음 · 장갑",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: simple bronze metal, tan traveling leather, turquoise stones, practical diamond-shaped travel crest, modest adventurer gear. SUBJECT: a matching pair of practical tan leather travel gloves with simple bronze buckles and tiny turquoise studs No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "pathfinder-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "pathfinder-shoes",
+      "setId": "pathfinder",
+      "slot": "shoes",
+      "name": "개척자의 발걸음 · 신발",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: simple bronze metal, tan traveling leather, turquoise stones, practical diamond-shaped travel crest, modest adventurer gear. SUBJECT: a matching pair of practical tan leather hiking boots with simple bronze buckles and tiny turquoise studs No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "pathfinder-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "pathfinder-ring",
+      "setId": "pathfinder",
+      "slot": "ring",
+      "name": "개척자의 발걸음 · 반지",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: simple bronze metal, tan traveling leather, turquoise stones, practical diamond-shaped travel crest, modest adventurer gear. SUBJECT: ONE wearable finger ring, three-quarter view, clear band opening, set metal and a single small set-colored gemstone mounted with the set crest. Small jewelry ring, NOT an orb, catalyst or floating core. No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "pathfinder-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "pathfinder-necklace",
+      "setId": "pathfinder",
+      "slot": "necklace",
+      "name": "개척자의 발걸음 · 목걸이",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: simple bronze metal, tan traveling leather, turquoise stones, practical diamond-shaped travel crest, modest adventurer gear. SUBJECT: ONE wearable necklace: a full fine chain in a loose oval loop and ONE small pendant with the set crest and set-colored gem. Show the entire chain and pendant, not just pendant; NOT an orb, catalyst or weapon. No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "pathfinder-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "ancient-legacy-armor",
+      "setId": "ancient-legacy",
+      "slot": "armor",
+      "name": "고대의 유산 · 갑옷",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: pale gray carved stone, matte silver, violet crystal, simple ancient geometric motifs, weathered shapes drawn with flat color planes not realistic texture. SUBJECT: a pale gray stone-plated cuirass with matte silver bands, carved simple geometric panels and a violet crystal at the chest No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "ancient-legacy-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "ancient-legacy-gloves",
+      "setId": "ancient-legacy",
+      "slot": "gloves",
+      "name": "고대의 유산 · 장갑",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: pale gray carved stone, matte silver, violet crystal, simple ancient geometric motifs, weathered shapes drawn with flat color planes not realistic texture. SUBJECT: a matching pair of pale gray stone-plated gauntlets with matte silver bands and violet geometric crystal insets No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "ancient-legacy-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "ancient-legacy-shoes",
+      "setId": "ancient-legacy",
+      "slot": "shoes",
+      "name": "고대의 유산 · 신발",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: pale gray carved stone, matte silver, violet crystal, simple ancient geometric motifs, weathered shapes drawn with flat color planes not realistic texture. SUBJECT: a matching pair of pale gray stone-plated boots with matte silver straps and violet diamond crystals No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "ancient-legacy-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "ancient-legacy-ring",
+      "setId": "ancient-legacy",
+      "slot": "ring",
+      "name": "고대의 유산 · 반지",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: pale gray carved stone, matte silver, violet crystal, simple ancient geometric motifs, weathered shapes drawn with flat color planes not realistic texture. SUBJECT: ONE wearable finger ring, three-quarter view, clear band opening, set metal and a single small set-colored gemstone mounted with the set crest. Small jewelry ring, NOT an orb, catalyst or floating core. No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "ancient-legacy-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    },
+    {
+      "id": "ancient-legacy-necklace",
+      "setId": "ancient-legacy",
+      "slot": "necklace",
+      "name": "고대의 유산 · 목걸이",
+      "prompt": "Use case: stylized-concept. Asset type: ONE fantasy RPG equipment inventory icon. Clean 2D JAPANESE ANIME item drawing matching the attached STYLE-ONLY reference, NOT the reference object. Confident dark colored outlines, broad simple color regions, hard-edged 2-3 tone cel shading and sparse flat highlights. Clear recognizable silhouette at 48px. No photorealism, no 3D render, no realistic texture, no dense microdetail, bloom, fog, cast shadow or background scene. Square 1024x1024 requested; genuinely TRANSPARENT alpha background, centered complete object within central 76% of canvas, ample clear padding on every side, no clipped tips, consistent upper-left light, slight three-quarter perspective. No person, hand, body, mannequin, lettering, numbers, UI, tile, frame, border or watermark. One item icon only, never a sheet. The attached reference is this equipment SET'S WEAPON, a palette/material/crest and 2D drawing style reference. Generate the DIFFERENT equipment part below, not another weapon. Carry over the weapon's set colors and emblem language; do not copy its weapon silhouette. SET DESIGN: pale gray carved stone, matte silver, violet crystal, simple ancient geometric motifs, weathered shapes drawn with flat color planes not realistic texture. SUBJECT: ONE wearable necklace: a full fine chain in a loose oval loop and ONE small pendant with the set crest and set-colored gem. Show the entire chain and pendant, not just pendant; NOT an orb, catalyst or weapon. No anatomy or mannequin. For gloves or boots, exactly two matching pieces as ONE compact paired inventory icon. Keep the whole object inside a 12% transparent margin on every side.",
+      "reference": "ancient-legacy-weapon.png",
+      "referenceRole": "set palette, crest and style"
+    }
+  ]
+}
