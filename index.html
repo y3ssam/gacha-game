@@ -398,6 +398,13 @@
             </svg>
             <span>세계관</span>
           </a>
+          <a class="nav-item" id="lorebook-nav" href="#lorebook">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 5.5C9 3.5 5.5 3.5 3 4.5v15c2.5-1 6-1 9 1 3-2 6.5-2 9-1v-15c-2.5-1-6-1-9 1Z" />
+              <path d="M12 5.5v15M6 8h3m-3 4h3m6-4h3m-3 4h3" />
+            </svg>
+            <span>로어북</span>
+          </a>
           <a class="nav-item" id="ai-connection-nav" href="#ai-connection" aria-current="page">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <rect x="5" y="5" width="14" height="14" rx="4" />
@@ -413,6 +420,7 @@
           <h1 id="page-title">AI 연결</h1>
           <p id="page-description">스토리를 만드는 AI와 이미지를 그리는 AI를 연결하세요.</p>
         </header>
+        <div class="content-body" id="lorebook" hidden></div>
         <div class="content-body" id="worlds" hidden>
           <div id="world-list-view"><div class="world-toolbar"><button class="add-world-button" id="add-world" type="button">+ 세계관 추가</button></div></div>
           <section id="world-editor" aria-label="세계관 추가" hidden>
@@ -979,25 +987,29 @@
       }
       document.getElementById('connection-back').addEventListener('click', returnToConnectionList);
       const worldNav = document.getElementById('worlds-nav');
+      const loreNav = document.getElementById('lorebook-nav');
       const aiNav = document.getElementById('ai-connection-nav');
       function showSection(section) {
         if (savingConnection) return;
         returnToConnectionList();
         const isWorlds = section === 'worlds';
+        const isLorebook = section === 'lorebook';
         document.getElementById('worlds').hidden = !isWorlds;
-        document.getElementById('ai-connection-body').hidden = isWorlds;
+        document.getElementById('lorebook').hidden = !isLorebook;
+        document.getElementById('ai-connection-body').hidden = isWorlds || isLorebook;
         document.getElementById('world-footer').hidden = !isWorlds || document.getElementById('world-editor').hidden;
         editorFooter.hidden = true;
-        document.getElementById('page-title').textContent = isWorlds ? '세계관' : 'AI 연결';
+        document.getElementById('page-title').textContent = isWorlds ? '세계관' : isLorebook ? '로어북' : 'AI 연결';
         document.getElementById('page-description').textContent = isWorlds
           ? '나만의 세계관을 만들고, 이어서 플레이하세요.'
+          : isLorebook ? '세계와 캐릭터의 설정을 모아두는 공간이에요.'
           : '스토리를 만드는 AI와 이미지를 그리는 AI를 연결하세요.';
-        for (const [link, selected] of [[worldNav, isWorlds], [aiNav, !isWorlds]]) {
+        for (const [link, selected] of [[worldNav, isWorlds], [loreNav, isLorebook], [aiNav, !isWorlds && !isLorebook]]) {
           if (selected) link.setAttribute('aria-current', 'page');
           else link.removeAttribute('aria-current');
         }
       }
-      for (const [link, section] of [[worldNav, 'worlds'], [aiNav, 'ai-connection']]) {
+      for (const [link, section] of [[worldNav, 'worlds'], [loreNav, 'lorebook'], [aiNav, 'ai-connection']]) {
         link.addEventListener('click', event => {
           event.preventDefault();
           if (savingConnection) return;
@@ -1005,8 +1017,11 @@
           history.replaceState(null, '', '#' + section);
         });
       }
-      window.addEventListener('hashchange', () => showSection(location.hash === '#worlds' ? 'worlds' : 'ai-connection'));
-      showSection(location.hash === '#worlds' ? 'worlds' : 'ai-connection');
+      function sectionFromHash() {
+        return ['#worlds', '#lorebook'].includes(location.hash) ? location.hash.slice(1) : 'ai-connection';
+      }
+      window.addEventListener('hashchange', () => showSection(sectionFromHash()));
+      showSection(sectionFromHash());
       const tabs = Array.from(document.querySelectorAll('.ai-tab'));
       function selectTab(selectedTab) {
         tabs.forEach((tab) => {
