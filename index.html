@@ -453,7 +453,7 @@
       .game-stage { flex: 1; min-height: 0; }
       #game-preview { position: relative; }
       .game-bottom-menu { position: absolute; bottom: 0; left: 0; right: 0; z-index: 2; display: flex; justify-content: center; gap: 12px; min-height: 72px; padding: 12px 28px; border-top: 1px solid var(--border); background: var(--surface-sidebar); transform: translateY(0); visibility: visible; transition: transform 280ms ease, visibility 0s; }
-      #game-preview:is([data-view="battle"], [data-view="chapters"], [data-view="scenarios"], [data-view="characters"], [data-view="character-detail"]) .game-bottom-menu { transform: translateY(100%); visibility: hidden; pointer-events: none; transition: transform 280ms ease, visibility 0s 280ms; }
+      #game-preview:is([data-view="battle"], [data-view="chapters"], [data-view="scenarios"], [data-view="characters"], [data-view="character-detail"], [data-view="equipment-picker"]) .game-bottom-menu { transform: translateY(100%); visibility: hidden; pointer-events: none; transition: transform 280ms ease, visibility 0s 280ms; }
       #game-preview[data-view="home"] .game-stage { padding-bottom: 72px; }
       @media (max-width: 640px) { #game-preview[data-view="home"] .game-stage { padding-bottom: 84px; } }
       @media (prefers-reduced-motion: reduce) { .game-bottom-menu, #game-preview[data-view="battle"] .game-bottom-menu { transition: none; } }
@@ -732,7 +732,8 @@
       #character-profile-background { display: grid; gap: 14px; }
       .character-equipment { display: grid; gap: 20px; padding: 2px 12px 12px 0; }
       .character-equipment h3 { margin: 0; font-size: 18px; font-weight: 600; }
-      .character-equipment-slots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+      .character-equipment-overview { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; gap: 20px; }
+      .character-equipment-slots { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
       .character-equipment-slot { display: grid; align-content: center; gap: 10px; min-height: 94px; min-width: 0; padding: 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-sidebar); color: var(--text-primary); font: inherit; text-align: left; cursor: pointer; }
       .character-equipment-slot[aria-pressed="true"] { border-color: var(--accent); background: var(--surface-active); }
       .character-equipment-slot strong { color: var(--accent); font-size: 13px; }
@@ -757,12 +758,27 @@
       .character-equipment-stat-grid dt { color: var(--text-secondary); font-size: 12px; }
       .character-equipment-stat-grid dd { margin: 0; font-size: 13px; font-variant-numeric: tabular-nums; }
       .character-equipment-set[data-active="true"] { color: var(--accent); }
-      .equipment-picker { width: min(720px, calc(100vw - 48px)); max-height: min(620px, calc(100dvh - 64px)); padding: 0; border: 1px solid var(--border); border-radius: 16px; background: var(--surface-main); color: var(--text-primary); }
-      .equipment-picker[open] { display: flex; flex-direction: column; }
-      .equipment-picker::backdrop { background: rgb(0 0 0 / 40%); backdrop-filter: none; }
-      .equipment-picker-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 24px; border-bottom: 1px solid var(--border); }
-      .equipment-picker-heading h3 { margin: 0; font-size: 18px; }
-      .equipment-picker-body { min-height: 0; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; padding: 20px 24px; }
+      .equipment-picker-screen { height: 100%; min-height: 0; display: flex; flex-direction: column; padding: 24px 28px; gap: 20px; }
+      .equipment-picker-heading { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+      .equipment-picker-heading h2 { margin: 0; font-size: 22px; }
+      .equipment-picker-layout { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 3fr); flex: 1; min-height: 0; gap: 24px; }
+      .equipment-picker-list-pane, .equipment-comparison { min-height: 0; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; }
+      .equipment-picker-list-pane { padding-right: 8px; }
+      .equipment-comparison { display: flex; flex-direction: column; gap: 14px; padding-right: 8px; }
+      .equipment-comparison h3 { margin: 0; font-size: 14px; }
+      .equipment-comparison-card { min-height: 112px; padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-sidebar); font-size: 13px; line-height: 1.8; overflow-wrap: anywhere; }
+      .equipment-comparison-card p { margin: 8px 0 0; color: var(--text-secondary); white-space: pre-line; }
+      .equipment-comparison-diff { margin: 0; color: var(--text-secondary); font-size: 12px; line-height: 1.8; white-space: pre-line; }
+      .equipment-comparison > .character-growth-button { margin-top: auto; flex-shrink: 0; }
+      .equipment-comparison > button:disabled { background: var(--surface-active); border-color: var(--border); color: var(--text-secondary); cursor: default; }
+      .character-equipment-choice { width: 100%; display: block; color: var(--text-primary); font: inherit; text-align: left; cursor: pointer; }
+      .character-equipment-choice > span { display: block; margin-top: 8px; color: var(--text-secondary); font-size: 13px; line-height: 1.7; }
+      .character-equipment-choice[aria-pressed="true"] { border-color: var(--accent); background: var(--surface-active); }
+      .character-equipment-choice:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -3px; }
+      .equipment-hover { position: fixed; z-index: 110; width: 260px; max-width: calc(100vw - 24px); max-height: calc(100dvh - 24px); overflow-y: auto; padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-sidebar); color: var(--text-primary); box-shadow: var(--frame-shadow); pointer-events: none; font-size: 13px; line-height: 1.8; white-space: pre-line; }
+      .equipment-context-menu { z-index: 120; }
+      .character-equipment-overview .character-equipment-stat-grid { grid-template-columns: minmax(0, 1fr); }
+      @media (max-width: 640px) { .equipment-picker-screen { padding: 20px 16px; } .equipment-picker-layout { gap: 12px; } .character-equipment-overview { gap: 12px; } }
       @container (max-width: 650px) { .character-equipment-slots { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
       .character-profile-background p { margin: 0; color: var(--text-primary); font-size: 14px; line-height: 1.9; white-space: pre-wrap; overflow-wrap: anywhere; }
       @container (max-width: 650px) { .character-profile-field { grid-template-columns: minmax(0, 1fr); gap: 5px; } }
@@ -974,20 +990,13 @@
                 <div class="character-detail-panel" id="character-panel-equipment" role="tabpanel" aria-labelledby="character-tab-equipment" tabindex="0" hidden>
                   <div class="character-equipment">
                     <h3>착용 장비</h3>
-                    <div class="character-equipment-slots" id="character-equipment-slots" role="group" aria-label="장비 종류 선택"></div>
-                    <section class="character-equipment-box" aria-labelledby="character-equipment-detail-title">
-                      <h4 id="character-equipment-detail-title">무기 · 미장착</h4>
-                      <p id="character-equipment-detail-effects"></p>
-                      <div class="character-equipment-list-heading"><button class="character-equipment-remove" id="character-equipment-remove" type="button" hidden>장착 해제</button><button class="character-growth-button" id="character-equipment-open" type="button">장착</button></div>
-                    </section>
-                    <section class="character-equipment-box" aria-labelledby="character-equipment-stats-title"><h4 id="character-equipment-stats-title">현재 스탯</h4><dl class="character-equipment-stat-grid" id="character-equipment-stats"></dl></section>
+                    <div class="character-equipment-overview">
+                      <div class="character-equipment-slots" id="character-equipment-slots" role="group" aria-label="장비 슬롯"></div>
+                      <section class="character-equipment-box" aria-labelledby="character-equipment-stats-title"><h4 id="character-equipment-stats-title">현재 스탯</h4><dl class="character-equipment-stat-grid" id="character-equipment-stats"></dl></section>
+                    </div>
                     <section class="character-equipment-box" aria-labelledby="character-equipment-sets-title"><h4 id="character-equipment-sets-title">세트 효과</h4><div id="character-equipment-sets"></div></section>
                     <p class="character-outfit-status" id="character-equipment-status" aria-live="polite"></p>
                   </div>
-                  <dialog class="equipment-picker" id="character-equipment-picker" aria-labelledby="character-equipment-list-title">
-                    <div class="equipment-picker-heading"><h3 id="character-equipment-list-title">보유 장비</h3><button class="connection-back" id="character-equipment-close" type="button" aria-label="장비 목록 닫기">×</button></div>
-                    <div class="equipment-picker-body"><div class="character-equipment-list" id="character-equipment-list"></div></div>
-                  </dialog>
                 </div>
                 <div class="character-detail-panel" id="character-panel-skills" role="tabpanel" aria-labelledby="character-tab-skills" tabindex="0" hidden>
                   <div class="character-skills">
@@ -1055,6 +1064,20 @@
                 </div>
               </div>
             </section>
+            <section class="equipment-picker-screen" id="equipment-picker-screen" aria-label="장비 선택 화면" hidden>
+              <div class="equipment-picker-heading"><button class="connection-back" id="character-equipment-back" type="button" aria-label="장비 탭으로 돌아가기">◀</button><h2 id="character-equipment-list-title">보유 장비</h2></div>
+              <div class="equipment-picker-layout">
+                <div class="equipment-picker-list-pane"><div class="character-equipment-list" id="character-equipment-list" role="group" aria-label="장착할 장비 선택"></div></div>
+                <aside class="equipment-comparison" aria-label="장비 비교">
+                  <h3>현재 장비</h3><div class="equipment-comparison-card" id="equipment-compare-current" aria-label="현재 장비 없음"></div>
+                  <h3>선택한 장비</h3><div class="equipment-comparison-card" id="equipment-compare-selected"></div>
+                  <p class="equipment-comparison-diff" id="equipment-compare-diff"></p>
+                  <button class="character-growth-button" id="equipment-confirm" type="button" disabled>장착</button>
+                </aside>
+              </div>
+            </section>
+            <div class="equipment-hover" id="equipment-hover" role="tooltip" hidden></div>
+            <div class="folder-menu equipment-context-menu" id="equipment-context-menu" role="menu" aria-label="장비 관리" hidden><button type="button" role="menuitem" data-equipment-action="replace">교체</button><button type="button" role="menuitem" data-equipment-action="remove">해제</button></div>
             <section class="story-preview-screen" id="combat-preview-screen" aria-label="전투 미리보기" hidden>
               <div class="story-preview-top">
                 <div class="story-preview-heading-row">
@@ -2345,6 +2368,8 @@
       setInterval(updateGameEnergy, 1000);
       document.addEventListener('visibilitychange', () => { if (!document.hidden) updateGameEnergy(); });
       function showGameView(view) {
+        hideEquipmentOverlays();
+        const isEquipmentPicker = view === 'equipment-picker';
         const isCharacterDetail = view === 'character-detail';
         const isCharacters = view === 'characters';
         if (isCharacters) {
@@ -2364,13 +2389,13 @@
             card.style.setProperty('--card-enter-delay', 100 + index * 100 + 'ms');
           });
         }
-        const isSubscreen = isBattle || isScenarios || isChapters || isStoryPreview || isCombatPreview || isCharacters || isCharacterDetail;
+        const isSubscreen = isBattle || isScenarios || isChapters || isStoryPreview || isCombatPreview || isCharacters || isCharacterDetail || isEquipmentPicker;
         const game = document.getElementById('game-preview');
         if (game.dataset.view === 'story-preview' && !isStoryPreview) {
           stopDialogueTyping();
           setDialogueAuto(false);
         }
-        game.dataset.view = isCharacterDetail ? 'character-detail' : isCharacters ? 'characters' : isCombatPreview ? 'combat-preview' : isStoryPreview ? 'story-preview' : isChapters ? 'chapters' : isScenarios ? 'scenarios' : isBattle ? 'battle' : 'home';
+        game.dataset.view = isEquipmentPicker ? 'equipment-picker' : isCharacterDetail ? 'character-detail' : isCharacters ? 'characters' : isCombatPreview ? 'combat-preview' : isStoryPreview ? 'story-preview' : isChapters ? 'chapters' : isScenarios ? 'scenarios' : isBattle ? 'battle' : 'home';
         game.setAttribute('aria-label', isCharacters ? '캐릭터 화면' : isCombatPreview ? '전투 미리보기' : isStoryPreview ? '시나리오 미리보기' : isChapters ? '챕터 목록 화면' : isScenarios ? '시나리오 목록 화면' : isBattle ? '전투 화면' : '게임 메인 화면');
         const menu = document.querySelector('.game-bottom-menu');
         menu.inert = isSubscreen;
@@ -2382,6 +2407,11 @@
         document.getElementById('game-stage').setAttribute('aria-label', isCharacters ? '캐릭터 화면' : isCombatPreview ? '전투 미리보기' : isStoryPreview ? '시나리오 미리보기' : isChapters ? '챕터 목록 화면' : isScenarios ? '시나리오 목록 화면' : isBattle ? '전투 화면' : '메인 화면');
         document.getElementById('characters-screen').hidden = !isCharacters;
         document.getElementById('character-detail-screen').hidden = !isCharacterDetail;
+        document.getElementById('equipment-picker-screen').hidden = !isEquipmentPicker;
+        if (isEquipmentPicker) {
+          game.setAttribute('aria-label', '장비 선택 화면');
+          document.getElementById('game-stage').setAttribute('aria-label', '장비 선택 화면');
+        }
         if (isCharacterDetail) {
           game.setAttribute('aria-label', '캐릭터 상세 화면');
           document.getElementById('game-stage').setAttribute('aria-label', '캐릭터 상세 화면');
@@ -2397,7 +2427,7 @@
         document.getElementById('game-home').focus({ preventScroll: true });
       });
       document.getElementById('game-home').addEventListener('click', () => {
-        const fromCharacters = ['characters', 'character-detail'].includes(document.getElementById('game-preview').dataset.view);
+        const fromCharacters = ['characters', 'character-detail', 'equipment-picker'].includes(document.getElementById('game-preview').dataset.view);
         showGameView('home');
         document.getElementById(fromCharacters ? 'game-characters' : 'game-battle').focus({ preventScroll: true });
       });
@@ -2999,9 +3029,9 @@
         Object.values(state.equipped).forEach(id => { const item = state.items.find(item => item.id === id); if (item?.setId) counts[item.setId] = (counts[item.setId] || 0) + 1; });
         return counts;
       }
-      function getCharacterEquipmentTotalStats(card) {
+      function getCharacterEquipmentTotalStats(card, equipmentState) {
         const total = getCharacterBaseStats(card);
-        const state = getCharacterEquipment(card);
+        const state = equipmentState || getCharacterEquipment(card);
         const add = stats => Object.entries(stats).forEach(([key, value]) => { total[key] += value; });
         Object.values(state.equipped).forEach(id => { const item = state.items.find(item => item.id === id); if (item) add(item.stats); });
         const counts = getCharacterEquipmentSetCounts(state);
@@ -3027,19 +3057,12 @@
         characterEquipmentTypes.forEach(type => {
           const item = state.items.find(item => item.id === state.equipped[type.id]);
           const button = document.createElement('button'); button.type = 'button'; button.className = 'character-equipment-slot'; button.dataset.equipmentType = type.id;
-          button.setAttribute('aria-pressed', String(state.selectedType === type.id));
+          button.setAttribute('aria-label', type.name + ' · ' + (item?.name || '미장착') + (item ? ' · 우클릭으로 교체 또는 해제' : ' · 클릭하여 장착'));
+          if (item) button.setAttribute('aria-haspopup', 'menu');
           const name = document.createElement('strong'); name.textContent = type.name;
           const equipped = document.createElement('span'); equipped.textContent = item?.name || '미장착';
           button.append(name, equipped); slots.append(button);
         });
-        const type = characterEquipmentTypes.find(type => type.id === state.selectedType);
-        const equipped = state.items.find(item => item.id === state.equipped[state.selectedType]);
-        document.getElementById('character-equipment-detail-title').textContent = type.name + ' · ' + (equipped?.name || '미장착');
-        document.getElementById('character-equipment-detail-effects').textContent = equipped
-          ? describeEquipmentStats(equipped.stats) + '\n' + characterEquipmentSets[equipped.setId].name + ' 세트'
-          : '이 슬롯에 착용한 장비가 없습니다.';
-        document.getElementById('character-equipment-remove').hidden = !equipped;
-        document.getElementById('character-equipment-open').textContent = equipped ? '교체' : '장착';
         const stats = document.getElementById('character-equipment-stats'); stats.replaceChildren();
         const total = getCharacterEquipmentTotalStats(card);
         Object.entries(characterEquipmentStatLabels).forEach(([key, label]) => {
@@ -3057,7 +3080,7 @@
             effect.textContent = bonus.pieces + '세트: ' + describeEquipmentStats(bonus.stats) + (count >= bonus.pieces ? ' · 활성' : ' · 미활성'); sets.append(effect);
           });
         });
-        document.getElementById('character-equipment-status').textContent = '장비와 세트 효과가 반영된 스탯입니다. 현재 장비·수치는 미리보기용입니다.';
+        document.getElementById('character-equipment-status').textContent = '빈 슬롯을 눌러 장착하세요. 착용 장비는 마우스를 올려 효과 확인, 우클릭으로 교체·해제할 수 있습니다. 현재 수치는 미리보기용입니다.';
       }
       function renderCharacterEquipmentPicker(card) {
         const state = getCharacterEquipment(card);
@@ -3067,21 +3090,19 @@
         const items = state.items.filter(item => item.type === state.selectedType);
         items.forEach(item => {
           const equipped = state.equipped[item.type] === item.id;
-          const row = document.createElement('div'); row.className = 'character-equipment-item'; row.dataset.equipped = String(equipped);
-          const info = document.createElement('div');
+          const row = document.createElement('button'); row.type = 'button'; row.className = 'character-equipment-item character-equipment-choice'; row.dataset.equipmentId = item.id; row.dataset.equipped = String(equipped);
+          row.setAttribute('aria-pressed', String(state.selectedItemId === item.id));
           const name = document.createElement('strong'); name.textContent = item.name;
-          const detail = document.createElement('p'); detail.textContent = describeEquipmentStats(item.stats);
-          const setInfo = document.createElement('p'); const set = characterEquipmentSets[item.setId];
+          if (equipped) name.textContent += ' · 장착 중';
+          const detail = document.createElement('span'); detail.textContent = describeEquipmentStats(item.stats);
+          const setInfo = document.createElement('span'); const set = characterEquipmentSets[item.setId];
           const counts = getCharacterEquipmentSetCounts(state);
           setInfo.textContent = set.name + ' 세트 · 현재 ' + (counts[item.setId] || 0) + '개 착용';
-          const effects = document.createElement('p'); effects.textContent = set.bonuses.map(bonus => bonus.pieces + '세트: ' + describeEquipmentStats(bonus.stats)).join(' / ');
-          info.append(name, detail, setInfo, effects);
-          const button = document.createElement('button'); button.type = 'button'; button.className = 'character-growth-button'; button.dataset.equipmentId = item.id;
-          button.textContent = equipped ? '장착 중' : '장착'; button.disabled = equipped;
-          button.setAttribute('aria-label', item.name + (equipped ? ' 장착 중' : ' 장착'));
-          row.append(info, button); list.append(row);
+          const effects = document.createElement('span'); effects.textContent = set.bonuses.map(bonus => bonus.pieces + '세트: ' + describeEquipmentStats(bonus.stats)).join(' / ');
+          row.append(name, detail, setInfo, effects); list.append(row);
         });
         if (!items.length) { const empty = document.createElement('p'); empty.className = 'character-awakening-note'; empty.textContent = '보유한 ' + type.name + ' 장비가 없습니다.'; list.append(empty); }
+        renderEquipmentComparison(card);
       }
       function equipCharacterEquipment(card, itemId) {
         if (!card) return false;
@@ -3094,28 +3115,137 @@
       }
       document.getElementById('character-equipment-slots').addEventListener('click', event => {
         const button = event.target.closest('[data-equipment-type]'); if (!button || !selectedCharacterCard) return;
-        const state = getCharacterEquipment(selectedCharacterCard); state.selectedType = button.dataset.equipmentType;
-        renderCharacterEquipment(selectedCharacterCard);
-        document.querySelectorAll('[data-equipment-type]').forEach(slot => { if (slot.dataset.equipmentType === state.selectedType) slot.focus({ preventScroll: true }); });
+        const state = getCharacterEquipment(selectedCharacterCard);
+        if (!state.equipped[button.dataset.equipmentType]) openEquipmentPicker(button.dataset.equipmentType);
       });
       document.getElementById('character-equipment-list').addEventListener('click', event => {
         const button = event.target.closest('[data-equipment-id]');
-        if (button && equipCharacterEquipment(selectedCharacterCard, button.dataset.equipmentId)) document.getElementById('character-equipment-picker').close();
+        if (!button || !selectedCharacterCard) return;
+        const state = getCharacterEquipment(selectedCharacterCard);
+        const item = state.items.find(item => item.id === button.dataset.equipmentId && item.type === state.selectedType);
+        if (!item) return;
+        state.selectedItemId = item.id;
+        document.querySelectorAll('.character-equipment-choice').forEach(choice => choice.setAttribute('aria-pressed', String(choice === button)));
+        renderEquipmentComparison(selectedCharacterCard);
       });
-      document.getElementById('character-equipment-open').addEventListener('click', () => {
+      document.getElementById('equipment-confirm').addEventListener('click', () => {
         if (!selectedCharacterCard) return;
+        const state = getCharacterEquipment(selectedCharacterCard);
+        const item = state.items.find(item => item.id === state.selectedItemId && item.type === state.selectedType);
+        if (item && equipCharacterEquipment(selectedCharacterCard, item.id)) returnFromEquipmentPicker();
+      });
+      document.getElementById('character-equipment-back').addEventListener('click', returnFromEquipmentPicker);
+      function openEquipmentPicker(type) {
+        if (!selectedCharacterCard || !characterEquipmentTypes.some(item => item.id === type)) return;
+        const state = getCharacterEquipment(selectedCharacterCard); state.selectedType = type;
+        state.selectedItemId = null;
         renderCharacterEquipmentPicker(selectedCharacterCard);
-        document.getElementById('character-equipment-picker').showModal();
-        document.getElementById('character-equipment-close').focus({ preventScroll: true });
-      });
-      document.getElementById('character-equipment-close').addEventListener('click', () => document.getElementById('character-equipment-picker').close());
-      document.getElementById('character-equipment-picker').addEventListener('close', () => document.getElementById('character-equipment-open').focus({ preventScroll: true }));
-      document.getElementById('character-equipment-remove').addEventListener('click', () => {
+        showGameView('equipment-picker');
+        document.querySelector('.equipment-picker-list-pane').scrollTop = 0;
+        document.querySelector('.equipment-comparison').scrollTop = 0;
+        document.getElementById('character-equipment-back').focus({ preventScroll: true });
+      }
+      function returnFromEquipmentPicker() {
+        showGameView('character-detail');
+        selectCharacterTab(document.getElementById('character-tab-equipment'));
+        const type = getCharacterEquipment(selectedCharacterCard).selectedType;
+        document.querySelectorAll('[data-equipment-type]').forEach(slot => { if (slot.dataset.equipmentType === type) slot.focus({ preventScroll: true }); });
+      }
+      function renderEquipmentComparison(card) {
+        const state = getCharacterEquipment(card);
+        const current = state.items.find(item => item.id === state.equipped[state.selectedType]);
+        const selected = state.items.find(item => item.id === state.selectedItemId && item.type === state.selectedType);
+        const render = (id, item) => {
+          const box = document.getElementById(id); box.replaceChildren();
+          box.setAttribute('aria-label', item ? item.name : id === 'equipment-compare-current' ? '현재 장비 없음' : '선택한 장비 없음');
+          if (!item) return;
+          const name = document.createElement('strong'); name.textContent = item.name;
+          const stats = document.createElement('p'); stats.textContent = describeEquipmentStats(item.stats);
+          const set = document.createElement('p'); set.textContent = characterEquipmentSets[item.setId].name + ' 세트\n' + characterEquipmentSets[item.setId].bonuses.map(bonus => bonus.pieces + '세트: ' + describeEquipmentStats(bonus.stats)).join('\n');
+          box.append(name, stats, set);
+        };
+        render('equipment-compare-current', current); render('equipment-compare-selected', selected);
+        const diff = document.getElementById('equipment-compare-diff');
+        if (selected) {
+          const before = getCharacterEquipmentTotalStats(card);
+          const after = getCharacterEquipmentTotalStats(card, { ...state, equipped: { ...state.equipped, [state.selectedType]: selected.id } });
+          const changes = Object.keys(characterEquipmentStatLabels).filter(key => before[key] !== after[key]).map(key => characterEquipmentStatLabels[key] + ' ' + before[key] + ' → ' + after[key] + ' (' + (after[key] > before[key] ? '+' : '') + (after[key] - before[key]) + (['critRate', 'critDamage', 'effectHit', 'effectResist'].includes(key) ? '%p' : '') + ')');
+          diff.textContent = changes.length ? '장착 후 변화 · 세트 효과 포함\n' + changes.join('\n') : '현재 장비와 스탯 차이가 없습니다.';
+        } else diff.textContent = '목록에서 장비를 선택하면 장착 후 스탯을 비교할 수 있습니다.';
+        const confirm = document.getElementById('equipment-confirm');
+        confirm.disabled = !selected || selected.id === current?.id;
+        confirm.textContent = selected && selected.id === current?.id ? '장착 중' : current ? '교체' : '장착';
+      }
+      function hideEquipmentOverlays() {
+        document.getElementById('equipment-hover').hidden = true;
+        document.getElementById('equipment-context-menu').hidden = true;
+        document.querySelectorAll('[data-equipment-type]').forEach(slot => slot.removeAttribute('aria-describedby'));
+      }
+      function placeEquipmentOverlay(overlay, x, y) {
+        overlay.style.left = '12px'; overlay.style.top = '12px'; overlay.hidden = false;
+        const rect = overlay.getBoundingClientRect();
+        overlay.style.left = Math.max(12, Math.min(x, window.innerWidth - rect.width - 12)) + 'px';
+        overlay.style.top = Math.max(12, Math.min(y, window.innerHeight - rect.height - 12)) + 'px';
+      }
+      function showEquipmentTooltip(slot) {
+        if (!selectedCharacterCard || !document.getElementById('equipment-context-menu').hidden) return;
+        const state = getCharacterEquipment(selectedCharacterCard);
+        const item = state.items.find(item => item.id === state.equipped[slot.dataset.equipmentType]);
+        if (!item) return;
+        const set = characterEquipmentSets[item.setId]; const box = document.getElementById('equipment-hover');
+        box.textContent = item.name + '\n' + describeEquipmentStats(item.stats) + '\n' + set.name + ' 세트\n' + set.bonuses.map(bonus => bonus.pieces + '세트: ' + describeEquipmentStats(bonus.stats)).join('\n');
+        const rect = slot.getBoundingClientRect(); placeEquipmentOverlay(box, rect.right + 10, rect.top);
+        slot.setAttribute('aria-describedby', 'equipment-hover');
+      }
+      function showEquipmentContextMenu(slot, x, y) {
         if (!selectedCharacterCard) return;
-        const state = getCharacterEquipment(selectedCharacterCard); delete state.equipped[state.selectedType]; renderCharacterEquipment(selectedCharacterCard); renderCharacterInfo(selectedCharacterCard);
-        document.getElementById('character-equipment-open').focus({ preventScroll: true });
+        const state = getCharacterEquipment(selectedCharacterCard);
+        if (!state.equipped[slot.dataset.equipmentType]) return;
+        hideEquipmentOverlays(); const menu = document.getElementById('equipment-context-menu'); menu.dataset.type = slot.dataset.equipmentType;
+        placeEquipmentOverlay(menu, x, y); menu.querySelector('button').focus({ preventScroll: true });
+      }
+      document.getElementById('character-equipment-slots').addEventListener('pointerover', event => {
+        const slot = event.target.closest('[data-equipment-type]'); if (slot && !slot.contains(event.relatedTarget)) showEquipmentTooltip(slot);
       });
+      document.getElementById('character-equipment-slots').addEventListener('pointerout', event => {
+        const slot = event.target.closest('[data-equipment-type]'); if (slot && !slot.contains(event.relatedTarget)) { document.getElementById('equipment-hover').hidden = true; slot.removeAttribute('aria-describedby'); }
+      });
+      document.getElementById('character-equipment-slots').addEventListener('focusin', event => { const slot = event.target.closest('[data-equipment-type]'); if (slot) showEquipmentTooltip(slot); });
+      document.getElementById('character-equipment-slots').addEventListener('focusout', () => { document.getElementById('equipment-hover').hidden = true; });
+      document.getElementById('character-equipment-slots').addEventListener('contextmenu', event => {
+        const slot = event.target.closest('[data-equipment-type]'); if (!slot) return;
+        event.preventDefault(); const rect = slot.getBoundingClientRect(); showEquipmentContextMenu(slot, event.clientX || rect.left, event.clientY || rect.bottom);
+      });
+      document.getElementById('character-equipment-slots').addEventListener('keydown', event => {
+        const slot = event.target.closest('[data-equipment-type]'); if (!slot) return;
+        if (event.key === 'ContextMenu' || (event.shiftKey && event.key === 'F10') || event.key === 'Enter' || event.key === ' ') {
+          if (!selectedCharacterCard || !getCharacterEquipment(selectedCharacterCard).equipped[slot.dataset.equipmentType]) return;
+          event.preventDefault(); const rect = slot.getBoundingClientRect(); showEquipmentContextMenu(slot, rect.left, rect.bottom);
+        }
+      });
+      document.getElementById('equipment-context-menu').addEventListener('click', event => {
+        const action = event.target.closest('[data-equipment-action]'); if (!action || !selectedCharacterCard) return;
+        const type = event.currentTarget.dataset.type; hideEquipmentOverlays();
+        if (action.dataset.equipmentAction === 'replace') openEquipmentPicker(type);
+        else {
+          const state = getCharacterEquipment(selectedCharacterCard); delete state.equipped[type]; renderCharacterEquipment(selectedCharacterCard); renderCharacterInfo(selectedCharacterCard);
+          document.querySelectorAll('[data-equipment-type]').forEach(slot => { if (slot.dataset.equipmentType === type) slot.focus({ preventScroll: true }); });
+        }
+      });
+      document.addEventListener('pointerdown', event => { if (!event.target.closest('#equipment-context-menu')) hideEquipmentOverlays(); });
+      document.addEventListener('keydown', event => {
+        const menu = document.getElementById('equipment-context-menu'); if (menu.hidden) return;
+        if (event.key === 'Escape') {
+          event.preventDefault(); const type = menu.dataset.type; hideEquipmentOverlays();
+          document.querySelectorAll('[data-equipment-type]').forEach(slot => { if (slot.dataset.equipmentType === type) slot.focus({ preventScroll: true }); });
+        } else if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+          event.preventDefault(); const buttons = Array.from(menu.querySelectorAll('button')); buttons[(buttons.indexOf(document.activeElement) + 1) % buttons.length].focus();
+        } else if (event.key === 'Tab') hideEquipmentOverlays();
+      });
+      window.addEventListener('resize', hideEquipmentOverlays);
+      document.getElementById('character-panel-equipment').addEventListener('scroll', hideEquipmentOverlays);
       function selectCharacterTab(selected) {
+        hideEquipmentOverlays();
         document.querySelectorAll('.character-detail-action').forEach(tab => {
           const active = tab === selected;
           tab.setAttribute('aria-selected', String(active));
