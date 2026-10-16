@@ -618,8 +618,8 @@
       .party-screen { height: 100%; padding: 24px 28px; display: flex; flex-direction: column; gap: 18px; }
       .party-heading { display: flex; align-items: center; justify-content: space-between; }
       .party-heading h2 { margin: 0; font-size: 20px; }
-      .party-layout-frame { flex: 1; min-height: 0; container-type: size; --party-column-gap: 28px; --party-slot-gap: 12px; }
-      .party-layout { height: 100%; min-height: 0; display: grid; grid-template-columns: minmax(0, min(calc((100cqw - 2 * var(--party-column-gap)) * .45), calc(100cqh - 78px + 2 * var(--party-slot-gap)))) minmax(0, 3fr) minmax(110px, 1fr); gap: var(--party-column-gap); }
+      .party-layout-frame { flex: 1; min-height: 0; container-type: size; --party-column-gap: 24px; --party-slot-gap: 12px; }
+      .party-layout { height: 100%; min-height: 0; display: grid; grid-template-columns: minmax(0, min(calc((100cqw - 2 * var(--party-column-gap)) * .45), calc(100cqh - 78px + 2 * var(--party-slot-gap)))) minmax(0, 1fr) clamp(128px, 14cqw, 176px); gap: var(--party-column-gap); }
       .party-rows { min-height: 0; display: grid; grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 20px; }
       .party-row { min-height: 0; display: flex; flex-direction: column; gap: 9px; }
       .party-row h3 { margin: 0 0 0 3px; height: 20px; flex: none; line-height: 20px; color: var(--text-secondary); font-size: 12px; font-weight: 500; letter-spacing: .12em; }
@@ -627,7 +627,7 @@
       #party-count { color: var(--text-secondary); font-size: 12px; line-height: 20px; }
       .party-slots { min-height: 0; flex: 1; display: flex; justify-content: flex-start; align-items: start; gap: var(--party-slot-gap); container-type: size; }
       .party-slot { position: relative; flex: none; width: min(calc((100cqw - 2 * var(--party-slot-gap)) / 3), calc(100cqh * 2 / 3)); aspect-ratio: 2 / 3; border: 1px solid var(--border); border-top: 3px solid var(--rarity-color, var(--border)); border-radius: 10px; background: var(--surface-main); overflow: hidden; }
-      .party-slot[data-selected="true"] { outline: 2px solid var(--accent); outline-offset: 3px; }
+      .party-slot[data-selected="true"] { outline: 2px solid var(--accent); outline-offset: -2px; }
       .party-slot-select { position: absolute; inset: 0; width: 100%; padding: 0; border: 0; background: transparent; color: var(--text-secondary); font: inherit; cursor: pointer; display: grid; place-items: center; }
       .party-slot-select:focus-visible, .party-remove:focus-visible, .party-member:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -4px; }
       .party-empty { display: grid; gap: 9px; justify-items: center; font-size: 12px; }
@@ -637,7 +637,7 @@
       .party-slot-caption strong { display: block; font-size: 14px; color: var(--text-primary); }
       .party-slot-caption small { display: block; margin-top: 5px; font-size: 11px; color: var(--text-secondary); }
       .party-remove { position: absolute; top: 8px; right: 8px; width: 24px; height: 24px; border: 1px solid var(--border); border-radius: 6px; background: #10151de6; color: var(--text-primary); cursor: pointer; font-size: 17px; }
-      .party-roster { min-height: 0; display: flex; flex-direction: column; gap: 9px; }
+      .party-roster { min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 9px; }
       .party-roster h3 { margin: 0 0 0 3px; height: 20px; flex: none; line-height: 20px; font-size: 16px; }
       .party-roster-list { flex: 1; min-height: 0; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-content: start; gap: 12px; padding: 0 0 3px; }
       .party-member { position: relative; min-width: 0; width: 100%; aspect-ratio: 2 / 3; padding: 0; overflow: hidden; border: 1px solid var(--border); border-top: 4px solid var(--rarity-color); border-radius: 10px; background: var(--surface-sidebar); text-align: left; font: inherit; cursor: pointer; color: var(--text-primary); }
@@ -652,20 +652,23 @@
       .party-formations { min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 9px; }
       .party-formations h3 { margin: 0 0 0 3px; height: 20px; flex: none; line-height: 20px; font-size: 16px; }
       .party-formation-list { flex: 1; min-height: 0; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; display: flex; flex-direction: column; align-items: stretch; gap: 10px; padding-bottom: 3px; }
-      .party-formation { flex: none; min-width: 0; display: flex; align-items: center; gap: 4px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-sidebar); }
+      /* 스크롤바는 열 사이의 여백에 두어 카드의 실제 오른쪽 선을 열 경계에 맞춥니다. */
+      .party-roster-list, .party-formation-list { width: calc(100% + var(--party-scrollbar-width, 0px)); align-self: flex-start; }
+      .party-formation { flex: 0 0 64px; height: 64px; min-width: 0; overflow: hidden; display: flex; align-items: center; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-sidebar); }
       .party-formation[data-active="true"] { border-color: var(--accent); background: var(--surface-active); }
-      .party-formation-select { min-width: 0; flex: 1; border: 0; padding: 12px 10px; background: transparent; color: var(--text-primary); text-align: left; font: inherit; cursor: pointer; }
-      .party-formation-select strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 500; }
-      .party-formation-select small { display: block; margin-top: 6px; font-size: 10px; color: var(--text-secondary); }
+      .party-formation-select { min-width: 0; height: 100%; flex: 1; border: 0; padding: 8px 10px; background: transparent; color: var(--text-primary); text-align: left; font: inherit; cursor: pointer; }
+      .party-formation-select strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 500; line-height: 18px; }
+      .party-formation-select small { display: block; margin-top: 4px; font-size: 11px; line-height: 16px; color: var(--text-secondary); }
       .party-formation[data-active="true"] small { color: var(--accent); }
       .party-formation-icon { flex: none; width: 26px; height: 28px; display: grid; place-items: center; padding: 5px; margin-right: 4px; border: 0; border-radius: 5px; background: transparent; color: var(--text-secondary); cursor: pointer; font: inherit; }
       .party-formation-icon svg { width: 15px; height: 15px; }
       .party-formation-icon:hover { background: var(--surface-hover); color: var(--accent); }
       .party-formation-add { flex: none; min-height: 40px; border: 1px dashed var(--border); border-radius: 8px; background: transparent; color: var(--accent); font: inherit; font-size: 12px; cursor: pointer; }
       .party-formation-add:hover { background: var(--surface-hover); }
-      .party-formation-form { min-width: 0; width: 100%; padding: 8px; display: grid; gap: 7px; }
-      .party-formation-form input { width: 100%; min-width: 0; height: 32px; padding: 5px 7px; border: 1px solid var(--border); border-radius: 5px; background: var(--surface-main); color: var(--text-primary); font: inherit; font-size: 12px; }
+      .party-formation-form { min-width: 0; width: 100%; height: 100%; margin: 0; padding: 8px 10px; display: grid; grid-template-rows: 24px 20px; gap: 2px; }
+      .party-formation-form input { width: 100%; min-width: 0; height: 24px; padding: 2px 5px; border: 1px solid var(--border); border-radius: 4px; background: var(--surface-main); color: var(--text-primary); font: inherit; font-size: 13px; }
       .party-formation-form-actions { display: flex; justify-content: flex-end; }
+      .party-formation-form .party-formation-icon { width: 24px; height: 20px; padding: 0; margin: 0; }
       .party-formation-form button:disabled { opacity: .35; cursor: default; }
       .party-formations button:focus-visible, .party-formation-form input:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -2px; }
       .party-slot-select:disabled, .party-member:disabled { cursor: default; opacity: .5; }
@@ -3075,7 +3078,18 @@
           list.scrollTop = list.scrollHeight;
         });
         list.append(add); list.scrollTop = scrollTop;
+        alignPartyScrollRails();
       }
+      function alignPartyScrollRails() {
+        ['party-roster-list', 'party-formation-list'].forEach(id => {
+          const list = document.getElementById(id);
+          if (!list.getClientRects().length) return;
+          const width = Math.max(0, list.offsetWidth - list.clientWidth) + 'px';
+          if (list.style.getPropertyValue('--party-scrollbar-width') !== width) list.style.setProperty('--party-scrollbar-width', width);
+        });
+      }
+      const partyScrollRailObserver = new ResizeObserver(alignPartyScrollRails);
+      ['party-roster-list', 'party-formation-list'].forEach(id => partyScrollRailObserver.observe(document.getElementById(id)));
       function renderParty() {
         const cards = Array.from(document.querySelectorAll('#characters-screen .character-portrait-card'));
         const colors = { '3': '#858b95', '4': '#b18ae5', '5': '#e8c56c' };
