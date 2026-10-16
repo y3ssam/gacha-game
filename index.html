@@ -482,6 +482,15 @@
       .game-energy:hover .energy-tooltip, .game-energy:focus .energy-tooltip { visibility: visible; opacity: 1; }
       @media (max-width: 900px) { .game-player-status { gap: 12px; } .game-currencies { gap: 12px; } .game-experience { width: 110px; } }
       @media (max-width: 640px) { .game-settings-row { flex-wrap: wrap; } .game-player-status { max-width: none; flex-basis: 100%; } .game-experience { width: 100%; } .game-top-actions { width: 100%; justify-content: space-between; } .game-currencies { gap: 20px; } }
+      .game-home-button { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 40px; height: 40px; margin-left: 8px; padding: 9px; border: 1px solid var(--border); border-radius: 10px; background: transparent; color: var(--text-primary); cursor: pointer; }
+      .game-home-button svg { width: 20px; height: 20px; }
+      .game-home-button:hover { background: var(--surface-active); }
+      .game-home-button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
+      @media (max-width: 640px) {
+        #game-preview[data-view="battle"] .game-player-status { grid-template-columns: minmax(0, 1fr) auto 40px; }
+        #game-preview[data-view="battle"] .game-experience { grid-column: 1 / 3; }
+        .game-home-button { grid-column: 3; grid-row: 1 / 3; margin-left: 0; }
+      }
     </style>
   </head>
   <body>
@@ -539,6 +548,9 @@
                 <div class="game-experience-label"><span>경험치</span><span id="game-player-exp">0 / 100</span></div>
                 <progress id="game-player-exp-bar" value="0" max="100" aria-label="랭크 경험치" aria-valuetext="100 중 0">0%</progress>
               </div>
+              <button class="game-home-button" id="game-home" type="button" aria-label="홈" title="홈" hidden>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1Z" /></svg>
+              </button>
             </div>
             <div class="game-top-actions">
               <div class="game-currencies" aria-label="보유 재화 · 미리보기">
@@ -1215,6 +1227,7 @@
         const isWorlds = section === 'worlds';
         const isLorebook = section === 'lorebook';
         const isGame = section === 'game-preview';
+        if (isGame) showGameView('home');
         document.querySelector('.game-frame').dataset.screen = isGame ? 'game' : 'settings';
         document.querySelector('main.content').setAttribute('aria-label', isGame ? '게임 화면' : '게임 설정');
         if (isGame) document.querySelector('main.content').removeAttribute('aria-labelledby');
@@ -1775,6 +1788,23 @@
       updateGameEnergy();
       setInterval(updateGameEnergy, 1000);
       document.addEventListener('visibilitychange', () => { if (!document.hidden) updateGameEnergy(); });
+      function showGameView(view) {
+        const isBattle = view === 'battle';
+        const game = document.getElementById('game-preview');
+        game.dataset.view = isBattle ? 'battle' : 'home';
+        game.setAttribute('aria-label', isBattle ? '전투 화면' : '게임 메인 화면');
+        document.querySelector('.game-bottom-menu').hidden = isBattle;
+        document.getElementById('game-home').hidden = !isBattle;
+        document.getElementById('game-stage').setAttribute('aria-label', isBattle ? '전투 화면' : '메인 화면');
+      }
+      document.getElementById('game-battle').addEventListener('click', () => {
+        showGameView('battle');
+        document.getElementById('game-home').focus();
+      });
+      document.getElementById('game-home').addEventListener('click', () => {
+        showGameView('home');
+        document.getElementById('game-battle').focus();
+      });
     </script>
   </body>
 </html>
