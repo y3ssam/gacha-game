@@ -659,6 +659,10 @@
       .character-info-power strong { color: var(--accent); font-size: 30px; font-weight: 650; font-variant-numeric: tabular-nums; }
       .character-info-level { margin: 0; font-size: 14px; }
       .character-info-level strong { margin-left: 8px; font-size: 18px; }
+      .character-info-growth { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+      .character-growth-button { min-height: 38px; padding: 8px 18px; border: 1px solid var(--action-background); border-radius: 10px; background: var(--action-background); color: var(--action-text); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
+      .character-growth-button:hover { background: var(--action-hover); border-color: var(--action-hover); }
+      .character-growth-button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
       .character-info-exp { display: grid; gap: 8px; }
       .character-info-exp-label { display: flex; justify-content: space-between; gap: 12px; color: var(--text-secondary); font-size: 12px; }
       .character-info-exp progress { display: block; width: 100%; height: 6px; border: 0; border-radius: 999px; overflow: hidden; background: var(--border); accent-color: var(--accent); }
@@ -836,7 +840,10 @@
                   <div class="character-info">
                     <div class="character-info-summary">
                       <div class="character-info-power"><span class="character-info-label">전투력</span><strong id="character-info-power"></strong></div>
-                      <p class="character-info-level"><span class="character-info-label">레벨</span><strong id="character-info-level"></strong></p>
+                      <div class="character-info-growth">
+                        <p class="character-info-level"><span class="character-info-label">레벨</span><strong id="character-info-level"></strong></p>
+                        <button class="character-growth-button" id="character-growth-button" type="button">레벨업</button>
+                      </div>
                     </div>
                     <div class="character-info-exp">
                       <div class="character-info-exp-label"><span>경험치</span><span id="character-info-exp-count"></span></div>
@@ -2530,9 +2537,15 @@
           '5': { power: 2150, element: '빛', role: '기사', hp: 3200, attack: 210, defense: 220, speed: 95 },
         };
         const info = previews[card.dataset.rarity] || previews['3'];
+        // 최대 레벨 20은 화면 확인용 임시 값이며, 생성된 캐릭터의 값을 우선합니다.
+        const level = Number(card.dataset.level) || Number(card.querySelector('.character-card-level').textContent.match(/\d+/)?.[0]) || 1;
+        const maxLevel = Number(card.dataset.maxLevel) || 20;
+        const growthButton = document.getElementById('character-growth-button');
+        growthButton.textContent = level >= maxLevel ? '돌파' : '레벨업';
+        growthButton.dataset.action = level >= maxLevel ? 'breakthrough' : 'level-up';
         const values = {
           'character-info-power': info.power.toLocaleString('ko-KR'),
-          'character-info-level': card.querySelector('.character-card-level').textContent,
+          'character-info-level': 'Lv. ' + level + ' / ' + maxLevel,
           'character-info-exp-count': '0 / 100',
           'character-info-element': info.element,
           'character-info-class': info.role,
