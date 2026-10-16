@@ -678,10 +678,11 @@
       .character-skill-content { min-height: 0; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; padding-right: 8px; }
       .character-skill { min-height: 260px; height: 100%; display: flex; flex-direction: column; padding: 6px 0; }
       .character-skill-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+      .character-skill-title { display: flex; align-items: baseline; flex-wrap: wrap; gap: 10px; min-width: 0; }
       .character-skill-heading h3 { margin: 0; font-size: 22px; font-weight: 600; }
-      .character-skill-cooldown { color: var(--text-secondary); font-size: 12px; }
+      .character-skill-type { color: var(--text-secondary); font-size: 12px; font-weight: 400; white-space: nowrap; }
+      .character-skill-cooldown { flex-basis: 100%; color: var(--text-secondary); font-size: 12px; }
       .character-skill-cooldown[data-reduced="true"] { color: var(--accent); }
-      .character-skill-rule { margin: -8px 0 18px; color: var(--text-secondary); font-size: 12px; line-height: 1.7; }
       .character-skill-description { margin: 24px 0; color: var(--text-primary); font-size: 15px; line-height: 1.9; word-break: keep-all; overflow-wrap: anywhere; }
       .character-skill-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border); }
       .character-skill-level { color: var(--accent); font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; }
@@ -1076,23 +1077,22 @@
                     </div>
                     <div class="character-skill-content">
                     <article class="character-skill" id="skill-detail-basic" data-skill="basic" role="tabpanel" aria-labelledby="skill-select-basic" tabindex="0">
-                      <div class="character-skill-heading"><h3>기본 스킬</h3><span class="character-skill-cooldown">쿨타임 없음</span></div>
+                      <div class="character-skill-heading"><div class="character-skill-title"><h3>검의 궤적</h3><span class="character-skill-type">기본 스킬</span></div><span class="character-skill-cooldown">쿨타임 없음</span></div>
                       <p class="character-skill-description">적 하나를 공격하는 기본 스킬입니다.</p>
                       <div class="character-skill-footer"><span class="character-skill-level" aria-live="polite">Lv. 1 / 10</span><button class="character-growth-button" type="button" aria-label="기본 스킬 레벨업">레벨업</button></div>
                     </article>
                     <article class="character-skill" id="skill-detail-active" data-skill="active" role="tabpanel" aria-labelledby="skill-select-active" tabindex="0" hidden>
-                      <div class="character-skill-heading"><h3>액티브 스킬</h3><span class="character-skill-cooldown" id="character-active-cooldown"></span></div>
-                      <p class="character-skill-description">캐릭터 고유의 능력을 사용합니다. 기본 쿨타임은 스킬의 효과와 밸런스에 따라 2~5턴으로 정해집니다.</p>
-                      <p class="character-skill-rule" id="character-active-cooldown-rule"></p>
+                      <div class="character-skill-heading"><div class="character-skill-title"><h3>돌파의 일격</h3><span class="character-skill-type">액티브</span></div><span class="character-skill-cooldown" id="character-active-cooldown"></span></div>
+                      <p class="character-skill-description">캐릭터 고유의 능력을 사용합니다.</p>
                       <div class="character-skill-footer"><span class="character-skill-level" aria-live="polite">Lv. 1 / 10</span><button class="character-growth-button" type="button" aria-label="액티브 스킬 레벨업">레벨업</button></div>
                     </article>
                     <article class="character-skill" id="skill-detail-ultimate" data-skill="ultimate" role="tabpanel" aria-labelledby="skill-select-ultimate" tabindex="0" hidden>
-                      <div class="character-skill-heading"><h3>궁극기</h3><span class="character-skill-cooldown">전투 에너지 100%</span></div>
+                      <div class="character-skill-heading"><div class="character-skill-title"><h3>새벽을 가르는 빛</h3><span class="character-skill-type">궁극기</span></div><span class="character-skill-cooldown">전투 에너지 100%</span></div>
                       <p class="character-skill-description">캐릭터의 강력한 고유 능력을 사용하는 스킬입니다. 해당 캐릭터의 전투 에너지 게이지가 100%일 때 사용할 수 있습니다.</p>
                       <div class="character-skill-footer"><span class="character-skill-level" aria-live="polite">Lv. 1 / 10</span><button class="character-growth-button" type="button" aria-label="궁극기 레벨업">레벨업</button></div>
                     </article>
                     <article class="character-skill" id="skill-detail-passive" data-skill="passive" role="tabpanel" aria-labelledby="skill-select-passive" tabindex="0" hidden>
-                      <div class="character-skill-heading"><h3>패시브</h3><span class="character-skill-cooldown">자동 효과</span></div>
+                      <div class="character-skill-heading"><div class="character-skill-title"><h3>불굴의 의지</h3><span class="character-skill-type">패시브</span></div><span class="character-skill-cooldown">자동 효과</span></div>
                       <p class="character-skill-description">전투 중 조건을 만족하면 자동으로 효과가 적용됩니다.</p>
                       <div class="character-skill-footer"><span class="character-skill-level" aria-live="polite">Lv. 1 / 10</span><button class="character-growth-button" type="button" aria-label="패시브 레벨업">레벨업</button></div>
                     </article>
@@ -2945,23 +2945,31 @@
         const reduction = base >= 4 ? reductionLevels.filter(level => skillLevel >= level).length : 0;
         return { base, current: base - Math.min(2, reduction), reductionLevels };
       }
+      function getCharacterSkillNames(card) {
+        // 실제 AI 생성 스킬 이름을 연결하기 전의 캐릭터별 미리보기 이름입니다.
+        const examples = {
+          '3': { basic: '검의 궤적', active: '돌파의 일격', ultimate: '새벽을 가르는 빛', passive: '불굴의 의지' },
+          '4': { basic: '물결의 속삭임', active: '유리숲의 파문', ultimate: '깊은 기억의 해일', passive: '흐르는 기억' },
+          '5': { basic: '경계의 일격', active: '수호의 방패', ultimate: '루멘의 맹세', passive: '귀환의 약속' },
+        };
+        return examples[card.dataset.rarity] || examples['3'];
+      }
       function renderCharacterSkills(card) {
         const levels = getCharacterSkillLevels(card);
+        const names = getCharacterSkillNames(card);
         document.querySelectorAll('.character-skill-selector').forEach(selector => {
           const key = selector.dataset.skillTarget;
           selector.querySelector('.character-skill-selector-art').replaceChildren(createPlaceholderSkillIcon(key));
           selector.querySelector('.character-skill-selector-level').textContent = 'Lv.' + levels[key];
-          selector.setAttribute('aria-label', { basic: '기본 스킬', active: '액티브 스킬', ultimate: '궁극기', passive: '패시브' }[key] + ' · 레벨 ' + levels[key]);
+          selector.setAttribute('aria-label', { basic: '기본 스킬', active: '액티브', ultimate: '궁극기', passive: '패시브' }[key] + ' · ' + names[key] + ' · 레벨 ' + levels[key]);
         });
         const cooldown = getCharacterActiveCooldown(card);
         const cooldownLabel = document.getElementById('character-active-cooldown');
         cooldownLabel.textContent = '쿨타임 ' + cooldown.current + '턴';
         cooldownLabel.dataset.reduced = String(cooldown.current < cooldown.base);
-        document.getElementById('character-active-cooldown-rule').textContent = cooldown.base >= 4
-          ? '기본 ' + cooldown.base + '턴 · Lv. ' + cooldown.reductionLevels[0] + '에서 ' + (cooldown.base - 1) + '턴, Lv. ' + cooldown.reductionLevels[1] + '에서 ' + (cooldown.base - 2) + '턴'
-          : '기본 쿨타임 ' + cooldown.base + '턴 · 레벨업에 따른 쿨타임 감소 없음';
         document.querySelectorAll('.character-skill').forEach(skill => {
           const level = levels[skill.dataset.skill];
+          skill.querySelector('h3').textContent = names[skill.dataset.skill];
           skill.querySelector('.character-skill-level').textContent = 'Lv. ' + level + ' / 10';
           const button = skill.querySelector('button');
           button.disabled = level >= 10;
