@@ -812,9 +812,6 @@
       .dungeon-reward svg { width: 28px; height: 28px; }
       .dungeon-floor-pane { min-height: 0; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
       .dungeon-floor-pane h3 { margin: 0; flex: none; font-size: 16px; line-height: 24px; }
-      .dungeon-element-tabs { display: flex; gap: 8px; flex: none; }
-      .dungeon-element-tab { flex: 1; height: 34px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface-sidebar); color: var(--text-secondary); font: inherit; font-size: 13px; cursor: pointer; }
-      .dungeon-element-tab[aria-selected="true"] { background: var(--surface-active); color: var(--accent); border-color: var(--accent); }
       .dungeon-floor-list { min-height: 0; flex: 1; overflow-y: auto; overscroll-behavior-y: contain; scrollbar-gutter: stable; scrollbar-width: thin; display: flex; flex-direction: column; gap: 10px; }
       .dungeon-floor { flex: none; width: 100%; height: 54px; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-sidebar); color: var(--text-primary); font: inherit; font-size: 15px; cursor: pointer; }
       .dungeon-floor[aria-pressed="true"] { border-color: var(--accent); background: var(--surface-active); color: var(--accent); }
@@ -1231,7 +1228,7 @@
               <div class="dungeon-screen-heading"><button class="connection-back" id="material-dungeon-back" type="button" aria-label="재료 던전 목록으로 돌아가기">◀</button><h2 id="material-dungeon-title"></h2><p class="dungeon-reset">한국 시간 자정에 속성 변경<strong id="dungeon-reset-countdown"></strong></p></div>
               <div class="dungeon-detail-layout">
                 <div class="dungeon-detail-art"><img id="dungeon-detail-image" alt="" /><div class="dungeon-detail-caption"><h3 id="dungeon-detail-name"></h3><div><p class="dungeon-reward-heading">주요 보상</p><div class="dungeon-rewards" id="dungeon-rewards"></div></div></div></div>
-                <aside class="dungeon-floor-pane" aria-label="던전 층 선택"><h3>층 선택</h3><div class="dungeon-element-tabs" id="dungeon-element-tabs" role="tablist" aria-label="개방 속성"></div><div class="dungeon-floor-list" id="dungeon-floor-list"></div><div class="dungeon-floor-footer"><p class="dungeon-prepare-status" id="dungeon-prepare-status" role="status"></p><button class="dungeon-prepare" id="dungeon-prepare" type="button">전투 준비</button></div></aside>
+                <aside class="dungeon-floor-pane" aria-label="던전 층 선택"><h3>층 선택</h3><div class="dungeon-floor-list" id="dungeon-floor-list"></div><div class="dungeon-floor-footer"><p class="dungeon-prepare-status" id="dungeon-prepare-status" role="status"></p><button class="dungeon-prepare" id="dungeon-prepare" type="button">전투 준비</button></div></aside>
               </div>
             </section>
             <section class="summon-screen" id="summon-screen" aria-labelledby="summon-title" hidden>
@@ -3707,22 +3704,27 @@
         }
         updateDungeonCountdown(now);
       }
+      function getOpenDungeonCards(day = currentDungeonDay) {
+        return materialDungeonKinds.flatMap(kind => (kind.elemental ? day.elements : [null]).map(element => ({ kind, element, id: 'dungeon-choice-' + kind.id + (element ? '-' + element : '') })));
+      }
       function renderMaterialDungeons() {
         const track = document.getElementById('dungeon-selection-track'); track.replaceChildren();
-        materialDungeonKinds.forEach((kind, index) => {
-          const button = document.createElement('button'); button.type = 'button'; button.className = 'dungeon-choice'; button.id = 'dungeon-choice-' + kind.id;
+        getOpenDungeonCards().forEach(({ kind, element, id }, index) => {
+          const button = document.createElement('button'); button.type = 'button'; button.className = 'dungeon-choice'; button.id = id;
           button.style.setProperty('--dungeon-enter-delay', index * 70 + 'ms');
-          const image = document.createElement('img'); image.src = getDungeonImage(kind.id, currentDungeonDay.elements[0]); image.alt = ''; image.draggable = false;
+          const image = document.createElement('img'); image.src = getDungeonImage(kind.id, element); image.alt = ''; image.draggable = false;
           const copy = document.createElement('span'); copy.className = 'dungeon-choice-copy';
           const title = document.createElement('strong'); title.textContent = kind.name;
           const reward = document.createElement('small'); reward.textContent = kind.reward; copy.append(title, reward); button.append(image, copy);
           if (kind.elemental) {
             const elements = document.createElement('span'); elements.className = 'dungeon-open-elements';
-            currentDungeonDay.elements.forEach(element => { const badge = document.createElement('span'); badge.textContent = dungeonElementNames[element]; elements.append(badge); }); button.append(elements);
+            const badge = document.createElement('span'); badge.textContent = dungeonElementNames[element]; elements.append(badge); button.append(elements);
           }
-          button.setAttribute('aria-label', kind.name + ' 던전' + (kind.elemental ? ' · 오늘 개방 ' + currentDungeonDay.elements.map(element => dungeonElementNames[element]).join(', ') : ''));
+          button.setAttribute('aria-label', (element ? dungeonElementNames[element] + ' ' : '') + kind.name + ' 던전');
           button.addEventListener('click', () => {
-            refreshDungeonSchedule(); dungeonScreenState.category = kind.id; dungeonScreenState.element = currentDungeonDay.elements[0]; dungeonScreenState.floor = 1;
+            refreshDungeonSchedule();
+            if (element && !currentDungeonDay.elements.includes(element)) return;
+            dungeonScreenState.category = kind.id; dungeonScreenState.element = element || currentDungeonDay.elements[0]; dungeonScreenState.floor = 1;
             showGameView('material-dungeon'); document.getElementById('material-dungeon-back').focus({ preventScroll: true });
           }); track.append(button);
         });
@@ -3739,18 +3741,13 @@
         if (!currentDungeonDay.elements.includes(dungeonScreenState.element)) dungeonScreenState.element = currentDungeonDay.elements[0];
         const element = dungeonScreenState.element;
         if (!getDungeonFloorState(kind.id, element, dungeonScreenState.floor).unlocked) dungeonScreenState.floor = 1;
-        document.getElementById('material-dungeon-title').textContent = kind.name + ' 던전';
         const name = (kind.elemental ? dungeonElementNames[element] + ' · ' : '') + kind.name + ' 던전';
+        document.getElementById('material-dungeon-title').textContent = name;
         document.getElementById('dungeon-detail-name').textContent = name + ' · ' + dungeonScreenState.floor + '층';
         const image = document.getElementById('dungeon-detail-image'), src = getDungeonImage(kind.id, element);
         if (image.getAttribute('src') !== src) image.src = src;
         image.alt = name;
         document.getElementById('dungeon-reset-countdown').parentElement.hidden = !kind.elemental;
-        const tabs = document.getElementById('dungeon-element-tabs'); tabs.replaceChildren(); tabs.hidden = !kind.elemental || currentDungeonDay.elements.length < 2;
-        if (!tabs.hidden) currentDungeonDay.elements.forEach(id => {
-          const tab = document.createElement('button'); tab.type = 'button'; tab.className = 'dungeon-element-tab'; tab.dataset.element = id; tab.setAttribute('role', 'tab'); tab.setAttribute('aria-selected', String(id === element)); tab.tabIndex = id === element ? 0 : -1; tab.textContent = dungeonElementNames[id];
-          tab.addEventListener('click', () => { refreshDungeonSchedule(); if (!currentDungeonDay.elements.includes(id)) return; dungeonScreenState.element = id; renderMaterialDungeon(); document.querySelector('.dungeon-element-tab[aria-selected="true"]').focus({ preventScroll: true }); }); tabs.append(tab);
-        });
         const floors = document.getElementById('dungeon-floor-list'), scrollTop = floors.scrollTop; floors.replaceChildren();
         // 이전 층을 클리어해야 다음 층이 열립니다. 전투 결과에서 recordDungeonFloorClear를 호출합니다.
         for (let floor = 1; floor <= 5; floor++) {
@@ -3773,14 +3770,12 @@
       }
       document.getElementById('materials-entry-card').addEventListener('click', () => { showGameView('materials'); document.getElementById('materials-back').focus({ preventScroll: true }); });
       document.getElementById('materials-back').addEventListener('click', () => { showGameView('battle'); document.getElementById('materials-entry-card').focus({ preventScroll: true }); });
-      document.getElementById('material-dungeon-back').addEventListener('click', () => { showGameView('materials'); document.getElementById('dungeon-choice-' + dungeonScreenState.category).focus({ preventScroll: true }); });
-      document.getElementById('dungeon-prepare').addEventListener('click', () => { refreshDungeonSchedule(); document.getElementById('dungeon-prepare-status').textContent = '전투 준비 화면은 준비 중이에요.'; });
-      document.getElementById('dungeon-element-tabs').addEventListener('keydown', event => {
-        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
-        event.preventDefault(); const tabs = Array.from(event.currentTarget.querySelectorAll('button')), current = tabs.indexOf(document.activeElement);
-        const next = event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : (current + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
-        tabs[next]?.click();
+      document.getElementById('material-dungeon-back').addEventListener('click', () => {
+        showGameView('materials');
+        const card = getOpenDungeonCards().find(entry => entry.kind.id === dungeonScreenState.category && (!entry.element || entry.element === dungeonScreenState.element));
+        document.getElementById(card?.id || 'materials-back').focus({ preventScroll: true });
       });
+      document.getElementById('dungeon-prepare').addEventListener('click', () => { refreshDungeonSchedule(); document.getElementById('dungeon-prepare-status').textContent = '전투 준비 화면은 준비 중이에요.'; });
       const dungeonCardScroll = document.getElementById('dungeon-selection-scroll');
       let dungeonCardDrag = null;
       let dungeonCardClickBlockedUntil = 0;
