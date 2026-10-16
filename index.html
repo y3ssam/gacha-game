@@ -618,12 +618,13 @@
       .party-screen { height: 100%; padding: 24px 28px; display: flex; flex-direction: column; gap: 18px; }
       .party-heading { display: flex; align-items: center; justify-content: space-between; }
       .party-heading h2 { margin: 0; font-size: 20px; }
-      .party-heading span { color: var(--text-secondary); font-size: 13px; }
       .party-layout-frame { flex: 1; min-height: 0; container-type: size; --party-column-gap: 28px; --party-slot-gap: 12px; }
-      .party-layout { height: 100%; min-height: 0; display: grid; grid-template-columns: minmax(0, min(calc((100cqw - var(--party-column-gap)) * .6), calc(100cqh - 78px + 2 * var(--party-slot-gap)))) minmax(0, 1fr); gap: var(--party-column-gap); }
+      .party-layout { height: 100%; min-height: 0; display: grid; grid-template-columns: minmax(0, min(calc((100cqw - 2 * var(--party-column-gap)) * .45), calc(100cqh - 78px + 2 * var(--party-slot-gap)))) minmax(0, 3fr) minmax(110px, 1fr); gap: var(--party-column-gap); }
       .party-rows { min-height: 0; display: grid; grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 20px; }
       .party-row { min-height: 0; display: flex; flex-direction: column; gap: 9px; }
       .party-row h3 { margin: 0 0 0 3px; height: 20px; flex: none; line-height: 20px; color: var(--text-secondary); font-size: 12px; font-weight: 500; letter-spacing: .12em; }
+      .party-row-heading { display: flex; align-items: center; justify-content: space-between; height: 20px; flex: none; }
+      #party-count { color: var(--text-secondary); font-size: 12px; line-height: 20px; }
       .party-slots { min-height: 0; flex: 1; display: flex; justify-content: flex-start; align-items: start; gap: var(--party-slot-gap); container-type: size; }
       .party-slot { position: relative; flex: none; width: min(calc((100cqw - 2 * var(--party-slot-gap)) / 3), calc(100cqh * 2 / 3)); aspect-ratio: 2 / 3; border: 1px solid var(--border); border-top: 3px solid var(--rarity-color, var(--border)); border-radius: 10px; background: var(--surface-main); overflow: hidden; }
       .party-slot[data-selected="true"] { outline: 2px solid var(--accent); outline-offset: 3px; }
@@ -638,7 +639,7 @@
       .party-remove { position: absolute; top: 8px; right: 8px; width: 24px; height: 24px; border: 1px solid var(--border); border-radius: 6px; background: #10151de6; color: var(--text-primary); cursor: pointer; font-size: 17px; }
       .party-roster { min-height: 0; display: flex; flex-direction: column; gap: 9px; }
       .party-roster h3 { margin: 0 0 0 3px; height: 20px; flex: none; line-height: 20px; font-size: 16px; }
-      .party-roster-list { flex: 1; min-height: 0; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-content: start; gap: 12px; padding: 0 0 3px; }
+      .party-roster-list { flex: 1; min-height: 0; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-content: start; gap: 12px; padding: 0 0 3px; }
       .party-member { position: relative; min-width: 0; width: 100%; aspect-ratio: 2 / 3; padding: 0; overflow: hidden; border: 1px solid var(--border); border-top: 4px solid var(--rarity-color); border-radius: 10px; background: var(--surface-sidebar); text-align: left; font: inherit; cursor: pointer; color: var(--text-primary); }
       .party-member:hover { border-color: var(--accent); }
       .party-member > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
@@ -648,6 +649,25 @@
       .party-member-level { font-size: 11px; color: var(--text-secondary); white-space: nowrap; }
       .party-member small { grid-column: 1 / -1; color: var(--text-secondary); font-size: 10px; }
       .party-member em { position: absolute; top: 33px; left: 10px; padding: 4px 6px; border-radius: 4px; background: var(--surface-active); color: var(--accent); font-size: 10px; font-style: normal; }
+      .party-formations { min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 9px; }
+      .party-formations h3 { margin: 0 0 0 3px; height: 20px; flex: none; line-height: 20px; font-size: 16px; }
+      .party-formation-list { flex: 1; min-height: 0; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; display: flex; flex-direction: column; align-items: stretch; gap: 10px; padding-bottom: 3px; }
+      .party-formation { flex: none; min-width: 0; display: flex; align-items: center; gap: 4px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-sidebar); }
+      .party-formation[data-active="true"] { border-color: var(--accent); background: var(--surface-active); }
+      .party-formation-select { min-width: 0; flex: 1; border: 0; padding: 12px 0 12px 10px; background: transparent; color: var(--text-primary); text-align: left; font: inherit; cursor: pointer; }
+      .party-formation-select strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 500; }
+      .party-formation-select small { display: block; margin-top: 6px; font-size: 10px; color: var(--text-secondary); }
+      .party-formation[data-active="true"] small { color: var(--accent); }
+      .party-formation-icon { flex: none; width: 26px; height: 28px; display: grid; place-items: center; padding: 5px; margin-right: 4px; border: 0; border-radius: 5px; background: transparent; color: var(--text-secondary); cursor: pointer; font: inherit; }
+      .party-formation-icon svg { width: 15px; height: 15px; }
+      .party-formation-icon:hover { background: var(--surface-hover); color: var(--accent); }
+      .party-formation-add { flex: none; min-height: 40px; border: 1px dashed var(--border); border-radius: 8px; background: transparent; color: var(--accent); font: inherit; font-size: 12px; cursor: pointer; }
+      .party-formation-add:hover { background: var(--surface-hover); }
+      .party-formation-form { min-width: 0; width: 100%; padding: 8px; display: grid; gap: 7px; }
+      .party-formation-form input { width: 100%; min-width: 0; height: 32px; padding: 5px 7px; border: 1px solid var(--border); border-radius: 5px; background: var(--surface-main); color: var(--text-primary); font: inherit; font-size: 12px; }
+      .party-formation-form-actions { display: flex; justify-content: flex-end; }
+      .party-formation-form button:disabled { opacity: .35; cursor: default; }
+      .party-formations button:focus-visible, .party-formation-form input:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -2px; }
       #game-preview[data-view="party"] .party-layout { animation: character-toolbar-enter 450ms ease-out both; }
       @media (max-width: 760px) { .party-screen { padding: 18px 16px; gap: 12px; } .party-layout-frame { --party-column-gap: 14px; --party-slot-gap: 8px; } .party-roster-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; } .party-slot-caption { padding-inline: 6px; } .party-slot-caption strong { font-size: 12px; } .party-member-caption { padding-inline: 6px; } }
       @media (prefers-reduced-motion: reduce) { #game-preview[data-view="party"] .party-layout { animation: none; } #game-preview[data-view="party"] .game-bottom-menu { transition: none; } }
@@ -1034,13 +1054,14 @@
           </div>
           <div class="game-stage" id="game-stage">
             <section class="party-screen" id="party-screen" aria-labelledby="party-title" hidden>
-              <div class="party-heading"><h2 id="party-title">편성</h2><span id="party-count" aria-live="polite">0 / 6</span></div>
+              <div class="party-heading"><h2 id="party-title">편성</h2></div>
               <div class="party-layout-frame"><div class="party-layout">
                 <div class="party-rows">
-                  <section class="party-row" aria-labelledby="party-front-title"><h3 id="party-front-title">전열</h3><div class="party-slots" id="party-front"></div></section>
+                  <section class="party-row" aria-labelledby="party-front-title"><div class="party-row-heading"><h3 id="party-front-title">전열</h3><span id="party-count" aria-live="polite">0 / 6</span></div><div class="party-slots" id="party-front"></div></section>
                   <section class="party-row" aria-labelledby="party-back-title"><h3 id="party-back-title">후열</h3><div class="party-slots" id="party-back"></div></section>
                 </div>
                 <aside class="party-roster" aria-labelledby="party-roster-title"><h3 id="party-roster-title">내 캐릭터</h3><div class="party-roster-list" id="party-roster-list"></div></aside>
+                <aside class="party-formations" aria-labelledby="party-formations-title"><h3 id="party-formations-title">편성 목록</h3><div class="party-formation-list" id="party-formation-list"></div></aside>
               </div></div>
             </section>
             <section class="characters-screen" id="characters-screen" aria-label="캐릭터 목록" hidden>
@@ -2906,13 +2927,62 @@
       });
       let selectedCharacterCard = null;
       // 실제 게임 저장 데이터 연결 전까지 유지하는 편성 미리보기입니다.
-      const previewParty = Array(6).fill(null);
+      const previewFormations = [{ name: '편성 1', members: Array(6).fill(null) }];
+      let selectedFormation = 0;
+      let editingFormation = null;
+      let previewParty = previewFormations[0].members;
       let selectedPartySlot = 0;
       function placePartyMember(party, index, card) {
         if (!Number.isInteger(index) || index < 0 || index >= 6 || !card) return party.slice();
         const next = party.map(member => member === card ? null : member);
         next[index] = card;
         return next;
+      }
+      function selectPartyFormation(index) {
+        if (!Number.isInteger(index) || !previewFormations[index]) return;
+        selectedFormation = index;
+        previewParty = previewFormations[index].members;
+        selectedPartySlot = Math.max(0, previewParty.findIndex(member => !member));
+        editingFormation = null;
+      }
+      function renderFormationList() {
+        const list = document.getElementById('party-formation-list');
+        const scrollTop = list.scrollTop; list.replaceChildren();
+        previewFormations.forEach((formation, index) => {
+          const row = document.createElement('div'); row.className = 'party-formation'; row.dataset.active = String(index === selectedFormation);
+          if (editingFormation === index) {
+            const form = document.createElement('form'); form.className = 'party-formation-form';
+            const input = document.createElement('input'); input.type = 'text'; input.maxLength = 32; input.value = formation.name; input.required = true; input.setAttribute('aria-label', '편성 이름'); input.autocomplete = 'off';
+            const actions = document.createElement('div'); actions.className = 'party-formation-form-actions';
+            const cancel = document.createElement('button'); cancel.type = 'button'; cancel.className = 'party-formation-icon'; cancel.textContent = '×'; cancel.setAttribute('aria-label', '이름 변경 취소');
+            const confirm = document.createElement('button'); confirm.type = 'submit'; confirm.className = 'party-formation-icon'; confirm.textContent = '✓'; confirm.setAttribute('aria-label', '편성 이름 저장');
+            const closeEditor = () => { editingFormation = null; renderFormationList(); document.querySelector('.party-formation-select[data-formation="' + index + '"]')?.focus({ preventScroll: true }); };
+            cancel.addEventListener('click', closeEditor);
+            input.addEventListener('input', () => { confirm.disabled = !input.value.trim(); });
+            input.addEventListener('keydown', event => { if (event.key === 'Escape') { event.preventDefault(); closeEditor(); } });
+            form.addEventListener('submit', event => { event.preventDefault(); const name = input.value.trim(); if (!name) return; formation.name = name; closeEditor(); });
+            actions.append(cancel, confirm); form.append(input, actions); row.append(form);
+          } else {
+            const select = document.createElement('button'); select.type = 'button'; select.className = 'party-formation-select'; select.dataset.formation = index; select.setAttribute('aria-pressed', String(index === selectedFormation));
+            const title = document.createElement('strong'); title.textContent = formation.name; select.title = formation.name;
+            const summary = document.createElement('small'); summary.textContent = (index === selectedFormation ? '사용 중 · ' : '') + formation.members.filter(Boolean).length + ' / 6';
+            select.append(title, summary);
+            select.addEventListener('click', () => { selectPartyFormation(index); renderParty(); document.querySelector('.party-formation-select[data-formation="' + index + '"]').focus({ preventScroll: true }); });
+            const rename = document.createElement('button'); rename.type = 'button'; rename.className = 'party-formation-icon'; rename.title = '이름 변경'; rename.setAttribute('aria-label', formation.name + ' 이름 변경');
+            rename.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5 4 4M4 20l4-1L20 7a2.8 2.8 0 0 0-4-4L4 15Z"/></svg>';
+            rename.addEventListener('click', () => { editingFormation = index; renderFormationList(); const input = list.querySelector('input'); input.focus({ preventScroll: true }); input.select(); });
+            row.append(select, rename);
+          }
+          list.append(row);
+        });
+        const add = document.createElement('button'); add.type = 'button'; add.className = 'party-formation-add'; add.textContent = '+ 편성 추가';
+        add.addEventListener('click', () => {
+          previewFormations.push({ name: '편성 ' + (previewFormations.length + 1), members: Array(6).fill(null) });
+          selectPartyFormation(previewFormations.length - 1); renderParty();
+          document.querySelector('.party-formation-select[data-formation="' + selectedFormation + '"]').focus({ preventScroll: true });
+          list.scrollTop = list.scrollHeight;
+        });
+        list.append(add); list.scrollTop = scrollTop;
       }
       function renderParty() {
         const cards = Array.from(document.querySelectorAll('#characters-screen .character-portrait-card'));
@@ -2978,6 +3048,7 @@
           roster.append(button);
         });
         roster.scrollTop = scrollTop;
+        renderFormationList();
       }
       document.getElementById('game-party').addEventListener('click', () => {
         showGameView('party'); document.getElementById('game-home').focus({ preventScroll: true });
