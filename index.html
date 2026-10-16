@@ -574,6 +574,10 @@
       .story-preview-back:hover { background: #ffffff18; }
       .story-preview-back:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
       @media (max-width: 640px) { .story-preview-top { padding: 20px; } }
+      .story-dialogue-box { position: absolute; left: 5%; right: 5%; bottom: 28px; height: clamp(150px, 30%, 210px); max-height: calc(100% - 140px); padding: 24px 32px; overflow-y: auto; scrollbar-width: thin; border: 1px solid #ffffff24; border-top: 2px solid var(--accent); border-radius: 12px; background: rgb(9 13 20 / 88%); color: var(--text-primary); box-shadow: 0 12px 40px #00000030; }
+      .story-dialogue-speaker { display: block; margin-bottom: 12px; color: var(--accent); font-size: 15px; font-weight: 600; }
+      .story-dialogue-text { margin: 0; font-size: 16px; line-height: 1.9; white-space: pre-wrap; overflow-wrap: anywhere; }
+      @media (max-width: 640px) { .story-dialogue-box { bottom: 20px; padding: 18px 20px; } .story-dialogue-speaker { font-size: 14px; margin-bottom: 10px; } .story-dialogue-text { font-size: 14px; line-height: 1.8; } }
     </style>
   </head>
   <body>
@@ -661,6 +665,10 @@
                   <p id="story-preview-chapter"></p>
                 </div>
                 </div>
+              </div>
+              <div class="story-dialogue-box" role="region" aria-label="시나리오 텍스트">
+                <span class="story-dialogue-speaker" id="story-dialogue-speaker">내레이션</span>
+                <p class="story-dialogue-text" id="story-dialogue-text">낯선 바람이 조용히 스쳐 지나간다. 눈앞에 펼쳐진 풍경 너머로, 아직 알지 못하는 이야기가 기다리고 있었다.</p>
               </div>
             </section>
             <section class="battle-content" id="battle-content" aria-label="전투 콘텐츠" hidden>
