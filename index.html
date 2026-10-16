@@ -758,6 +758,10 @@
       .character-equipment-stat-grid dt { color: var(--text-secondary); font-size: 12px; }
       .character-equipment-stat-grid dd { margin: 0; font-size: 13px; font-variant-numeric: tabular-nums; }
       .character-equipment-set[data-active="true"] { color: var(--accent); }
+      #character-equipment-sets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+      .character-equipment-set-slot { min-width: 0; min-height: 96px; padding: 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-sidebar); }
+      .character-equipment-set-slot strong { display: block; margin-bottom: 8px; color: var(--accent); font-size: 14px; overflow-wrap: anywhere; }
+      .character-equipment-set-slot .character-equipment-set { font-size: 12px; line-height: 1.7; overflow-wrap: anywhere; }
       .equipment-picker-screen { height: 100%; min-height: 0; display: flex; flex-direction: column; padding: 24px 28px; gap: 20px; }
       .equipment-picker-heading { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
       .equipment-picker-heading h2 { margin: 0; font-size: 22px; }
@@ -3080,14 +3084,17 @@
         const counts = getCharacterEquipmentSetCounts(state);
         Object.entries(characterEquipmentSets).forEach(([id, set]) => {
           const count = counts[id] || 0;
-          if (count === 0) return;
-          const heading = document.createElement('p'); heading.textContent = set.name + ' 세트 · ' + count + '개 착용'; sets.append(heading);
-          set.bonuses.forEach(bonus => {
-            const effect = document.createElement('p'); effect.className = 'character-equipment-set'; effect.dataset.active = String(count >= bonus.pieces);
-            effect.textContent = bonus.pieces + '세트: ' + describeEquipmentStats(bonus.stats) + (count >= bonus.pieces ? ' · 활성' : ' · 미활성'); sets.append(effect);
+          const activeBonuses = set.bonuses.filter(bonus => count >= bonus.pieces);
+          if (count < 2 || !activeBonuses.length) return;
+          const slot = document.createElement('div'); slot.className = 'character-equipment-set-slot'; slot.dataset.setId = id;
+          const heading = document.createElement('strong'); heading.textContent = set.name + ' · ' + count + '개'; slot.append(heading);
+          activeBonuses.forEach(bonus => {
+            const effect = document.createElement('p'); effect.className = 'character-equipment-set'; effect.dataset.active = 'true';
+            effect.textContent = bonus.pieces + '세트: ' + describeEquipmentStats(bonus.stats); slot.append(effect);
           });
+          sets.append(slot);
         });
-        if (!sets.children.length) { const empty = document.createElement('p'); empty.textContent = '착용한 세트 장비가 없습니다.'; sets.append(empty); }
+        while (sets.children.length < 3) { const empty = document.createElement('div'); empty.className = 'character-equipment-set-slot'; empty.setAttribute('aria-label', '빈 세트 효과 칸'); sets.append(empty); }
         document.getElementById('character-equipment-status').textContent = '빈 슬롯을 눌러 장착하세요. 착용 장비는 마우스를 올려 효과 확인, 우클릭으로 교체·해제할 수 있습니다. 현재 수치는 미리보기용입니다.';
       }
       function createEquipmentIcon(type) {
