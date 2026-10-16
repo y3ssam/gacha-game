@@ -735,7 +735,6 @@
       .character-equipment-overview { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: stretch; min-height: 340px; gap: 20px; }
       .character-equipment-slots { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 10px; }
       .character-equipment-slot { position: relative; min-height: 94px; min-width: 0; padding: 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-sidebar); color: var(--text-primary); font: inherit; text-align: left; cursor: pointer; }
-      .character-equipment-slot[aria-pressed="true"] { border-color: var(--accent); background: var(--surface-active); }
       .character-equipment-slot strong { position: absolute; top: 12px; left: 14px; color: var(--accent); font-size: 13px; }
       .character-equipment-slot span { position: absolute; inset: 0; display: grid; place-items: center; padding: 26px 10px; color: var(--text-secondary); font-size: 12px; text-align: center; overflow-wrap: anywhere; }
       .character-equipment-slot:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
@@ -3228,8 +3227,6 @@
       document.getElementById('character-equipment-slots').addEventListener('pointerout', event => {
         const slot = event.target.closest('[data-equipment-type]'); if (slot && !slot.contains(event.relatedTarget)) { document.getElementById('equipment-hover').hidden = true; slot.removeAttribute('aria-describedby'); }
       });
-      document.getElementById('character-equipment-slots').addEventListener('focusin', event => { const slot = event.target.closest('[data-equipment-type]'); if (slot) showEquipmentTooltip(slot); });
-      document.getElementById('character-equipment-slots').addEventListener('focusout', () => { document.getElementById('equipment-hover').hidden = true; });
       document.getElementById('character-equipment-slots').addEventListener('contextmenu', event => {
         const slot = event.target.closest('[data-equipment-type]'); if (!slot) return;
         event.preventDefault(); const rect = slot.getBoundingClientRect(); showEquipmentContextMenu(slot, event.clientX || rect.left, event.clientY || rect.bottom);
