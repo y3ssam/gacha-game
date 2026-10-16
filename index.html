@@ -168,7 +168,11 @@
         font: inherit; font-size: 13px; cursor: pointer;
       }
       .saved-connection button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
-      .content-body { flex: 1; min-height: 0; overflow-y: auto; padding: 32px 40px; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+      /* 스크롤 유무와 관계없이 내용과 별도로 스크롤바 자리를 확보합니다. */
+      .content-body { flex: 1; min-height: 0; overflow-y: auto; scrollbar-gutter: stable; padding: 32px 40px; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+      @supports not (scrollbar-gutter: stable) {
+        .content-body { overflow-y: scroll; }
+      }
       .ai-toolbar {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 152px)) minmax(0, 1fr) minmax(0, 152px);
