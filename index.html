@@ -788,6 +788,7 @@
       .character-equipment-overview .character-equipment-stat-grid { grid-template-columns: minmax(0, 1fr); grid-template-rows: repeat(8, minmax(24px, 1fr)); gap: 8px; align-items: center; }
       .character-equipment-overview .character-equipment-stat-grid dt { font-size: 14px; }
       .character-equipment-overview .character-equipment-stat-grid dd { font-size: 16px; font-weight: 600; }
+      .character-equipment-stat-bonus { margin-left: 5px; color: var(--accent); font-size: 14px; white-space: nowrap; }
       @media (max-width: 640px) { .equipment-picker-screen { padding: 20px 16px; } .equipment-picker-layout { gap: 12px; } .character-equipment-overview { gap: 12px; } }
       @container (max-width: 650px) { .character-equipment-slots { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
       .character-profile-background p { margin: 0; color: var(--text-primary); font-size: 14px; line-height: 1.9; white-space: pre-wrap; overflow-wrap: anywhere; }
@@ -1005,7 +1006,6 @@
                       <section class="character-equipment-box" aria-labelledby="character-equipment-stats-title"><h4 id="character-equipment-stats-title">현재 스탯</h4><dl class="character-equipment-stat-grid" id="character-equipment-stats"></dl></section>
                     </div>
                     <section class="character-equipment-box" aria-labelledby="character-equipment-sets-title"><h4 id="character-equipment-sets-title">세트 효과</h4><div id="character-equipment-sets"></div></section>
-                    <p class="character-outfit-status" id="character-equipment-status" aria-live="polite"></p>
                   </div>
                 </div>
                 <div class="character-detail-panel" id="character-panel-skills" role="tabpanel" aria-labelledby="character-tab-skills" tabindex="0" hidden>
@@ -3075,9 +3075,15 @@
         });
         const stats = document.getElementById('character-equipment-stats'); stats.replaceChildren();
         const total = getCharacterEquipmentTotalStats(card);
+        const base = getCharacterBaseStats(card);
         Object.entries(characterEquipmentStatLabels).forEach(([key, label]) => {
           const row = document.createElement('div'); const name = document.createElement('dt'); name.textContent = label;
-          const value = document.createElement('dd'); value.textContent = total[key].toLocaleString('ko-KR') + (['critRate', 'critDamage', 'effectHit', 'effectResist'].includes(key) ? '%' : '');
+          const unit = ['critRate', 'critDamage', 'effectHit', 'effectResist'].includes(key) ? '%' : '';
+          const value = document.createElement('dd'); value.textContent = base[key].toLocaleString('ko-KR') + unit;
+          const bonus = document.createElement('span'); bonus.className = 'character-equipment-stat-bonus';
+          const increase = total[key] - base[key];
+          bonus.textContent = '(' + (increase >= 0 ? '+' : '') + increase.toLocaleString('ko-KR') + unit + ')';
+          value.append(bonus);
           row.append(name, value); stats.append(row);
         });
         const sets = document.getElementById('character-equipment-sets'); sets.replaceChildren();
@@ -3095,7 +3101,6 @@
           sets.append(slot);
         });
         while (sets.children.length < 3) { const empty = document.createElement('div'); empty.className = 'character-equipment-set-slot'; empty.setAttribute('aria-label', '빈 세트 효과 칸'); sets.append(empty); }
-        document.getElementById('character-equipment-status').textContent = '빈 슬롯을 눌러 장착하세요. 착용 장비는 마우스를 올려 효과 확인, 우클릭으로 교체·해제할 수 있습니다. 현재 수치는 미리보기용입니다.';
       }
       function createEquipmentIcon(type) {
         const paths = {
