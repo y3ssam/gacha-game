@@ -663,6 +663,15 @@
       .character-growth-button { min-height: 38px; padding: 8px 18px; border: 1px solid var(--action-background); border-radius: 10px; background: var(--action-background); color: var(--action-text); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
       .character-growth-button:hover { background: var(--action-hover); border-color: var(--action-hover); }
       .character-growth-button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
+      .character-skills { display: grid; gap: 16px; padding: 2px 12px 12px 0; }
+      .character-skill { padding: 20px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-sidebar); }
+      .character-skill-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+      .character-skill-heading h3 { margin: 0; font-size: 17px; font-weight: 600; }
+      .character-skill-cooldown { color: var(--text-secondary); font-size: 12px; }
+      .character-skill-description { margin: 12px 0 18px; color: var(--text-secondary); font-size: 13px; line-height: 1.7; word-break: keep-all; overflow-wrap: anywhere; }
+      .character-skill-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+      .character-skill-level { color: var(--accent); font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; }
+      .character-skill .character-growth-button:disabled { border-color: var(--border); background: var(--surface-active); color: var(--text-secondary); cursor: default; }
       .character-info-exp { display: grid; gap: 8px; }
       .character-info-exp-label { display: flex; justify-content: space-between; gap: 12px; color: var(--text-secondary); font-size: 12px; }
       .character-info-exp progress { display: block; width: 100%; height: 6px; border: 0; border-radius: 999px; overflow: hidden; background: var(--border); accent-color: var(--accent); }
@@ -866,7 +875,25 @@
                     </dl>
                   </div>
                 </div>
-                <div class="character-detail-panel" id="character-panel-skills" role="tabpanel" aria-labelledby="character-tab-skills" tabindex="0" hidden></div>
+                <div class="character-detail-panel" id="character-panel-skills" role="tabpanel" aria-labelledby="character-tab-skills" tabindex="0" hidden>
+                  <div class="character-skills">
+                    <article class="character-skill" data-skill="basic">
+                      <div class="character-skill-heading"><h3>기본 스킬</h3><span class="character-skill-cooldown">쿨타임 없음</span></div>
+                      <p class="character-skill-description">적 하나를 공격하는 기본 스킬입니다.</p>
+                      <div class="character-skill-footer"><span class="character-skill-level" aria-live="polite">Lv. 1 / 10</span><button class="character-growth-button" type="button" aria-label="기본 스킬 레벨업">레벨업</button></div>
+                    </article>
+                    <article class="character-skill" data-skill="passive">
+                      <div class="character-skill-heading"><h3>패시브 스킬</h3><span class="character-skill-cooldown">자동 효과</span></div>
+                      <p class="character-skill-description">전투 중 조건을 만족하면 자동으로 효과가 적용됩니다.</p>
+                      <div class="character-skill-footer"><span class="character-skill-level" aria-live="polite">Lv. 1 / 10</span><button class="character-growth-button" type="button" aria-label="패시브 스킬 레벨업">레벨업</button></div>
+                    </article>
+                    <article class="character-skill" data-skill="ultimate">
+                      <div class="character-skill-heading"><h3>궁극기</h3></div>
+                      <p class="character-skill-description">캐릭터의 강력한 고유 능력을 사용하는 스킬입니다.</p>
+                      <div class="character-skill-footer"><span class="character-skill-level" aria-live="polite">Lv. 1 / 10</span><button class="character-growth-button" type="button" aria-label="궁극기 레벨업">레벨업</button></div>
+                    </article>
+                  </div>
+                </div>
                 <div class="character-detail-panel" id="character-panel-awakening" role="tabpanel" aria-labelledby="character-tab-awakening" tabindex="0" hidden></div>
                 <div class="character-detail-panel" id="character-panel-outfits" role="tabpanel" aria-labelledby="character-tab-outfits" tabindex="0" hidden></div>
                 <div class="character-detail-panel" id="character-panel-affinity" role="tabpanel" aria-labelledby="character-tab-affinity" tabindex="0" hidden></div>
@@ -2495,10 +2522,14 @@
         document.getElementById('game-home').focus({ preventScroll: true });
       });
       let selectedCharacterCard = null;
+      // 실제 성장 데이터 연결 전, 캐릭터별로 보관하는 미리보기 세션의 스킬 레벨입니다.
+      const previewCharacterSkillLevels = new WeakMap();
       function openCharacterDetail(card) {
         selectedCharacterCard = card;
         selectCharacterTab(document.getElementById('character-tab-info'));
         renderCharacterInfo(card);
+        renderCharacterSkills(card);
+        document.getElementById('character-panel-skills').scrollTop = 0;
         const name = card.querySelector('.character-card-name').textContent;
         document.getElementById('character-detail-name').textContent = name;
         document.getElementById('character-detail-level').textContent = card.querySelector('.character-card-level').textContent;
@@ -2564,6 +2595,31 @@
         exp.setAttribute('aria-valuetext', '0 / 100');
         document.getElementById('character-panel-info').scrollTop = 0;
       }
+      function getCharacterSkillLevels(card) {
+        if (!previewCharacterSkillLevels.has(card)) previewCharacterSkillLevels.set(card, { basic: 1, passive: 1, ultimate: 1 });
+        return previewCharacterSkillLevels.get(card);
+      }
+      function renderCharacterSkills(card) {
+        const levels = getCharacterSkillLevels(card);
+        document.querySelectorAll('.character-skill').forEach(skill => {
+          const level = levels[skill.dataset.skill];
+          skill.querySelector('.character-skill-level').textContent = 'Lv. ' + level + ' / 10';
+          const button = skill.querySelector('button');
+          button.disabled = level >= 10;
+          button.textContent = level >= 10 ? '최대 레벨' : '레벨업';
+          button.setAttribute('aria-label', skill.querySelector('h3').textContent + (level >= 10 ? ' 최대 레벨' : ' 레벨업'));
+        });
+      }
+      function upgradeCharacterSkill(card, key) {
+        if (!card || !['basic', 'passive', 'ultimate'].includes(key)) return;
+        const levels = getCharacterSkillLevels(card);
+        if (levels[key] >= 10) return;
+        levels[key]++;
+        renderCharacterSkills(card);
+      }
+      document.querySelectorAll('.character-skill').forEach(skill => {
+        skill.querySelector('button').addEventListener('click', () => upgradeCharacterSkill(selectedCharacterCard, skill.dataset.skill));
+      });
       function selectCharacterTab(selected) {
         document.querySelectorAll('.character-detail-action').forEach(tab => {
           const active = tab === selected;
