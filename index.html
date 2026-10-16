@@ -663,15 +663,27 @@
       .character-growth-button { min-height: 38px; padding: 8px 18px; border: 1px solid var(--action-background); border-radius: 10px; background: var(--action-background); color: var(--action-text); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
       .character-growth-button:hover { background: var(--action-hover); border-color: var(--action-hover); }
       .character-growth-button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
-      .character-skills { display: grid; gap: 16px; padding: 2px 12px 12px 0; }
-      .character-skill { padding: 20px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-sidebar); }
+      #character-panel-skills { overflow: hidden; scrollbar-gutter: auto; }
+      .character-skills { height: 100%; min-height: 0; display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 24px; padding: 2px 8px 2px 0; }
+      .character-skill-picker { min-height: 0; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; scrollbar-width: thin; padding: 4px; }
+      .character-skill-selector { flex-shrink: 0; display: grid; justify-items: center; gap: 7px; width: 100%; padding: 0; border: 0; background: transparent; color: var(--text-secondary); font: inherit; font-size: 12px; cursor: pointer; }
+      .character-skill-selector-icon { position: relative; display: grid; place-items: center; width: 60px; height: 60px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface-sidebar); color: var(--text-secondary); }
+      .character-skill-selector-icon svg { width: 30px; height: 30px; }
+      .character-skill-selector-level { position: absolute; right: 4px; bottom: 2px; font-size: 10px; font-weight: 600; font-variant-numeric: tabular-nums; }
+      .character-skill-selector[aria-selected="true"] { color: var(--accent); }
+      .character-skill-selector[aria-selected="true"] .character-skill-selector-icon { color: var(--accent); border-color: var(--accent); background: var(--surface-active); }
+      .character-skill-selector:hover .character-skill-selector-icon { border-color: var(--accent); }
+      .character-skill-selector:focus-visible { outline: none; }
+      .character-skill-selector:focus-visible .character-skill-selector-icon { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
+      .character-skill-content { min-height: 0; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; padding-right: 8px; }
+      .character-skill { min-height: 260px; height: 100%; display: flex; flex-direction: column; padding: 6px 0; }
       .character-skill-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
-      .character-skill-heading h3 { margin: 0; font-size: 17px; font-weight: 600; }
+      .character-skill-heading h3 { margin: 0; font-size: 22px; font-weight: 600; }
       .character-skill-cooldown { color: var(--text-secondary); font-size: 12px; }
       .character-skill-cooldown[data-reduced="true"] { color: var(--accent); }
       .character-skill-rule { margin: -8px 0 18px; color: var(--text-secondary); font-size: 12px; line-height: 1.7; }
-      .character-skill-description { margin: 12px 0 18px; color: var(--text-secondary); font-size: 13px; line-height: 1.7; word-break: keep-all; overflow-wrap: anywhere; }
-      .character-skill-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+      .character-skill-description { margin: 24px 0; color: var(--text-primary); font-size: 15px; line-height: 1.9; word-break: keep-all; overflow-wrap: anywhere; }
+      .character-skill-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border); }
       .character-skill-level { color: var(--accent); font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; }
       .character-skill .character-growth-button:disabled { border-color: var(--border); background: var(--surface-active); color: var(--text-secondary); cursor: default; }
       .character-awakening { display: grid; gap: 20px; padding: 2px 12px 12px 0; }
@@ -1056,27 +1068,35 @@
                 </div>
                 <div class="character-detail-panel" id="character-panel-skills" role="tabpanel" aria-labelledby="character-tab-skills" tabindex="0" hidden>
                   <div class="character-skills">
-                    <article class="character-skill" data-skill="basic">
+                    <div class="character-skill-picker" id="character-skill-picker" role="tablist" aria-label="스킬 선택" aria-orientation="vertical">
+                      <button class="character-skill-selector" id="skill-select-basic" type="button" role="tab" aria-selected="true" aria-controls="skill-detail-basic" data-skill-target="basic"><span class="character-skill-selector-icon" aria-hidden="true"><span class="character-skill-selector-art"></span><span class="character-skill-selector-level">1</span></span><span>기본 스킬</span></button>
+                      <button class="character-skill-selector" id="skill-select-active" type="button" role="tab" aria-selected="false" aria-controls="skill-detail-active" tabindex="-1" data-skill-target="active"><span class="character-skill-selector-icon" aria-hidden="true"><span class="character-skill-selector-art"></span><span class="character-skill-selector-level">1</span></span><span>액티브</span></button>
+                      <button class="character-skill-selector" id="skill-select-ultimate" type="button" role="tab" aria-selected="false" aria-controls="skill-detail-ultimate" tabindex="-1" data-skill-target="ultimate"><span class="character-skill-selector-icon" aria-hidden="true"><span class="character-skill-selector-art"></span><span class="character-skill-selector-level">1</span></span><span>궁극기</span></button>
+                      <button class="character-skill-selector" id="skill-select-passive" type="button" role="tab" aria-selected="false" aria-controls="skill-detail-passive" tabindex="-1" data-skill-target="passive"><span class="character-skill-selector-icon" aria-hidden="true"><span class="character-skill-selector-art"></span><span class="character-skill-selector-level">1</span></span><span>패시브</span></button>
+                    </div>
+                    <div class="character-skill-content">
+                    <article class="character-skill" id="skill-detail-basic" data-skill="basic" role="tabpanel" aria-labelledby="skill-select-basic" tabindex="0">
                       <div class="character-skill-heading"><h3>기본 스킬</h3><span class="character-skill-cooldown">쿨타임 없음</span></div>
                       <p class="character-skill-description">적 하나를 공격하는 기본 스킬입니다.</p>
                       <div class="character-skill-footer"><span class="character-skill-level" aria-live="polite">Lv. 1 / 10</span><button class="character-growth-button" type="button" aria-label="기본 스킬 레벨업">레벨업</button></div>
                     </article>
-                    <article class="character-skill" data-skill="active">
+                    <article class="character-skill" id="skill-detail-active" data-skill="active" role="tabpanel" aria-labelledby="skill-select-active" tabindex="0" hidden>
                       <div class="character-skill-heading"><h3>액티브 스킬</h3><span class="character-skill-cooldown" id="character-active-cooldown"></span></div>
                       <p class="character-skill-description">캐릭터 고유의 능력을 사용합니다. 기본 쿨타임은 스킬의 효과와 밸런스에 따라 2~5턴으로 정해집니다.</p>
                       <p class="character-skill-rule" id="character-active-cooldown-rule"></p>
                       <div class="character-skill-footer"><span class="character-skill-level" aria-live="polite">Lv. 1 / 10</span><button class="character-growth-button" type="button" aria-label="액티브 스킬 레벨업">레벨업</button></div>
                     </article>
-                    <article class="character-skill" data-skill="ultimate">
+                    <article class="character-skill" id="skill-detail-ultimate" data-skill="ultimate" role="tabpanel" aria-labelledby="skill-select-ultimate" tabindex="0" hidden>
                       <div class="character-skill-heading"><h3>궁극기</h3><span class="character-skill-cooldown">전투 에너지 100%</span></div>
                       <p class="character-skill-description">캐릭터의 강력한 고유 능력을 사용하는 스킬입니다. 해당 캐릭터의 전투 에너지 게이지가 100%일 때 사용할 수 있습니다.</p>
                       <div class="character-skill-footer"><span class="character-skill-level" aria-live="polite">Lv. 1 / 10</span><button class="character-growth-button" type="button" aria-label="궁극기 레벨업">레벨업</button></div>
                     </article>
-                    <article class="character-skill" data-skill="passive">
+                    <article class="character-skill" id="skill-detail-passive" data-skill="passive" role="tabpanel" aria-labelledby="skill-select-passive" tabindex="0" hidden>
                       <div class="character-skill-heading"><h3>패시브</h3><span class="character-skill-cooldown">자동 효과</span></div>
                       <p class="character-skill-description">전투 중 조건을 만족하면 자동으로 효과가 적용됩니다.</p>
                       <div class="character-skill-footer"><span class="character-skill-level" aria-live="polite">Lv. 1 / 10</span><button class="character-growth-button" type="button" aria-label="패시브 레벨업">레벨업</button></div>
                     </article>
+                    </div>
                   </div>
                 </div>
                 <div class="character-detail-panel" id="character-panel-awakening" role="tabpanel" aria-labelledby="character-tab-awakening" tabindex="0" hidden>
@@ -2797,6 +2817,7 @@
         selectCharacterTab(document.getElementById('character-tab-info'));
         renderCharacterInfo(card);
         renderCharacterSkills(card);
+        selectCharacterSkill('basic');
         renderCharacterAwakening(card);
         document.getElementById('character-panel-awakening').scrollTop = 0;
         const outfits = getCharacterOutfits(card);
@@ -2876,6 +2897,40 @@
         exp.setAttribute('aria-valuetext', '0 / 100');
         document.getElementById('character-panel-info').scrollTop = 0;
       }
+      function createPlaceholderSkillIcon(key) {
+        const paths = {
+          basic: 'm14 3 7 0 0 7-11 11-7-7L14 3ZM6 11l7 7M3 21l4-4',
+          active: 'm13 2-9 12h7l-1 8L21 9h-8l0-7Z',
+          ultimate: 'm12 2 3 7 7 3-7 3-3 7-3-7-7-3 7-3 3-7ZM4 3v4M2 5h4M20 17v4M18 19h4',
+          passive: 'M12 2 3 6v6c0 5 9 10 9 10s9-5 9-10V6l-9-4ZM8 12l3 3 5-6',
+        };
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('fill', 'none'); svg.setAttribute('stroke', 'currentColor'); svg.setAttribute('stroke-width', '1.5'); svg.setAttribute('stroke-linecap', 'round'); svg.setAttribute('stroke-linejoin', 'round');
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path'); path.setAttribute('d', paths[key]); svg.append(path); return svg;
+      }
+      function selectCharacterSkill(key) {
+        const selectors = Array.from(document.querySelectorAll('.character-skill-selector'));
+        if (!selectors.some(selector => selector.dataset.skillTarget === key)) return;
+        selectors.forEach(selector => {
+          const selected = selector.dataset.skillTarget === key;
+          selector.setAttribute('aria-selected', String(selected)); selector.tabIndex = selected ? 0 : -1;
+          document.getElementById(selector.getAttribute('aria-controls')).hidden = !selected;
+        });
+        document.querySelector('.character-skill-content').scrollTop = 0;
+      }
+      document.querySelectorAll('.character-skill-selector').forEach(selector => {
+        selector.addEventListener('click', () => selectCharacterSkill(selector.dataset.skillTarget));
+        selector.addEventListener('keydown', event => {
+          const selectors = Array.from(document.querySelectorAll('.character-skill-selector'));
+          let index = selectors.indexOf(selector);
+          if (event.key === 'ArrowDown') index = (index + 1) % selectors.length;
+          else if (event.key === 'ArrowUp') index = (index - 1 + selectors.length) % selectors.length;
+          else if (event.key === 'Home') index = 0;
+          else if (event.key === 'End') index = selectors.length - 1;
+          else return;
+          event.preventDefault(); selectCharacterSkill(selectors[index].dataset.skillTarget); selectors[index].focus();
+        });
+      });
       function getCharacterSkillLevels(card) {
         if (!previewCharacterSkillLevels.has(card)) previewCharacterSkillLevels.set(card, { basic: 1, active: 1, ultimate: 1, passive: 1 });
         return previewCharacterSkillLevels.get(card);
@@ -2892,6 +2947,12 @@
       }
       function renderCharacterSkills(card) {
         const levels = getCharacterSkillLevels(card);
+        document.querySelectorAll('.character-skill-selector').forEach(selector => {
+          const key = selector.dataset.skillTarget;
+          selector.querySelector('.character-skill-selector-art').replaceChildren(createPlaceholderSkillIcon(key));
+          selector.querySelector('.character-skill-selector-level').textContent = 'Lv.' + levels[key];
+          selector.setAttribute('aria-label', { basic: '기본 스킬', active: '액티브 스킬', ultimate: '궁극기', passive: '패시브' }[key] + ' · 레벨 ' + levels[key]);
+        });
         const cooldown = getCharacterActiveCooldown(card);
         const cooldownLabel = document.getElementById('character-active-cooldown');
         cooldownLabel.textContent = '쿨타임 ' + cooldown.current + '턴';
