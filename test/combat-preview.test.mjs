@@ -78,3 +78,21 @@ test('auto prioritizes ultimate, active, basic and the preview timers stop on ex
     assert.equal(timers.size, 0);
   }
 });
+
+test('stage formation keeps unassigned slots empty and briefing blocks preview actions', () => {
+  const { run, timers } = setup();
+  run(`
+    globalThis.getCharacterEquipmentTotalStats = () => ({ speed: 120, hp: 3200 });
+    previewParty[0] = { querySelector: selector => selector === '.character-card-name' ? { textContent: '편성 캐릭터' } : null };
+    battleStageContext = { source: 'dungeon' };
+    resetCombatPreview();
+  `);
+  assert.equal(run("combatPreviewState.units.filter(unit => unit.team === 'ally' && !unit.empty).length"), 1);
+  assert.equal(run('combatPreviewState.units.filter(unit => unit.empty).length'), 5);
+  assert.equal(run('combatPreviewState.queue.length'), 7);
+  assert.equal(run('combatPreviewState.queue[0].name'), '편성 캐릭터');
+  run(`battleBriefingOpen = true; playCombatPreviewAction('ultimate', combatPreviewState.units.find(unit => unit.team === 'enemy')); scheduleCombatPreview();`);
+  assert.equal(run('combatPreviewState.busy'), false);
+  assert.equal(run('combatPreviewState.queue[0].energy'), 100);
+  assert.equal(timers.size, 0);
+});
