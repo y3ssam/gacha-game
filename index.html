@@ -811,15 +811,15 @@
       .summon-screen > h2 { margin: 0; font-size: 20px; line-height: 28px; flex: none; }
       .summon-layout { flex: 1; min-height: 0; display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 24px; }
       .summon-banner-list { min-width: 0; min-height: 0; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; display: flex; flex-direction: column; gap: 12px; padding-right: 4px; }
-      .summon-banner-choice { position: relative; flex: none; width: 100%; min-height: 88px; display: flex; align-items: center; gap: 12px; padding: 12px; border: 1px solid var(--border); border-left: 3px solid transparent; border-radius: 9px; background: var(--surface-sidebar); color: var(--text-primary); font: inherit; text-align: left; cursor: pointer; }
+      .summon-banner-choice { position: relative; isolation: isolate; overflow: hidden; flex: none; width: 100%; aspect-ratio: 16 / 9; min-height: 100px; display: flex; align-items: flex-start; padding: 14px 12px; border: 1px solid var(--border); border-left: 3px solid transparent; border-radius: 9px; background: var(--surface-sidebar); color: #eef1f7; font: inherit; text-align: left; cursor: pointer; }
       .summon-banner-choice[aria-selected="true"] { border-color: var(--accent); background: var(--surface-active); }
       .summon-banner-choice:hover { background: var(--surface-hover); }
-      .summon-banner-thumbnail { flex: none; width: 46px; height: 60px; display: grid; place-items: center; border: 1px solid var(--border); border-radius: 5px; color: var(--accent); background: linear-gradient(145deg, var(--summon-tint), var(--surface-sidebar)); }
-      .summon-banner-thumbnail svg { width: 24px; height: 24px; }
-      .summon-banner-thumbnail img { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
-      .summon-banner-choice-copy { min-width: 0; }
-      .summon-banner-choice strong { display: block; font-size: 14px; font-weight: 600; overflow-wrap: anywhere; line-height: 1.5; }
-      .summon-banner-choice small { display: block; margin-top: 7px; font-size: 11px; color: var(--text-secondary); }
+      .summon-banner-thumbnail { position: absolute; inset: 0; display: grid; place-items: center; color: var(--accent); background: radial-gradient(ellipse at 65% 40%, var(--summon-tint), transparent 65%), linear-gradient(135deg, var(--surface-active), var(--surface-sidebar)); }
+      .summon-banner-thumbnail svg { width: 36px; height: 36px; opacity: .25; }
+      .summon-banner-thumbnail img { display: block; width: 100%; height: 100%; object-fit: cover; }
+      .summon-banner-choice::after { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(to bottom, #000d, #0007 50%, transparent); }
+      .summon-banner-choice-copy { position: relative; z-index: 2; min-width: 0; }
+      .summon-banner-choice strong { display: block; font-size: 14px; font-weight: 600; overflow-wrap: anywhere; line-height: 1.5; text-shadow: 0 1px 5px #0008; }
       .summon-banner { position: relative; min-width: 0; min-height: 0; overflow: hidden; border: 1px solid var(--border); border-radius: 12px; isolation: isolate; background: var(--surface-sidebar); }
       .summon-banner-art { position: absolute; inset: 0; z-index: -2; background: radial-gradient(ellipse at 65% 40%, var(--summon-tint), transparent 65%), linear-gradient(135deg, var(--surface-active), var(--surface-sidebar)); }
       .summon-banner-art > img { width: 100%; height: 100%; object-fit: cover; }
@@ -864,7 +864,7 @@
       .summon-screen button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -3px; }
       #game-preview[data-view="summon"] .summon-layout { animation: character-toolbar-enter 450ms ease-out both; }
       @media (max-width: 900px) { .summon-layout { grid-template-columns: 170px minmax(0, 1fr); gap: 16px; } .summon-banner-top { flex-direction: column-reverse; gap: 20px; left: 18px; right: 18px; top: 18px; } .summon-banner-actions { align-self: flex-end; } .summon-banner-bottom { left: 18px; right: 18px; bottom: 18px; flex-direction: column; align-items: stretch; gap: 12px; } .summon-pull-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-left: 0; } .summon-pull { height: 52px; font-size: 16px; } }
-      @media (max-width: 640px) { .summon-screen { padding: 18px 16px; gap: 14px; } .summon-layout { grid-template-columns: 116px minmax(0, 1fr); gap: 12px; } .summon-banner-choice { padding: 10px 8px; min-height: 76px; } .summon-banner-thumbnail { display: none; } .summon-banner-choice strong { font-size: 12px; } .summon-banner-actions { gap: 5px; flex-wrap: wrap; } .summon-overlay-button { font-size: 11px; padding-inline: 7px; } .summon-banner-top, .summon-banner-bottom { left: 12px; right: 12px; } .summon-banner-heading h3 { font-size: 22px; } .summon-pull-actions { gap: 8px; } .summon-pull { padding-inline: 5px; font-size: 14px; } }
+      @media (max-width: 640px) { .summon-screen { padding: 18px 16px; gap: 14px; } .summon-layout { grid-template-columns: 116px minmax(0, 1fr); gap: 12px; } .summon-banner-choice { padding: 10px 8px; min-height: 76px; } .summon-banner-choice strong { font-size: 12px; } .summon-banner-actions { gap: 5px; flex-wrap: wrap; } .summon-overlay-button { font-size: 11px; padding-inline: 7px; } .summon-banner-top, .summon-banner-bottom { left: 12px; right: 12px; } .summon-banner-heading h3 { font-size: 22px; } .summon-pull-actions { gap: 8px; } .summon-pull { padding-inline: 5px; font-size: 14px; } }
       @media (prefers-reduced-motion: reduce) { #game-preview[data-view="summon"] .summon-layout { animation: none; } #game-preview[data-view="summon"] .game-bottom-menu { transition: none; } }
       #game-preview:is([data-view="materials"], [data-view="material-dungeon"]) .game-bottom-menu { transform: translateY(100%); visibility: hidden; pointer-events: none; transition: transform 280ms ease, visibility 0s 280ms; }
       .dungeon-screen { height: 100%; min-height: 0; display: flex; flex-direction: column; gap: 20px; padding: 24px 28px; }
@@ -3898,9 +3898,7 @@
       document.getElementById('game-inventory').addEventListener('click', () => { showGameView('inventory'); document.getElementById('game-home').focus({ preventScroll: true }); });
       // 배너 구성과 출현 대상은 화면 확인용이며 실제 소환 규칙은 아직 연결하지 않았습니다.
       const previewSummonBanners = [
-        { id: 'standard', name: '일반 소환', label: '상시 배너', kind: 'character', description: '함께할 동료를 만나보세요.', tint: '#2b3c59', imageUrl: null },
-        { id: 'featured', name: '캐릭터 픽업', label: '픽업 배너', kind: 'featured', description: '새로운 만남이 기다리고 있습니다.', tint: '#49365d', imageUrl: null },
-        { id: 'equipment', name: '장비 소환', label: '장비 배너', kind: 'equipment', description: '여정을 함께할 장비를 만나보세요.', tint: '#4b4330', imageUrl: null },
+        { id: 'standard', name: '상시 캐릭터 소환', label: '상시 배너', kind: 'character', description: '함께할 동료를 만나보세요.', tint: '#2b3c59', imageUrl: null },
       ];
       let selectedSummonBanner = 'standard';
       let summonDialogReturnFocus = null;
@@ -3919,7 +3917,7 @@
           if (banner.imageUrl) { const image = document.createElement('img'); image.src = banner.imageUrl; image.alt = ''; thumbnail.append(image); } else thumbnail.append(createSummonMark());
           const copy = document.createElement('span'); copy.className = 'summon-banner-choice-copy';
           const title = document.createElement('strong'); title.textContent = banner.name;
-          const label = document.createElement('small'); label.textContent = banner.label; copy.append(title, label); button.append(thumbnail, copy);
+          copy.append(title); button.append(thumbnail, copy);
           button.addEventListener('click', () => { selectedSummonBanner = banner.id; renderSummon(); document.getElementById('summon-tab-' + banner.id).focus({ preventScroll: true }); }); list.append(button);
         });
         list.scrollTop = scrollTop;
