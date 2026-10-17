@@ -635,6 +635,7 @@
       .combat-enemy-side { width: 78%; justify-self: end; align-self: center; }
       .combat-allied-side { display: grid; grid-template-columns: minmax(0, 1fr) clamp(156px, 17cqw, 212px); align-items: center; gap: clamp(14px, 2.5cqw, 32px); min-height: 0; }
       .combat-line { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); align-items: end; gap: clamp(5px, 1cqw, 12px); max-width: 840px; margin: 0; padding: 0; list-style: none; }
+      #combat-allies { padding-left: clamp(12px, 2cqw, 24px); }
       .combat-line > li { position: relative; min-width: 0; }
       .combat-line > li:nth-child(4) { margin-left: 5px; }
       .combat-line > li:nth-child(3n + 1)::before { content: attr(data-row); display: block; margin: 0 0 7px 3px; font-size: 10px; color: #c5ccd8; letter-spacing: .12em; }
