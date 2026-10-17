@@ -3321,7 +3321,7 @@
         for (const team of ['enemy', 'ally']) {
           const list = document.getElementById(team === 'enemy' ? 'combat-enemies' : 'combat-allies'); list.replaceChildren();
           const teamUnits = units.filter(unit => unit.team === team);
-          const ordered = team === 'enemy' ? [...teamUnits.slice(3), ...teamUnits.slice(0, 3)] : teamUnits;
+          const ordered = teamUnits;
           ordered.forEach(unit => {
             const slot = document.createElement('li'); slot.dataset.row = unit.slot < 3 ? '전열' : '후열';
             const card = document.createElement('button'); card.type = 'button'; card.className = 'combat-unit'; card.dataset.team = team; card.dataset.current = String(unit === current);
