@@ -861,6 +861,19 @@
       .summon-appearance-name { flex: 1; min-width: 0; font-size: 14px; overflow-wrap: anywhere; }
       .summon-appearance-name small { display: block; margin-top: 5px; color: var(--text-secondary); font-size: 12px; }
       .summon-character-stars { flex: none; font-size: 12px; color: var(--rarity-color); letter-spacing: 1px; }
+      .summon-rarity-group + .summon-rarity-group { margin-top: 30px; }
+      .summon-rarity-heading { margin: 0 0 16px; padding: 0 0 12px; border-bottom: 1px solid var(--border); }
+      .summon-rarity-heading .equipment-rarity-stars { justify-content: flex-start; gap: 2px; }
+      .summon-rarity-heading .equipment-rarity-stars svg { width: 14px; height: 14px; }
+      .summon-rarity-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(124px, 140px)); gap: 14px; align-items: start; }
+      .summon-appearance-card { position: relative; width: 100%; aspect-ratio: 2 / 3; overflow: hidden; border: 1px solid var(--border); border-top: 4px solid var(--equipment-rarity-color); border-radius: 9px; background: var(--surface-sidebar); }
+      .summon-appearance-card > img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
+      .summon-appearance-card > svg { position: absolute; width: 44px; height: 44px; top: 38%; left: calc(50% - 22px); opacity: .18; color: var(--accent); }
+      .summon-appearance-card > .equipment-rarity-stars { position: absolute; top: 12px; left: 10px; z-index: 1; }
+      .summon-appearance-card .equipment-rarity-stars svg { width: 10px; height: 10px; }
+      .summon-appearance-caption { position: absolute; inset: auto 0 0; padding: 32px 10px 13px; background: linear-gradient(transparent, #090d14ed); }
+      .summon-appearance-caption strong { display: block; font-size: 14px; font-weight: 600; line-height: 1.5; overflow-wrap: anywhere; color: #eef1f7; }
+      .summon-appearance-caption small { display: block; margin-top: 5px; font-size: 11px; line-height: 1.5; color: #b7c6d8; overflow-wrap: anywhere; }
       .summon-screen button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -3px; }
       #game-preview[data-view="summon"] .summon-layout { animation: character-toolbar-enter 450ms ease-out both; }
       @media (max-width: 900px) { .summon-layout { grid-template-columns: 170px minmax(0, 1fr); gap: 16px; } .summon-banner-top { flex-direction: column-reverse; gap: 20px; left: 18px; right: 18px; top: 18px; } .summon-banner-actions { align-self: flex-end; } .summon-banner-bottom { left: 18px; right: 18px; bottom: 18px; flex-direction: column; align-items: stretch; gap: 12px; } .summon-pull-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-left: 0; } .summon-pull { height: 52px; font-size: 16px; } }
@@ -3941,13 +3954,35 @@
         const candidates = banner.kind === 'featured' ? cards.filter(card => Number(card.dataset.rarity) === 5) : cards;
         return candidates.map(card => ({ card }));
       }
+      function renderSummonCharacterAppearances(entries, body) {
+        [5, 4, 3].forEach(rarity => {
+          const characters = entries.filter(entry => entry.card && getEquipmentRarity({ rarity: entry.card.dataset.rarity }) === rarity);
+          if (!characters.length) return;
+          const group = document.createElement('section'); group.className = 'summon-rarity-group'; group.setAttribute('aria-label', rarity + '성 캐릭터'); applyEquipmentRarity(group, { rarity });
+          const heading = document.createElement('h3'); heading.className = 'summon-rarity-heading'; heading.append(createEquipmentStars({ rarity })); group.append(heading);
+          const grid = document.createElement('div'); grid.className = 'summon-rarity-cards';
+          characters.forEach(({ card }) => {
+            const tile = document.createElement('article'); tile.className = 'summon-appearance-card'; applyEquipmentRarity(tile, { rarity });
+            const image = card.querySelector('img');
+            if (image) { const art = document.createElement('img'); art.src = image.getAttribute('src'); art.alt = ''; art.loading = 'lazy'; tile.append(art); }
+            else tile.append(createSummonMark());
+            const stars = createEquipmentStars({ rarity }); tile.append(stars);
+            const caption = document.createElement('div'); caption.className = 'summon-appearance-caption';
+            const name = document.createElement('strong'); name.textContent = card.querySelector('.character-card-name').textContent;
+            const info = getCharacterBaseStats(card), details = document.createElement('small'); details.textContent = info.element + ' · ' + info.role;
+            caption.append(name, details); tile.append(caption); grid.append(tile);
+          });
+          group.append(grid); body.append(group);
+        });
+      }
       function openSummonDialog(kind, trigger) {
         const banner = getSelectedSummonBanner(), appearances = kind === 'appearances'; summonDialogReturnFocus = trigger;
         document.getElementById('summon-dialog-title').textContent = appearances ? '출현 목록' : '소환 기록';
         document.getElementById('summon-dialog-subtitle').textContent = banner.name + (appearances ? ' · 미리보기' : '');
         const body = document.getElementById('summon-dialog-body'); body.replaceChildren();
         const entries = appearances ? getSummonPreviewAppearances(banner) : [];
-        entries.forEach(entry => {
+        if (entries.some(entry => entry.card)) renderSummonCharacterAppearances(entries, body);
+        else entries.forEach(entry => {
           const row = document.createElement('div'); row.className = 'summon-appearance-row';
           const name = document.createElement('div'); name.className = 'summon-appearance-name';
           if (entry.item) {
