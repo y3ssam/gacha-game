@@ -657,7 +657,7 @@
       .combat-skills { align-self: end; padding-bottom: 3px; min-width: 0; }
       .combat-acting-name { display: block; margin: 0 0 4px; font-size: 15px; color: var(--accent); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .combat-action-hint { min-height: 30px; margin: 0 0 10px; font-size: 11px; line-height: 1.5; color: #c7cfdb; }
-      .combat-skill-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 14px; }
+      .combat-skill-grid { display: grid; grid-template-columns: repeat(2, max-content); justify-content: center; gap: 8px 10px; }
       .combat-skill { display: grid; justify-items: center; gap: 5px; padding: 0; border: 0; background: transparent; color: #e2e9f3; font: inherit; font-size: 11px; cursor: pointer; }
       .combat-skill-disc { position: relative; display: grid; place-items: center; width: clamp(46px, 5.3cqw, 68px); aspect-ratio: 1; border: 1px solid #b8c9de77; border-radius: 50%; background: linear-gradient(145deg, #30455fe6, #121d2aee); }
       .combat-skill-disc svg { width: 48%; height: 48%; }
@@ -675,9 +675,9 @@
       .combat-ultimate strong { color: var(--accent); font-size: clamp(22px, 4cqw, 48px); }
       .combat-ultimate p { margin: 0; color: #eef1f7; font-size: 14px; }
       @keyframes combat-ultimate-enter { 0% { opacity: 0; transform: translateX(-35px); } 20%, 75% { opacity: 1; transform: translateX(0); } 100% { opacity: 0; transform: translateX(35px); } }
-      @media (max-width: 800px) { .combat-arena { left: 18px; right: 18px; gap: 12px; } .combat-turns > span { display: none; } .combat-arena { --combat-skill-width: 132px; --combat-skill-gap: 14px; } .combat-skill-grid { gap: 10px; } .combat-unit { padding: 5px; } .combat-acting-name { font-size: 13px; } }
+      @media (max-width: 800px) { .combat-arena { left: 18px; right: 18px; gap: 12px; } .combat-turns > span { display: none; } .combat-arena { --combat-skill-width: 132px; --combat-skill-gap: 14px; } .combat-skill-grid { gap: 6px 8px; } .combat-unit { padding: 5px; } .combat-acting-name { font-size: 13px; } }
       @media (max-width: 640px) { .combat-arena { top: 124px; bottom: 28px; grid-template-rows: 46px minmax(0, 1fr) minmax(0, 1fr); gap: 8px; } .combat-arena { --combat-skill-width: 104px; --combat-skill-gap: 10px; } .combat-unit { height: clamp(64px, 25cqh, 150px); } .combat-line { gap: 4px; } .combat-line > li:nth-child(4) { margin-left: 0; } .combat-skill-disc { width: 40px; } .combat-action-hint { min-height: 0; font-size: 10px; margin-bottom: 8px; } .combat-skill { font-size: 10px; } .combat-acting-name { font-size: 11px; } .combat-skill-tooltip { right: 18px; bottom: 210px; } }
-      @media (max-height: 600px) and (min-width: 641px) { .combat-arena { top: 76px; bottom: 28px; grid-template-rows: 42px minmax(0, 1fr) minmax(0, 1fr); gap: 8px; } .combat-unit { height: 25cqh; } .combat-skill-disc { width: 43px; } .combat-skill-grid { gap: 8px; } .combat-action-hint { margin-bottom: 6px; } }
+      @media (max-height: 600px) and (min-width: 641px) { .combat-arena { top: 76px; bottom: 28px; grid-template-rows: 42px minmax(0, 1fr) minmax(0, 1fr); gap: 8px; } .combat-unit { height: 25cqh; } .combat-skill-disc { width: 43px; } .combat-skill-grid { gap: 6px 8px; } .combat-action-hint { margin-bottom: 6px; } }
       @media (prefers-reduced-motion: reduce) { .combat-ultimate { animation: none; } .combat-unit[data-target="true"]:hover { transform: none; } }
       #game-preview[data-view="party"] .game-bottom-menu { transform: translateY(100%); visibility: hidden; pointer-events: none; transition: transform 280ms ease, visibility 0s 280ms; }
       .party-screen { height: 100%; padding: 24px 28px; display: flex; flex-direction: column; gap: 18px; }
