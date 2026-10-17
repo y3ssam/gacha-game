@@ -681,10 +681,10 @@
       @media (prefers-reduced-motion: reduce) { .combat-ultimate { animation: none; } .combat-unit[data-target="true"]:hover { transform: none; } }
       #game-preview[data-view="party"] .game-bottom-menu { transform: translateY(100%); visibility: hidden; pointer-events: none; transition: transform 280ms ease, visibility 0s 280ms; }
       .party-screen { height: 100%; padding: 24px 28px; display: flex; flex-direction: column; gap: 18px; }
-      .party-heading { position: relative; display: flex; align-items: center; justify-content: space-between; }
+      .party-heading { display: flex; align-items: center; justify-content: space-between; }
       .party-heading h2 { margin: 0; font-size: 20px; }
       .party-stage-enter { min-width: 148px; min-height: 44px; border: 1px solid var(--accent); border-radius: 9px; padding: 10px 22px; background: var(--accent); color: var(--surface-main); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
-      .party-heading > .party-stage-enter { position: absolute; right: 0; top: 50%; transform: translateY(-50%); min-height: 36px; padding: 6px 20px; }
+      .party-formations > .party-stage-enter { width: 100%; min-width: 0; flex: none; }
       .party-stage-enter:disabled { opacity: .35; cursor: default; }
       .party-stage-enter:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 4px; }
       .combat-unit[data-empty="true"] { border: 1px dashed #ffffff30; background: #10192366; opacity: .35; }
@@ -1363,14 +1363,14 @@
               </div>
             </section>
             <section class="party-screen" id="party-screen" aria-labelledby="party-title" hidden>
-              <div class="party-heading"><h2 id="party-title" tabindex="-1">편성</h2><button class="party-stage-enter" id="party-stage-enter" type="button" hidden>전투 진입</button></div>
+              <div class="party-heading"><h2 id="party-title" tabindex="-1">편성</h2></div>
               <div class="party-layout-frame"><div class="party-layout">
                 <div class="party-rows">
                   <section class="party-row" aria-labelledby="party-front-title"><div class="party-row-heading"><h3 id="party-front-title">전열</h3><span id="party-count" aria-live="polite">0 / 6</span></div><div class="party-slots" id="party-front"></div></section>
                   <section class="party-row" aria-labelledby="party-back-title"><h3 id="party-back-title">후열</h3><div class="party-slots" id="party-back"></div></section>
                 </div>
                 <aside class="party-roster" aria-labelledby="party-roster-title"><h3 id="party-roster-title">내 캐릭터</h3><div class="party-roster-list" id="party-roster-list"></div></aside>
-                <aside class="party-formations" aria-labelledby="party-formations-title"><h3 id="party-formations-title">편성 목록</h3><div class="party-formation-list" id="party-formation-list"></div></aside>
+                <aside class="party-formations" aria-labelledby="party-formations-title"><h3 id="party-formations-title">편성 목록</h3><div class="party-formation-list" id="party-formation-list"></div><button class="party-stage-enter" id="party-stage-enter" type="button" hidden>전투 진입</button></aside>
               </div></div>
               <div class="folder-menu" id="party-formation-menu" role="menu" aria-label="편성 관리" hidden>
                 <button type="button" role="menuitem" data-action="rename">이름 변경</button>
