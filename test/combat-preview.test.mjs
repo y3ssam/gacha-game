@@ -32,7 +32,9 @@ test('battle preview contains six allies, six enemies, speed queue and 2x2 skill
   const { get, run } = setup();
   assert.equal(get('combat-allies').children.length, 6);
   assert.equal(get('combat-enemies').children.length, 6);
-  assert.equal(get('combat-turn-list').children.length, 12);
+  assert.equal(get('combat-turn-list').children.length, 7);
+  assert.equal(get('combat-turn-list').children[0].getAttribute('aria-current'), 'true');
+  assert.ok(get('combat-turn-list').children.every(card => !card.textContent && card.children.length === 1));
   assert.equal(get('combat-skill-grid').children.length, 4);
   assert.equal(run('combatPreviewState.queue.every((unit, index, queue) => !index || queue[index - 1].speed >= unit.speed)'), true);
   assert.equal(run("combatPreviewSkills.filter(skill => isCombatPreviewSkillAvailable(skill, combatPreviewState.queue[0])).map(skill => skill.id).join(',')"), 'basic,active,ultimate');
