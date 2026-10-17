@@ -623,9 +623,8 @@
       #combat-preview-screen::before { content: ''; position: absolute; inset: -12px; z-index: -2; background: url('assets/dungeons/story-entry.png') center / cover; filter: blur(5px); opacity: .55; }
       #combat-preview-screen::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, #080e18a8, #080e1848 45%, #080e18d9); }
       #combat-preview-screen .story-preview-top { z-index: 3; }
-      .combat-arena { --combat-side-inset: clamp(24px, 8cqw, 108px); --combat-skill-width: clamp(156px, 17cqw, 212px); --combat-skill-gap: clamp(14px, 2.5cqw, 32px); position: absolute; inset: 96px 32px 26px; display: grid; grid-template-rows: 58px minmax(0, 1fr) minmax(0, 1fr); gap: 18px; min-height: 0; }
+      .combat-arena { --combat-side-inset: clamp(24px, 8cqw, 108px); --combat-skill-width: clamp(156px, 17cqw, 212px); --combat-skill-gap: clamp(14px, 2.5cqw, 32px); position: absolute; inset: 88px 32px 58px; display: grid; grid-template-rows: 58px minmax(0, 1fr) minmax(0, 1fr); gap: 18px; min-height: 0; }
       .combat-turns { display: flex; align-items: center; gap: 12px; min-width: 0; }
-      .combat-turns > span { flex: none; font-size: 11px; letter-spacing: .12em; color: #b8c2d2; }
       .combat-turn-list { display: flex; align-items: center; gap: 7px; height: 100%; min-width: 0; overflow: hidden; padding: 3px; }
       .combat-turn { position: relative; flex: 0 0 auto; height: 80%; aspect-ratio: 2 / 3; overflow: hidden; border: 1px solid #98b8dc66; border-top: 2px solid #9daec5; border-radius: 4px; background: linear-gradient(155deg, #33485d, #101721); color: #94a9c366; }
       .combat-turn[data-team="enemy"] { border-top-color: #ca8b89; background: linear-gradient(155deg, #533b48, #191923); }
@@ -635,11 +634,11 @@
       .combat-enemy-side { display: grid; grid-template-columns: var(--combat-skill-width) minmax(0, 1fr); gap: var(--combat-skill-gap); width: 100%; padding-right: var(--combat-side-inset); align-self: center; }
       #combat-enemies { grid-column: 2; justify-self: end; }
       .combat-allied-side { display: grid; grid-template-columns: minmax(0, 1fr) var(--combat-skill-width); align-items: center; gap: var(--combat-skill-gap); padding-left: var(--combat-side-inset); min-height: 0; }
-      .combat-line { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); align-items: end; gap: clamp(5px, 1cqw, 12px); width: 100%; max-width: 840px; margin: 0; padding: 0; list-style: none; }
+      .combat-line { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); align-items: end; gap: clamp(5px, 1cqw, 12px); width: 100%; max-width: 888px; margin: 0; padding: 0; list-style: none; }
       .combat-line > li { position: relative; min-width: 0; }
       .combat-line > li:nth-child(4) { margin-left: 5px; }
       .combat-line > li:nth-child(3n + 1)::before { content: attr(data-row); display: block; margin: 0 0 7px 3px; font-size: 10px; color: #c5ccd8; letter-spacing: .12em; }
-      .combat-unit { position: relative; display: flex; flex-direction: column; justify-content: flex-end; width: 100%; height: clamp(100px, 27cqh, 196px); max-height: 100%; padding: 8px; border: 1px solid #98b8dc66; border-top: 3px solid #9daec5; border-radius: 9px; overflow: hidden; color: #eef1f7; background: linear-gradient(155deg, #33485d, #182534 48%, #101721); font: inherit; cursor: default; text-align: left; }
+      .combat-unit { position: relative; display: flex; flex-direction: column; justify-content: flex-end; width: 100%; height: clamp(108px, 29cqh, 208px); max-height: 100%; padding: 8px; border: 1px solid #98b8dc66; border-top: 3px solid #9daec5; border-radius: 9px; overflow: hidden; color: #eef1f7; background: linear-gradient(155deg, #33485d, #182534 48%, #101721); font: inherit; cursor: default; text-align: left; }
       .combat-unit[data-team="enemy"] { border-top-color: #ca8b89; background: linear-gradient(155deg, #533b48, #302630 48%, #191923); }
       .combat-unit[data-current="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
       .combat-unit[data-target="true"] { cursor: pointer; border-color: #f1b576; }
@@ -677,8 +676,8 @@
       .combat-ultimate p { margin: 0; color: #eef1f7; font-size: 14px; }
       @keyframes combat-ultimate-enter { 0% { opacity: 0; transform: translateX(-35px); } 20%, 75% { opacity: 1; transform: translateX(0); } 100% { opacity: 0; transform: translateX(35px); } }
       @media (max-width: 800px) { .combat-arena { left: 18px; right: 18px; gap: 12px; } .combat-turns > span { display: none; } .combat-arena { --combat-skill-width: 132px; --combat-skill-gap: 14px; } .combat-skill-grid { gap: 10px; } .combat-unit { padding: 5px; } .combat-acting-name { font-size: 13px; } }
-      @media (max-width: 640px) { .combat-arena { top: 132px; bottom: 14px; grid-template-rows: 46px minmax(0, 1fr) minmax(0, 1fr); gap: 8px; } .combat-arena { --combat-skill-width: 104px; --combat-skill-gap: 10px; } .combat-unit { height: clamp(60px, 23cqh, 140px); } .combat-line { gap: 4px; } .combat-line > li:nth-child(4) { margin-left: 0; } .combat-skill-disc { width: 40px; } .combat-action-hint { min-height: 0; font-size: 10px; margin-bottom: 8px; } .combat-skill { font-size: 10px; } .combat-acting-name { font-size: 11px; } .combat-skill-tooltip { right: 18px; bottom: 210px; } }
-      @media (max-height: 600px) and (min-width: 641px) { .combat-arena { top: 82px; bottom: 14px; grid-template-rows: 42px minmax(0, 1fr) minmax(0, 1fr); gap: 8px; } .combat-unit { height: 24cqh; } .combat-skill-disc { width: 43px; } .combat-skill-grid { gap: 8px; } .combat-action-hint { margin-bottom: 6px; } }
+      @media (max-width: 640px) { .combat-arena { top: 124px; bottom: 28px; grid-template-rows: 46px minmax(0, 1fr) minmax(0, 1fr); gap: 8px; } .combat-arena { --combat-skill-width: 104px; --combat-skill-gap: 10px; } .combat-unit { height: clamp(64px, 25cqh, 150px); } .combat-line { gap: 4px; } .combat-line > li:nth-child(4) { margin-left: 0; } .combat-skill-disc { width: 40px; } .combat-action-hint { min-height: 0; font-size: 10px; margin-bottom: 8px; } .combat-skill { font-size: 10px; } .combat-acting-name { font-size: 11px; } .combat-skill-tooltip { right: 18px; bottom: 210px; } }
+      @media (max-height: 600px) and (min-width: 641px) { .combat-arena { top: 76px; bottom: 28px; grid-template-rows: 42px minmax(0, 1fr) minmax(0, 1fr); gap: 8px; } .combat-unit { height: 25cqh; } .combat-skill-disc { width: 43px; } .combat-skill-grid { gap: 8px; } .combat-action-hint { margin-bottom: 6px; } }
       @media (prefers-reduced-motion: reduce) { .combat-ultimate { animation: none; } .combat-unit[data-target="true"]:hover { transform: none; } }
       #game-preview[data-view="party"] .game-bottom-menu { transform: translateY(100%); visibility: hidden; pointer-events: none; transition: transform 280ms ease, visibility 0s 280ms; }
       .party-screen { height: 100%; padding: 24px 28px; display: flex; flex-direction: column; gap: 18px; }
@@ -1584,11 +1583,11 @@
             <div class="folder-menu equipment-context-menu" id="equipment-context-menu" role="menu" aria-label="장비 관리" hidden><button type="button" role="menuitem" data-equipment-action="enhance">강화</button><button type="button" role="menuitem" data-equipment-action="replace">교체</button><button type="button" role="menuitem" data-equipment-action="remove">해제</button></div>
             <section class="story-preview-screen" id="combat-preview-screen" aria-label="전투 미리보기" hidden>
               <div class="combat-arena">
-                <div class="combat-turns"><span>TURN ORDER</span><div class="combat-turn-list" id="combat-turn-list" role="list" aria-label="속도에 따른 행동 순서"></div></div>
+                <div class="combat-turns"><div class="combat-turn-list" id="combat-turn-list" role="list" aria-label="속도에 따른 행동 순서"></div></div>
                 <div class="combat-enemy-side"><ul class="combat-line" id="combat-enemies" aria-label="적군"></ul></div>
                 <div class="combat-allied-side">
                   <ul class="combat-line" id="combat-allies" aria-label="아군"></ul>
-                  <div class="combat-skills"><strong class="combat-acting-name" id="combat-acting-name"></strong><p class="combat-action-hint" id="combat-action-hint" aria-live="polite">사용할 스킬을 선택하세요.</p><div class="combat-skill-grid" id="combat-skill-grid" aria-label="현재 캐릭터의 스킬"></div></div>
+                  <div class="combat-skills"><p class="combat-action-hint" id="combat-action-hint" hidden></p><div class="combat-skill-grid" id="combat-skill-grid" aria-label="현재 캐릭터의 스킬"></div></div>
                 </div>
               </div>
               <div class="combat-skill-tooltip" id="combat-skill-tooltip" role="tooltip" hidden></div>
@@ -3342,7 +3341,6 @@
             slot.append(card); list.append(slot);
           });
         }
-        document.getElementById('combat-acting-name').textContent = current.name;
         document.getElementById('combat-action-hint').textContent = current.team === 'enemy' ? '적군 행동 미리보기' : selectedSkill ? '대상 카드를 선택하세요.' : '사용할 스킬을 선택하세요.';
         const skills = document.getElementById('combat-skill-grid'); skills.replaceChildren();
         combatPreviewSkills.forEach(skill => {
