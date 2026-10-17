@@ -681,14 +681,10 @@
       @media (prefers-reduced-motion: reduce) { .combat-ultimate { animation: none; } .combat-unit[data-target="true"]:hover { transform: none; } }
       #game-preview[data-view="party"] .game-bottom-menu { transform: translateY(100%); visibility: hidden; pointer-events: none; transition: transform 280ms ease, visibility 0s 280ms; }
       .party-screen { height: 100%; padding: 24px 28px; display: flex; flex-direction: column; gap: 18px; }
-      .party-heading { display: flex; align-items: center; justify-content: space-between; }
+      .party-heading { position: relative; display: flex; align-items: center; justify-content: space-between; }
       .party-heading h2 { margin: 0; font-size: 20px; }
-      .party-stage-back { margin-right: 14px; }
-      .party-stage-heading { display: flex; align-items: center; }
-      .party-stage-footer { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex: none; padding-top: 14px; border-top: 1px solid var(--border); }
-      .party-stage-footer strong { display: block; color: var(--text-primary); font-size: 14px; }
-      .party-stage-footer span { display: block; margin-top: 5px; color: var(--text-secondary); font-size: 12px; }
       .party-stage-enter { min-width: 148px; min-height: 44px; border: 1px solid var(--accent); border-radius: 9px; padding: 10px 22px; background: var(--accent); color: var(--surface-main); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+      .party-heading > .party-stage-enter { position: absolute; right: 0; top: 50%; transform: translateY(-50%); min-height: 36px; padding: 6px 20px; }
       .party-stage-enter:disabled { opacity: .35; cursor: default; }
       .party-stage-enter:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 4px; }
       .combat-unit[data-empty="true"] { border: 1px dashed #ffffff30; background: #10192366; opacity: .35; }
@@ -709,7 +705,7 @@
       .battle-enemy-description { min-height: 44px; margin: 0 auto 20px; max-width: 560px; font-size: 12px; line-height: 1.8; color: #b9c5d5; }
       .battle-enemy-description strong { color: #edf2fa; font-weight: 500; }
       .battle-briefing-start { min-width: 260px; min-height: 54px; font-size: 19px; }
-      @media (max-width: 640px) { .battle-briefing { padding: 20px; } .battle-briefing-content { padding: 52px 0 12px; } .battle-briefing-back { top: 16px; left: 18px; } .battle-briefing-description { font-size: 12px; } .battle-briefing-start { min-width: 200px; } .party-stage-footer { gap: 12px; } .party-stage-enter { min-width: 112px; padding: 9px 14px; } }
+      @media (max-width: 640px) { .battle-briefing { padding: 20px; } .battle-briefing-content { padding: 52px 0 12px; } .battle-briefing-back { top: 16px; left: 18px; } .battle-briefing-description { font-size: 12px; } .battle-briefing-start { min-width: 200px; } .party-stage-enter { min-width: 112px; padding: 9px 14px; } }
       .party-layout-frame { flex: 1; min-height: 0; container-type: size; --party-column-gap: 24px; --party-slot-gap: 12px; }
       .party-layout { height: 100%; min-height: 0; display: grid; grid-template-columns: minmax(0, min(calc((100cqw - 2 * var(--party-column-gap)) * .45), calc(100cqh - 78px + 2 * var(--party-slot-gap)))) minmax(0, 1fr) clamp(128px, 14cqw, 176px); gap: var(--party-column-gap); }
       .party-rows { min-height: 0; display: grid; grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 20px; }
@@ -1367,7 +1363,7 @@
               </div>
             </section>
             <section class="party-screen" id="party-screen" aria-labelledby="party-title" hidden>
-              <div class="party-heading"><div class="party-stage-heading"><button class="connection-back party-stage-back" id="party-stage-back" type="button" aria-label="스테이지로 돌아가기" hidden>◀</button><h2 id="party-title">편성</h2></div></div>
+              <div class="party-heading"><h2 id="party-title" tabindex="-1">편성</h2><button class="party-stage-enter" id="party-stage-enter" type="button" hidden>전투 진입</button></div>
               <div class="party-layout-frame"><div class="party-layout">
                 <div class="party-rows">
                   <section class="party-row" aria-labelledby="party-front-title"><div class="party-row-heading"><h3 id="party-front-title">전열</h3><span id="party-count" aria-live="polite">0 / 6</span></div><div class="party-slots" id="party-front"></div></section>
@@ -1376,7 +1372,6 @@
                 <aside class="party-roster" aria-labelledby="party-roster-title"><h3 id="party-roster-title">내 캐릭터</h3><div class="party-roster-list" id="party-roster-list"></div></aside>
                 <aside class="party-formations" aria-labelledby="party-formations-title"><h3 id="party-formations-title">편성 목록</h3><div class="party-formation-list" id="party-formation-list"></div></aside>
               </div></div>
-              <div class="party-stage-footer" id="party-stage-footer" hidden><div><strong id="party-stage-name"></strong><span id="party-stage-summary"></span></div><button class="party-stage-enter" id="party-stage-enter" type="button">전투 진입</button></div>
               <div class="folder-menu" id="party-formation-menu" role="menu" aria-label="편성 관리" hidden>
                 <button type="button" role="menuitem" data-action="rename">이름 변경</button>
                 <button type="button" role="menuitem" data-action="delete">삭제</button>
@@ -3445,27 +3440,15 @@
       });
       function renderBattleSetupControls() {
         const active = Boolean(battleStageContext);
-        document.getElementById('party-stage-back').hidden = !active;
-        document.getElementById('party-stage-footer').hidden = !active;
-        document.getElementById('party-title').textContent = active ? '전투 편성' : '편성';
-        if (!active) return;
-        document.getElementById('party-stage-name').textContent = battleStageContext.title;
-        const formation = previewFormations[selectedFormation], count = previewParty.filter(Boolean).length;
-        document.getElementById('party-stage-summary').textContent = (formation?.name || '선택한 편성 없음') + ' · ' + count + ' / 6';
-        document.getElementById('party-stage-enter').disabled = count === 0;
+        const button = document.getElementById('party-stage-enter');
+        button.hidden = !active;
+        button.disabled = !previewParty.some(Boolean);
       }
       function openBattleStageSetup(context) {
         stopCombatPreview(); closeBattleBriefing();
         battleStageContext = { ...context };
         showGameView('party');
-        document.getElementById('party-stage-back').focus({ preventScroll: true });
-      }
-      function leaveBattleStageSetup() {
-        const source = battleStageContext?.source; battleStageContext = null;
-        closeBattleBriefing(); stopCombatPreview();
-        showGameView(source === 'dungeon' ? 'material-dungeon' : 'scenarios');
-        if (source === 'dungeon') document.getElementById('dungeon-prepare').focus({ preventScroll: true });
-        else previewScenarioCard?.focus({ preventScroll: true });
+        document.getElementById('party-title').focus({ preventScroll: true });
       }
       function closeBattleBriefing() {
         battleBriefingOpen = false;
@@ -3511,7 +3494,6 @@
         document.getElementById('battle-briefing').hidden = false;
         document.getElementById('battle-briefing-start').focus({ preventScroll: true });
       }
-      document.getElementById('party-stage-back').addEventListener('click', leaveBattleStageSetup);
       document.getElementById('party-stage-enter').addEventListener('click', showBattleBriefing);
       document.getElementById('battle-briefing-back').addEventListener('click', returnToBattleSetup);
       document.getElementById('battle-briefing-start').addEventListener('click', () => {
