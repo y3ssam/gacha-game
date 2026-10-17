@@ -2398,7 +2398,6 @@
         history.replaceState(null, '', '#worlds');
         worldNav.focus();
       });
-      showSection(sectionFromHash());
       const tabs = Array.from(document.querySelectorAll('.ai-tab'));
       function selectTab(selectedTab) {
         tabs.forEach((tab) => {
@@ -5112,6 +5111,8 @@
           tabs[index].focus({ preventScroll: true });
         });
       });
+      // 모든 화면 상태와 이벤트를 준비한 뒤 최초 주소에 해당하는 화면을 엽니다.
+      showSection(sectionFromHash());
     </script>
   </body>
 </html>
