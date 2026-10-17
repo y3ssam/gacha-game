@@ -3349,7 +3349,7 @@
           const disc = document.createElement('span'); disc.className = 'combat-skill-disc';
           const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('fill', 'none'); svg.setAttribute('stroke', 'currentColor'); svg.setAttribute('stroke-width', '1.5'); svg.setAttribute('stroke-linejoin', 'round'); svg.setAttribute('aria-hidden', 'true');
           const path = document.createElementNS('http://www.w3.org/2000/svg', 'path'); path.setAttribute('d', skill.path); svg.append(path); disc.append(svg);
-          if (skill.id === 'active' && current.cooldown || skill.id === 'ultimate') { const value = document.createElement('span'); value.className = 'combat-skill-value'; value.textContent = skill.id === 'ultimate' ? current.energy + '%' : current.cooldown; disc.append(value); }
+          if (skill.id === 'active' || skill.id === 'ultimate') { const value = document.createElement('span'); value.className = 'combat-skill-value'; value.textContent = skill.id === 'ultimate' ? current.energy + '%' : current.cooldown + '턴'; disc.append(value); }
           const label = document.createElement('span'); label.textContent = skill.name; button.append(disc, label);
           const showDescription = () => {
             const tooltip = document.getElementById('combat-skill-tooltip'); tooltip.replaceChildren();
